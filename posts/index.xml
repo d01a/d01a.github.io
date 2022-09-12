@@ -1,0 +1,18 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>All Posts - d01a</title>
+        <link>https://d01a.github.io/posts/</link>
+        <description>All Posts | d01a</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>dola.elbehairy2173@gmail.com (Mohamed Adel)</managingEditor>
+            <webMaster>dola.elbehairy2173@gmail.com (Mohamed Adel)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 12 Sep 2022 11:04:49 &#43;0800</lastBuildDate><atom:link href="https://d01a.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Raccoon Stealer</title>
+    <link>https://d01a.github.io/raccoon-stealer/</link>
+    <pubDate>Mon, 12 Sep 2022 11:04:49 &#43;0800</pubDate>
+    <author>Mohamed Adel</author>
+    <guid>https://d01a.github.io/raccoon-stealer/</guid>
+    <description><![CDATA[Conclusion Raccoon Stealer V2 (or RecordBreaker) Is a stealer that provided as a service with about 200$/m. It is a new version of Raccoon stealer that appeared in 2019 and died for a while then it returns with this new Stealer which known as RecordBreaker.
+It Comes with a lot of capabilities, It can grab a lot of sensitive information like :
+Steal Victim System information Steal Victim Username and passwords stored in the browser Steal Victim Browser&rsquo;s Autofill Information Steal Credit Card information Steal Crypto wallets Information Steal Bitcoin Wallets Grab any file from the victim system Take Screenshots from the victim system Load next stage Analysis First Look First we start with basic analysis, using Detect it easy we see that the file seems to be not packed.]]></description>
+</item>
+</channel>
+</rss>
