@@ -1,7 +1,7 @@
 # Aurora Stealer
 
 
-## Conclusion
+## Introduction
 
 Aurora Stealer is an information stealer Written in GO. It is a commercial stealer that costs around 250$ per month. The malware can steal Browser password and saved cookies, crypto information (Desktop and Web), Telegram, Steam and Specific files from the victim machine and can take a screenshot from it.
 
@@ -363,6 +363,13 @@ the screenshot:
 
 Sample JSON file can be found here [https://pastebin.com/YpTwAC94](https://pastebin.com/YpTwAC94)
 
+## Conclusion
+
+Aurora stealer is a new commercial infostealer. Most of it's capabilities are typical things that can be found in most of the stealers.
+it can grab Browser saved password/cookies and Cryptocurrency wallets information from Desktop applications and Web based wallets.
+Also, it can grab a files from the victim machine and take a screenshot. The communication with C2 server is done over TCP protocol.
+Most of these things can be found in most of the stealer But being written in GO makes it special, even it has a plaintext strings, The reversing process is quite annoying as most of the tools cannot handle GO binaries in a right way.
+
 ## IOCs:
 
 - 29339458f4a33ee922f25d36b83f19797a15a279634e9c44ebd3816866a541cb
@@ -406,5 +413,4 @@ rule aurora_stealer{
 - [https://dr-knz.net/go-calling-convention-x86-64.html](https://dr-knz.net/go-calling-convention-x86-64.html)
 - [https://dr-knz.net/go-calling-convention-x86-64-2020.html](https://dr-knz.net/go-calling-convention-x86-64-2020.html)
 - [Aurora: a rising stealer flying under the radar - SEKOIA.IO Blog](https://blog.sekoia.io/aurora-a-rising-stealer-flying-under-the-radar/)
-
 

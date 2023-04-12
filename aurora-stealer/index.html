@@ -9,7 +9,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://d01a.github.io/aurora-stealer/" /><meta property="og:image" content="https://d01a.github.io/aurora-stealer/featured-image.jpg"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-04-12T11:04:49+08:00" />
-<meta property="article:modified_time" content="2023-04-13T00:22:50+02:00" /><meta property="og:site_name" content="d01a" />
+<meta property="article:modified_time" content="2023-04-13T01:54:05+02:00" /><meta property="og:site_name" content="d01a" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://d01a.github.io/aurora-stealer/featured-image.jpg"/>
@@ -34,8 +34,8 @@
                             "url": "https:\/\/d01a.github.io\/aurora-stealer\/featured-image.jpg",
                             "width":  1024 ,
                             "height":  575 
-                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  2301 ,
-        "url": "https:\/\/d01a.github.io\/aurora-stealer\/","datePublished": "2023-04-12T11:04:49+08:00","dateModified": "2023-04-13T00:22:50+02:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  2411 ,
+        "url": "https:\/\/d01a.github.io\/aurora-stealer\/","datePublished": "2023-04-12T11:04:49+08:00","dateModified": "2023-04-13T01:54:05+02:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Mohamed Adel","logo": {
                     "@type": "ImageObject",
@@ -113,8 +113,8 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Aurora Stealer</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/malware-analysis/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Malware Analysis</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-04-12">2023-04-12</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;2301 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;11 minutes&nbsp;<span id="/aurora-stealer/" class="leancloud_visitors" data-flag-title="Aurora Stealer">
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-04-12">2023-04-12</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;2411 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;12 minutes&nbsp;<span id="/aurora-stealer/" class="leancloud_visitors" data-flag-title="Aurora Stealer">
                         <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;views
                     </span>&nbsp;</div>
         </div><div class="featured-image"><img
@@ -131,7 +131,7 @@
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#introduction">Introduction</a></li>
     <li><a href="#analysis">Analysis</a></li>
     <li><a href="#basic-information">Basic information</a>
       <ul>
@@ -151,12 +151,13 @@
       </ul>
     </li>
     <li><a href="#network-analysis">Network Analysis</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
     <li><a href="#iocs">IOCs:</a></li>
     <li><a href="#yara-rule">Yara Rule</a></li>
     <li><a href="#references">References</a></li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h2 id="conclusion">Conclusion</h2>
+            </div><div class="content" id="content"><h2 id="introduction">Introduction</h2>
 <p>Aurora Stealer is an information stealer Written in GO. It is a commercial stealer that costs around 250$ per month. The malware can steal Browser password and saved cookies, crypto information (Desktop and Web), Telegram, Steam and Specific files from the victim machine and can take a screenshot from it.</p>
 <p><img
         class="lazyload"
@@ -749,6 +750,11 @@ Without Symbols, the reversing will be so hard as a simple Hello world program i
         alt="/aurora-stealer/Aurora%20Stealer%203ac5d7639dee4d95b3cfd546053de596/Untitled%2037.png"
         title="Untitled" width="1280" height="720" /></p>
 <p>Sample JSON file can be found here <a href="https://pastebin.com/YpTwAC94" target="_blank" rel="noopener noreffer ">https://pastebin.com/YpTwAC94</a></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Aurora stealer is a new commercial infostealer. Most of it&rsquo;s capabilities are typical things that can be found in most of the stealers.
+it can grab Browser saved password/cookies and Cryptocurrency wallets information from Desktop applications and Web based wallets.
+Also, it can grab a files from the victim machine and take a screenshot. The communication with C2 server is done over TCP protocol.
+Most of these things can be found in most of the stealer But being written in GO makes it special, even it has a plaintext strings, The reversing process is quite annoying as most of the tools cannot handle GO binaries in a right way.</p>
 <h2 id="iocs">IOCs:</h2>
 <ul>
 <li>29339458f4a33ee922f25d36b83f19797a15a279634e9c44ebd3816866a541cb</li>
@@ -823,8 +829,8 @@ Without Symbols, the reversing will be so hard as a simple Hello world program i
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2023-04-13&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/e035d772efdb0997fbb35524f2b4e70b22bd665c" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) e035d772efdb0997fbb35524f2b4e70b22bd665c: Aurora Stealer">
-                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>e035d77</a></span>
+                <span>Updated on 2023-04-13&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/860b350888228a1b6c1d153c2db2c481a3d8c6a5" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) 860b350888228a1b6c1d153c2db2c481a3d8c6a5: update: Aurora stealer">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>860b350</a></span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
