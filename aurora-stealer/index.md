@@ -389,16 +389,12 @@ rule aurora_stealer{
     strings:
     $is_go = "Go build" ascii
 
-    $a1 = "8081" ascii
-    $a2 = "C:\\Windows.old\\Users\\" ascii
-    $a3 = "\\AppData\\Roaming\\" ascii
-    $a4 = "wmic csproduct get uuid" ascii
-    $a5 = "wmic cpu get name" ascii
-    $a6 = "systeminfo" ascii
-    $a7 = "wmic path win32_VideoController get name" ascii
-    $a8 = "\\AppData\\Local\\" ascii
-    $a9 = "\\Opera Stable\\Local State" ascii
-    $a10 = "coNNNECTIONGWQFGQW"  ascii
+    $a1 = "C:\\Windows.old\\Users\\" ascii
+    $a2 = "\\AppData\\Roaming\\" ascii
+    $a3 = "wmic csproduct get uuid" ascii
+    $a4 = "wmic cpu get name" ascii
+    $a5 = "systeminfo" ascii
+    $a6 = "coNNNECTIONGWQFGQW"  ascii
 
     $fun1 = "main.Grab"  ascii
     $fun2 = "main.getMasterKey"  ascii
@@ -409,7 +405,7 @@ rule aurora_stealer{
 
 
     condition:
-    uint16(0) == 0x5a4d and ( $is_go and (8 of ($a*)) and (4 of ($fun*)) )
+    uint16(0) == 0x5a4d and ( $is_go and (4 of ($a*)) and (4 of ($fun*)) )
 }
 ```
 
