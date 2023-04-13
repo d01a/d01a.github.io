@@ -384,6 +384,7 @@ rule aurora_stealer{
     hash = "29339458f4a33ee922f25d36b83f19797a15a279634e9c44ebd3816866a541cb"
     reference = "https://d01a.github.io/"
     Author = "d01a"
+    description = "detect Aurora stealer"
 
     strings:
     $is_go = "Go build" ascii
@@ -408,7 +409,7 @@ rule aurora_stealer{
 
 
     condition:
-    uint16(0) == 0x5a4d and filesize > 1000KB and ( $is_go and (8 of ($a*)) and (4 of ($fun*)) )
+    uint16(0) == 0x5a4d and ( $is_go and (8 of ($a*)) and (4 of ($fun*)) )
 }
 ```
 
