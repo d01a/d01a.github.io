@@ -7,7 +7,6 @@ Aurora Stealer is an information stealer Written in GO. It is a commercial steal
 
 ![Untitled](Aurora%20Stealer%203ac5d7639dee4d95b3cfd546053de596/Untitled.png)
 
-## Analysis
 
 ## Basic information
 

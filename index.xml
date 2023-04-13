@@ -13,7 +13,7 @@
     <author>Mohamed Adel</author>
     <guid>https://d01a.github.io/aurora-stealer/</guid>
     <description><![CDATA[Introduction Aurora Stealer is an information stealer Written in GO. It is a commercial stealer that costs around 250$ per month. The malware can steal Browser password and saved cookies, crypto information (Desktop and Web), Telegram, Steam and Specific files from the victim machine and can take a screenshot from it.
-Analysis Basic information The icon of the executable gives us a hit about how this is spreading. It has Photoshop icon, most probably it was spreading using Malvertising.]]></description>
+Basic information The icon of the executable gives us a hit about how this is spreading. It has Photoshop icon, most probably it was spreading using Malvertising.]]></description>
 </item>
 <item>
     <title>OriginLogger Loader</title>
