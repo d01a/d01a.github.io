@@ -387,9 +387,8 @@ rule aurora_stealer{
 
     strings:
     $is_go = "Go build" ascii
-    $s1 = "spermad"     ascii
-    $s2 = "coNNNECTIONGWQFGQW"  ascii
-    $a1 = "82.115.223.249:8081" ascii
+
+    $a1 = "8081" ascii
     $a2 = "C:\\Windows.old\\Users\\" ascii
     $a3 = "\\AppData\\Roaming\\" ascii
     $a4 = "wmic csproduct get uuid" ascii
@@ -398,9 +397,18 @@ rule aurora_stealer{
     $a7 = "wmic path win32_VideoController get name" ascii
     $a8 = "\\AppData\\Local\\" ascii
     $a9 = "\\Opera Stable\\Local State" ascii
+    $a10 = "coNNNECTIONGWQFGQW"  ascii
+
+    $fun1 = "main.Grab"  ascii
+    $fun2 = "main.getMasterKey"  ascii
+    $fun3 = "main.SendToServer_NEW"  ascii
+    $fun4 = "main.ConnectToServer"  ascii
+    $fun5 = "main.xDecrypt" ascii
+    $fun6 = "main.GetDisplayBounds" ascii
+
 
     condition:
-    uint16(0) == 0x5a4d and filesize > 1000KB and ( $is_go and any of ($s*) and (6 of ($a*)) )
+    uint16(0) == 0x5a4d and filesize > 1000KB and ( $is_go and (8 of ($a*)) and (4 of ($fun*)) )
 }
 ```
 
