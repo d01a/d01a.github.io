@@ -1,4 +1,4 @@
-# Aurora Stealer
+# Aurora Stealer Builder
 
 
 ## Introduction
