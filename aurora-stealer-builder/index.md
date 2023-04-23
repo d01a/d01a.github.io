@@ -654,8 +654,7 @@ new builder version
 rule aurora_stealer_builder_new{
     meta:
     malware = "Aurora stealer Builder new version 2023"
-    hash1 = "ebd1368979b5adb9586ce512b63876985a497e1727ffbd54732cd42eef992b81"
-    hash2 = "e7aa0529d4412a8cee5c20c4b7c817337fabb1598b44efbf639f4a7dac4292ad"
+    hash = "ebd1368979b5adb9586ce512b63876985a497e1727ffbd54732cd42eef992b81"
     reference = "https://d01a.github.io/"
     Author = "d01a"
     description = "detect Aurora stealer Builder new version 2023"
@@ -837,4 +836,4 @@ EXTERNAL_RUN_PE_X64
 
 ## Acknowledgments:
 
-[@gi7w0rm](https://twitter.com/gi7w0rm) for providing me with the samples and helping me format the article to make it better.
+[@gi7w0rm](https://twitter.com/gi7w0rm) for providing me with the samples and helping me formatting the article to make it better.
