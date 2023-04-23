@@ -837,4 +837,4 @@ EXTERNAL_RUN_PE_X64
 
 ## Acknowledgments:
 
-[@gi7w0rm](https://twitter.com/gi7w0rm) for providing me with the samples and helping me formatting the article to make it better.
+[@gi7w0rm](https://twitter.com/gi7w0rm) for providing me with the samples and helping me format the article to make it better.
