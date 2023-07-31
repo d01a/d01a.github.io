@@ -630,7 +630,8 @@ rule pikabot{
 
 - [https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html](https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html)
 - [https://www.zscaler.com/blogs/security-research/technical-analysis-pikabot](https://www.zscaler.com/blogs/security-research/technical-analysis-pikabot)
-- [https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/](https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/)[https://github.com/qilingframework/qiling](https://github.com/qilingframework/qiling)
+- [https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/](https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/)
+- [https://github.com/qilingframework/qiling](https://github.com/qilingframework/qiling)
 - [https://anti-debug.checkpoint.com/techniques/assembly.html](https://anti-debug.checkpoint.com/techniques/assembly.html)
 - [https://unprotect.it/technique/int-0x2d/](https://unprotect.it/technique/int-0x2d/)
 - [https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/](https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/)
