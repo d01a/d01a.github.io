@@ -326,26 +326,27 @@ The malware uses a series of anti-debugging checks before continuing, the checks
 
 ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%209.png)
 
-1.  check `BeingDebugged` flag.
-2.  Win32 API `CheckRemoteDebuggerPresent` and `IsDebuggerPresent`
-3.  delay the execution using `beep` function to escape Sandbox environments.
-4.  Anti-VM trick is that it imports different Libraries that don't exist in most of the VMs and Sandboxes. Libraries are: `NlsData0000.DLL` , `NetProjW.DLL` , `Ghofr.LL` and `fg122.DLL`.
-5.  Checks `NtGlobalFlag` as it is equal zero by default but set to 0x70 if a debugger is attached.
-6.  Calls `NtQueryInformationProcess` with `ProcessDebugPort` (0x7) Flag.
-7.  Function `sub_10002315` has a couple of _Anti debugging & Anti Emulation_ checks. The first it Uses `GetWriteWatch` and `VirtualAlloc` APIs To test for a Debugger attached or Sandbox environment by making a call to `VirtualAlloc` with `MEM_WRITE_WATCH` Flag specified, then call `GetWriteWatch` to retrieve the addresses of the allocated pages that has been written to since the allocation or the write-track state has been reset. [PoC](https://github.com/BaumFX/cpp-anti-debug/blob/master/anti_debug.cpp#L260).
+2.  check `BeingDebugged` flag.
+3.  Win32 API `CheckRemoteDebuggerPresent` and `IsDebuggerPresent`
+4.  delay the execution using `beep` function to escape Sandbox environments.
+5.  Anti-VM trick is that it imports different Libraries that don't exist in most of the VMs and Sandboxes. Libraries are: `NlsData0000.DLL` , `NetProjW.DLL` , `Ghofr.LL` and `fg122.DLL`.
+6.  Checks `NtGlobalFlag` as it is equal zero by default but set to 0x70 if a debugger is attached.
+7.  Calls `NtQueryInformationProcess` with `ProcessDebugPort` (0x7) Flag.
+8.  Function `sub_10002315` has a couple of _Anti debugging & Anti Emulation_ checks. The first it Uses `GetWriteWatch` and `VirtualAlloc` APIs To test for a Debugger attached or Sandbox environment by making a call to `VirtualAlloc` with `MEM_WRITE_WATCH` Flag specified, then call `GetWriteWatch` to retrieve the addresses of the allocated pages that has been written to since the allocation or the write-track state has been reset. [PoC](https://github.com/BaumFX/cpp-anti-debug/blob/master/anti_debug.cpp#L260).
     The second check is a series of function calls that are responsible for checking if the malware runs in sandbox or emulation environment. its return values will determine if the system is running normal or something is happening (Sandbox or emulation). It starts by checking the atom name using `GlobalGetAtomNameW` passing invalid `nAtom = 0` parameter and checking the return value _(Should be 0)_.
+
     ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2010.png)
 
-        The next is to call `GetEnvirnmentVariableA` with `lpName =  %random_file_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%` expecting it to return 0 as it is likely to have an environment variable name like that.
-        Then, it calls `GetBinaryTypeA` with `lpApplicationName = %random_file_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%` expecting it to return 0 as well.
-        Then it calls `HeapQueryInformation` with invalid `HEAP_INFORMATION_CLASS` value (69). Same thing with  `ReadProcessMemory` API passing invalid address `0x69696969`.
-        Then, it is called `GetThreadContext` passing reused allocated memory and not a pointer to `Context` structure.
+    The next is to call `GetEnvirnmentVariableA` with `lpName =  %random_file_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%` expecting it to return 0 as it is likely to have an environment variable name like that.
+    Then, it calls `GetBinaryTypeA` with `lpApplicationName = %random_file_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%` expecting it to return 0 as well.
+    Then it calls `HeapQueryInformation` with invalid `HEAP_INFORMATION_CLASS` value (69). Same thing with `ReadProcessMemory` API passing invalid address `0x69696969`.
+    Then, it is called `GetThreadContext` passing reused allocated memory and not a pointer to `Context` structure.
 
-8.  Uses `SetLastError` and `GetLastError` with _OutputDebugStringA("anti-debugging test.")_ to check if the debugger attached, the debug message will be printed successfully and. If the debugger is not attached, the error code will be changed indicating that no debugger is attached.
-9.  Check the number of processors using `GetSystemInfo`. Less than 2 return 0 indicating VM environment.
-10. Uses `__rdtsc` twice to detect single stepping in the debuggers. the same thing with `QueryerformanceCounter` and `GetTickCount64`.
-11. Check the memory size with `GlobalMemoryStatusEx` to check if it is less than 2 GB.
-12. Check the `Trap` flag (T) as indicator if single stepping.
+9.  Uses `SetLastError` and `GetLastError` with _OutputDebugStringA("anti-debugging test.")_ to check if the debugger attached, the debug message will be printed successfully and. If the debugger is not attached, the error code will be changed indicating that no debugger is attached.
+10. Check the number of processors using `GetSystemInfo`. Less than 2 return 0 indicating VM environment.
+11. Uses `__rdtsc` twice to detect single stepping in the debuggers. the same thing with `QueryerformanceCounter` and `GetTickCount64`.
+12. Check the memory size with `GlobalMemoryStatusEx` to check if it is less than 2 GB.
+13. Check the `Trap` flag (T) as indicator if single stepping.
 
 ### Unpacking Core module
 

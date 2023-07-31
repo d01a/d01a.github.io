@@ -9,7 +9,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://d01a.github.io/pikabot/" /><meta property="og:image" content="https://d01a.github.io/pikabot/featured-image.jpg"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-07-31T09:04:49+08:00" />
-<meta property="article:modified_time" content="2023-07-31T19:31:48+03:00" /><meta property="og:site_name" content="d01a" />
+<meta property="article:modified_time" content="2023-07-31T19:45:32+03:00" /><meta property="og:site_name" content="d01a" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://d01a.github.io/pikabot/featured-image.jpg"/>
@@ -35,7 +35,7 @@
                             "width":  1200 ,
                             "height":  628 
                         }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  3897 ,
-        "url": "https:\/\/d01a.github.io\/pikabot\/","datePublished": "2023-07-31T09:04:49+08:00","dateModified": "2023-07-31T19:31:48+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+        "url": "https:\/\/d01a.github.io\/pikabot\/","datePublished": "2023-07-31T09:04:49+08:00","dateModified": "2023-07-31T19:45:32+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Mohamed Adel","logo": {
                     "@type": "ImageObject",
@@ -782,7 +782,7 @@ Works well for most of the strings. But it fails at two cases where the strings 
         data-sizes="auto"
         alt="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%209.png"
         title="Untitled" width="1079" height="163" /></p>
-<ol>
+<ol start="2">
 <li>
 <p>check <code>BeingDebugged</code> flag.</p>
 </li>
@@ -803,8 +803,8 @@ Works well for most of the strings. But it fails at two cases where the strings 
 </li>
 <li>
 <p>Function <code>sub_10002315</code> has a couple of <em>Anti debugging &amp; Anti Emulation</em> checks. The first it Uses <code>GetWriteWatch</code> and <code>VirtualAlloc</code> APIs To test for a Debugger attached or Sandbox environment by making a call to <code>VirtualAlloc</code> with <code>MEM_WRITE_WATCH</code> Flag specified, then call <code>GetWriteWatch</code> to retrieve the addresses of the allocated pages that has been written to since the allocation or the write-track state has been reset. <a href="https://github.com/BaumFX/cpp-anti-debug/blob/master/anti_debug.cpp#L260" target="_blank" rel="noopener noreffer ">PoC</a>.
-The second check is a series of function calls that are responsible for checking if the malware runs in sandbox or emulation environment. its return values will determine if the system is running normal or something is happening (Sandbox or emulation). It starts by checking the atom name using <code>GlobalGetAtomNameW</code> passing invalid <code>nAtom = 0</code> parameter and checking the return value <em>(Should be 0)</em>.
-<img
+The second check is a series of function calls that are responsible for checking if the malware runs in sandbox or emulation environment. its return values will determine if the system is running normal or something is happening (Sandbox or emulation). It starts by checking the atom name using <code>GlobalGetAtomNameW</code> passing invalid <code>nAtom = 0</code> parameter and checking the return value <em>(Should be 0)</em>.</p>
+<p><img
         class="lazyload"
         src="/svg/loading.min.svg"
         data-src="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2010.png"
@@ -812,11 +812,10 @@ The second check is a series of function calls that are responsible for checking
         data-sizes="auto"
         alt="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2010.png"
         title="Untitled" width="1031" height="218" /></p>
-<pre><code>The next is to call `GetEnvirnmentVariableA` with `lpName =  %random_file_name_that_doesnt_exist?[]&lt;&gt;@\\;*!-{}#:/~%` expecting it to return 0 as it is likely to have an environment variable name like that.
-Then, it calls `GetBinaryTypeA` with `lpApplicationName = %random_file_name_that_doesnt_exist?[]&lt;&gt;@\\;*!-{}#:/~%` expecting it to return 0 as well.
-Then it calls `HeapQueryInformation` with invalid `HEAP_INFORMATION_CLASS` value (69). Same thing with  `ReadProcessMemory` API passing invalid address `0x69696969`.
-Then, it is called `GetThreadContext` passing reused allocated memory and not a pointer to `Context` structure.
-</code></pre>
+<p>The next is to call <code>GetEnvirnmentVariableA</code> with <code>lpName =  %random_file_name_that_doesnt_exist?[]&lt;&gt;@\\;*!-{}#:/~%</code> expecting it to return 0 as it is likely to have an environment variable name like that.
+Then, it calls <code>GetBinaryTypeA</code> with <code>lpApplicationName = %random_file_name_that_doesnt_exist?[]&lt;&gt;@\\;*!-{}#:/~%</code> expecting it to return 0 as well.
+Then it calls <code>HeapQueryInformation</code> with invalid <code>HEAP_INFORMATION_CLASS</code> value (69). Same thing with <code>ReadProcessMemory</code> API passing invalid address <code>0x69696969</code>.
+Then, it is called <code>GetThreadContext</code> passing reused allocated memory and not a pointer to <code>Context</code> structure.</p>
 </li>
 <li>
 <p>Uses <code>SetLastError</code> and <code>GetLastError</code> with <em>OutputDebugStringA(&ldquo;anti-debugging test.&rdquo;)</em> to check if the debugger attached, the debug message will be printed successfully and. If the debugger is not attached, the error code will be changed indicating that no debugger is attached.</p>
@@ -1283,8 +1282,8 @@ the following example script from <a href="https://research.openanalysis.net/pik
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2023-07-31&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/12f85b4018e254c94cd2f91310ce585fd1e14e59" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) 12f85b4018e254c94cd2f91310ce585fd1e14e59: update pikabot">
-                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>12f85b4</a></span>
+                <span>Updated on 2023-07-31&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/e0ad4065e1d3367fc84cc3aaee6a4250093ff1e6" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) e0ad4065e1d3367fc84cc3aaee6a4250093ff1e6: update pikabot">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>e0ad406</a></span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
