@@ -27,7 +27,7 @@ Checking the transcript log file created to see the full session.
 
 ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%202.png)
 
-The first script is the RAW data the retrieved from the JS file and the second one is the decoded one. Let's look at the script.  [pastebin](https://pastebin.com/emNXb6uN)
+The first script is the RAW data the retrieved from the JS file and the second one is the decoded one. Let's look at the script. [pastebin](https://pastebin.com/emNXb6uN)
 
 ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%203.png)
 
@@ -35,28 +35,28 @@ The first 6 Variables (numbered lines) weren't used anywhere in the code. They c
 
 - Note: Every variable contains not only one base64 encoded string but multiple, separated by a character. e.g., `$rifflers` uses `q` character as a separator and `$gentlewomanlike` that contains valid IP list uses `XO` as a separator. Just delete the separator and decode the string will work.
 
-| URL | Status |
-| --- | --- |
-| http[://]Supermysteries[.]creditcard | Not found |
-| https[://]205.194.71[.]236 | Not found |
-| https[://]punishes[.]vacations | Not found |
-| https[://]profiters[.]construction | Not found |
-| https[://]83.99.144[.]199 | Not found |
-| http[://]whittret[.]hamburg | Not found |
+| URL                                     | Status    |
+| --------------------------------------- | --------- |
+| http[://]Supermysteries[.]creditcard    | Not found |
+| https[://]205.194.71[.]236              | Not found |
+| https[://]punishes[.]vacations          | Not found |
+| https[://]profiters[.]construction      | Not found |
+| https[://]83.99.144[.]199               | Not found |
+| http[://]whittret[.]hamburg             | Not found |
 | https[://]AdelochordaIntroverse[.]pizza | Not found |
-| https[://]98.81.136[.]149 | Not found |
-| https[://]UnredeemedlyBeadeyes[.]land | Not found |
-| http[://]81.179.42[.]197 | Not found |
-| http[://]Leavings[.]florist | Not found |
-| http[://]55.112.208[.]170 | Not found |
-| http[://]wilded[.]parts | Not found |
+| https[://]98.81.136[.]149               | Not found |
+| https[://]UnredeemedlyBeadeyes[.]land   | Not found |
+| http[://]81.179.42[.]197                | Not found |
+| http[://]Leavings[.]florist             | Not found |
+| http[://]55.112.208[.]170               | Not found |
+| http[://]wilded[.]parts                 | Not found |
 | https[://]AlbergatriceRepaginated[.]xxx | Not found |
-| http[://]heptameron[.]se | Not found |
-| http[://]51.238.155[.]130 | Not found |
-| https[://]Bigeminy[.]tokyo | Not found |
-| https[://]144.206.78[.]90 | Not found |
-| https[://]zeatin[.]marketing | Not found |
-| http[://]countervene[.]agency | Not found |
+| http[://]heptameron[.]se                | Not found |
+| http[://]51.238.155[.]130               | Not found |
+| https[://]Bigeminy[.]tokyo              | Not found |
+| https[://]144.206.78[.]90               | Not found |
+| https[://]zeatin[.]marketing            | Not found |
+| http[://]countervene[.]agency           | Not found |
 
 Going back to the script, it iterates through the variable `$gentlewomanlike` using `XO` as a separator between each Base64-encoded string. There are more unused URLs in the script. But the used strings that initiate a request t them are:
 
@@ -79,14 +79,12 @@ start rundll32 $env:ProgramData\\forerankSomnolescent.EuthanasyUnblushingly,vips
 To get the final payload, I used `unpacme`. for the unpacked sample, see [unpacme result](https://www.unpac.me/results/0a65b4be-8ae6-4ced-8e2e-f333e85ac369#/)
 
 > NOTE: The unpacked DLL is broken so, if you want to debug the sample you can use this sample
-> 
 
 At the end of `DllEntryPoint` There is a call to the main function of the malware that contains all its functionality.
 
 ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%204.png)
 
 > All functions will have the same structure. First there is some code to obfuscate the numbers used later, then decoding the required strings and in the end, it will resolve the required functions and calls it.
-> 
 
 One of the first things the malware does is to resolve the required APIs. `Pikabot` resolves two functions that will be used to get the addresses of the required APIs; `GetProcAddress` and `LoadLibraryA` by searching through `Kernel32.dll` exports using a Hash of each API; `0x57889AF9` and `0x0B1C126D`, respectively.
 
@@ -107,7 +105,6 @@ The decoding operation takes a constant pattern as follows.
 I will use [Qiling](https://github.com/qilingframework/qiling) in the emulation. First let's try with a single string.
 
 > NOTE: The script did not run with me if the DLL is not located in a sub path of rootfs. For more information about the installation process look at the documentation or this blog.
-> 
 
 ```python
 from qiling import *
@@ -129,7 +126,6 @@ ql.emu_stop()
 The first stack string is `AddVectoredExceptionHandler`. Now we want to make go decode all the strings of the binary.
 
 > The method I will use here based on OALABS Blog
-> 
 
 How to locate where stack strings are decoded? Every Block of stack strings ends with `cmp REG, <STRING_LENGTH>` followed by a `jl`. So, if we locate this pattern, we can backtrack to find a sequence of `mov` instruction. How to do this?
 
@@ -145,7 +141,6 @@ I tried to emulate it with `qiling` but it has some problems:
 2. Too slow as `qiling` will load in every string decoding. (If loaded once, most of the strings will not be decoded as the address will be pointing to unmapped region of memory)
 
 > Qiling script will be helpful if you want to get a specific string.
-> 
 
 I wrote this script to manually decode the strings. can be found on my [github](https://github.com/d01a/IDAPython_scripts/blob/master/Pikabot_string_decode.py)
 
@@ -317,11 +312,11 @@ Works well for most of the strings. But it fails at two cases where the strings 
 
 the malware uses `LoadLibraryA` and `GetProcAddress` to get the function Address. They choses the appropriate DLL by passing a flag in the first Argument.
 
-| flag | DLL |
-| --- | --- |
-| 1 | Kernel32.dll |
-| 2 | User32.dll |
-| 3 | ntdll.dll |
+| flag | DLL          |
+| ---- | ------------ |
+| 1    | Kernel32.dll |
+| 2    | User32.dll   |
+| 3    | ntdll.dll    |
 
 ### Anti Analysis
 
@@ -331,24 +326,23 @@ The malware uses a series of anti-debugging checks before continuing, the checks
 
 ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%209.png)
 
-1. check `BeingDebugged` flag.
-2. Win32 API `CheckRemoteDebuggerPresent` and `IsDebuggerPresent`
-3. delay the execution using `beep` function to escape Sandbox environments.
-4. Anti-VM trick is that it imports different Libraries that don't exist in most of the VMs and Sandboxes. Libraries are: `NlsData0000.DLL` , `NetProjW.DLL` , `Ghofr.LL` and `fg122.DLL`.
-5. Checks `NtGlobalFlag` as it is equal zero by default but set to 0x70 if a debugger is attached.
-6. Calls `NtQueryInformationProcess` with `ProcessDebugPort` (0x7) Flag.
-7. Function `sub_10002315` has a couple of *Anti debugging & Anti Emulation* checks. The first it Uses `GetWriteWatch` and `VirtualAlloc` APIs To test for a Debugger attached or Sandbox environment by making a call to `VirtualAlloc` with `MEM_WRITE_WATCH` Flag specified, then call `GetWriteWatch` to retrieve the addresses of the allocated pages that has been written to since the allocation or the write-track state has been reset. [PoC](https://github.com/BaumFX/cpp-anti-debug/blob/master/anti_debug.cpp#L260).
-The second check is a series of function calls that are responsible for checking if the malware runs in sandbox or emulation environment. its return values will determine if the system is running normal or something is happening (Sandbox or emulation). It starts by checking the atom name using `GlobalGetAtomNameW` passing invalid `nAtom = 0` parameter and checking the return value *(Should be 0)*.
-    
+1.  check `BeingDebugged` flag.
+2.  Win32 API `CheckRemoteDebuggerPresent` and `IsDebuggerPresent`
+3.  delay the execution using `beep` function to escape Sandbox environments.
+4.  Anti-VM trick is that it imports different Libraries that don't exist in most of the VMs and Sandboxes. Libraries are: `NlsData0000.DLL` , `NetProjW.DLL` , `Ghofr.LL` and `fg122.DLL`.
+5.  Checks `NtGlobalFlag` as it is equal zero by default but set to 0x70 if a debugger is attached.
+6.  Calls `NtQueryInformationProcess` with `ProcessDebugPort` (0x7) Flag.
+7.  Function `sub_10002315` has a couple of _Anti debugging & Anti Emulation_ checks. The first it Uses `GetWriteWatch` and `VirtualAlloc` APIs To test for a Debugger attached or Sandbox environment by making a call to `VirtualAlloc` with `MEM_WRITE_WATCH` Flag specified, then call `GetWriteWatch` to retrieve the addresses of the allocated pages that has been written to since the allocation or the write-track state has been reset. [PoC](https://github.com/BaumFX/cpp-anti-debug/blob/master/anti_debug.cpp#L260).
+    The second check is a series of function calls that are responsible for checking if the malware runs in sandbox or emulation environment. its return values will determine if the system is running normal or something is happening (Sandbox or emulation). It starts by checking the atom name using `GlobalGetAtomNameW` passing invalid `nAtom = 0` parameter and checking the return value _(Should be 0)_.
     ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2010.png)
-    
-    The next is to call `GetEnvirnmentVariableA` with `lpName =  %random_file_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%` expecting it to return 0 as it is likely to have an environment variable name like that.
-    Then, it calls `GetBinaryTypeA` with `lpApplicationName = %random_file_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%` expecting it to return 0 as well.
-    Then it calls `HeapQueryInformation` with invalid `HEAP_INFORMATION_CLASS` value (69). Same thing with  `ReadProcessMemory` API passing invalid address `0x69696969`.
-    Then, it is called `GetThreadContext` passing reused allocated memory and not a pointer to `Context` structure.
-    
-8. Uses `SetLastError` and `GetLastError` with *OutputDebugStringA("anti-debugging test.")* to check if the debugger attached, the debug message will be printed successfully and. If the debugger is not attached, the error code will be changed indicating that no debugger is attached.
-9. Check the number of processors using `GetSystemInfo`. Less than 2 return 0 indicating VM environment.
+
+        The next is to call `GetEnvirnmentVariableA` with `lpName =  %random_file_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%` expecting it to return 0 as it is likely to have an environment variable name like that.
+        Then, it calls `GetBinaryTypeA` with `lpApplicationName = %random_file_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%` expecting it to return 0 as well.
+        Then it calls `HeapQueryInformation` with invalid `HEAP_INFORMATION_CLASS` value (69). Same thing with  `ReadProcessMemory` API passing invalid address `0x69696969`.
+        Then, it is called `GetThreadContext` passing reused allocated memory and not a pointer to `Context` structure.
+
+8.  Uses `SetLastError` and `GetLastError` with _OutputDebugStringA("anti-debugging test.")_ to check if the debugger attached, the debug message will be printed successfully and. If the debugger is not attached, the error code will be changed indicating that no debugger is attached.
+9.  Check the number of processors using `GetSystemInfo`. Less than 2 return 0 indicating VM environment.
 10. Uses `__rdtsc` twice to detect single stepping in the debuggers. the same thing with `QueryerformanceCounter` and `GetTickCount64`.
 11. Check the memory size with `GlobalMemoryStatusEx` to check if it is less than 2 GB.
 12. Check the `Trap` flag (T) as indicator if single stepping.
@@ -384,23 +378,20 @@ The core module is stored in two PNG images in the resource section. After The X
 After Decrypting the Core module, it is injected in `C:\\Windows\\SysWOW64\\SndVol.exe` process.
 
 > Note: the target process varies across the samples. I looked at another one and it was C:\\Windows\\System32\\WWAHost.exe
-> 
 
 To get the core module, you can put a breakpoint on `WriteProcessMemory` and dump the memory buffer containing the injected code. In my case I had to change the name of the target process as the original target process does not exist on my machine.
 
 > The whole binary is not written in one time so be patient OR write down the address of the injected code in the target process and put a breakpoint on ResumeThread and dump the address, it will be mapped to you will need to unmap it first. OR you can just dump the heap buffer that contains the decrypted data and dump the memory section, but it will need to be cleaned.
-> 
 
 ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2013.png)
 
 ### Third stage: Pikabot Core module
 
 > I uploaded the unpacked sample to [malware bazaar] (MalwareBazaar | SHA256 11cbb0233aff83d54e0d9189d3a08d02a6bbb0ffa5c3b161df462780e0ee2d2d (abuse.ch))
-> 
 
 The core module uses the same string encryption method so applying the previous script works well.
 The DLL contains a small number of functions and exports. `DllRegisterServer` contains a call to `sub_100025FF` function that has all the functionality of the Core module.
-The same API dynamic resolving function (*sub_100036BA*) is used but more DLLs are added to use network and other functionalities required. The Additional DLLs are:  `Wininet.dll`, `Advapi32.dll` and `NetApi32.dll`
+The same API dynamic resolving function (_sub_100036BA_) is used but more DLLs are added to use network and other functionalities required. The Additional DLLs are: `Wininet.dll`, `Advapi32.dll` and `NetApi32.dll`
 
 ### System language check
 
@@ -428,11 +419,9 @@ Then, it performs some basic anti debugging checks (`sub_10001994`).
 
 And it uses two Anti VM checks (`sub_10001AA6`):
 
-- It executes `cpuid` instruction with `EAX = 0x40000000` to return Hypervisor brand and compare the returned value in the *ECX == 0x4D566572* and *EDX == 0x65726177* which are VMware CPUID value (for more explanation and how to defeat it, check this [blog](https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/)).
+- It executes `cpuid` instruction with `EAX = 0x40000000` to return Hypervisor brand and compare the returned value in the _ECX == 0x4D566572_ and _EDX == 0x65726177_ which are VMware CPUID value (for more explanation and how to defeat it, check this [blog](https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/)).
 - Check the existence of Virtual Box related registry key `HARDWARE\\\\ACPI\\\\DSDT\\\\VBOX__`
-    
-    ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2015.png)
-    
+  ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2015.png)
 
 The malware then checks the command execution functionality using a command that vary across the samples.
 
@@ -455,11 +444,11 @@ It uses a hardcoded mutex value `{99C10657-633C-4165-9D0A-082238CB9FE0}` to make
 
 ### Collect victim info.
 
-The next step is to collect some information about the victim system to send them to the C2 server (`sub_10008263`).  The first thing you will see at the beginning of this function is a big stack string. This string is the schema that will be filled with the victim info, decoding this string will give us the following.
+The next step is to collect some information about the victim system to send them to the C2 server (`sub_10008263`). The first thing you will see at the beginning of this function is a big stack string. This string is the schema that will be filled with the victim info, decoding this string will give us the following.
 
 ![Untitled](PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2018.png)
 
-The **stream** =  `bb_d2@T@dd48940b389148069ffc1db3f2f38c0e` and **version** = `0.1.7` are predefined in the binary.
+The **stream** = `bb_d2@T@dd48940b389148069ffc1db3f2f38c0e` and **version** = `0.1.7` are predefined in the binary.
 The information collection process is done as follows (`sub_1000241E`):
 
 - Get the `os_version` from `OSMajorVersion` , `OSMinorVersion` and `OSBuildNumber` from the PEB structure and `GetProductInfo` API.
@@ -473,7 +462,7 @@ The information collection process is done as follows (`sub_1000241E`):
 - Get the `arch` by calling `GetSystemInfo` API.
 - Get the `domain_name` by calling `GetComputerNameExW` API.
 - Get `domain_controller_name` by calling `DsGetDcNameW` API or return `unknown` if not available.
-Each data item fills its location by calling `wsprintfW` function so, it will become like the following but with the victim collected data.
+  Each data item fills its location by calling `wsprintfW` function so, it will become like the following but with the victim collected data.
 
 ```json
 "{"uuid": "uuid",
@@ -498,7 +487,7 @@ Each data item fills its location by calling `wsprintfW` function so, it will be
 
 ### C2 server communication
 
-The data collected is encoded using standard Base64 then encrypted using AES using the first 32-byte as the key and the first 16-byte of the key as the IV. then the data decoded with Base64 and sent to C2 server IP = `37.1.215.220` using *POST* request to the subdirectory `messages/INJtv97YfpOzznVMY`. The response is decoded in the same way too. The initial beacon contains `user_id=Him3xrn9e&team_id=JqLtxw1h` hardcoded string added to IP parameters.
+The data collected is encoded using standard Base64 then encrypted using AES using the first 32-byte as the key and the first 16-byte of the key as the IV. then the data decoded with Base64 and sent to C2 server IP = `37.1.215.220` using _POST_ request to the subdirectory `messages/INJtv97YfpOzznVMY`. The response is decoded in the same way too. The initial beacon contains `user_id=Him3xrn9e&team_id=JqLtxw1h` hardcoded string added to IP parameters.
 The request header is included in the binary as follows:
 
 ```
@@ -519,20 +508,20 @@ Mozilla/4.0 (Compatible; MSIE 8.0; Windows NT 5.2; Trident/6.0)
 
 The response of the initial sent packet (knock) contains some commands to be executed on the victim machine:
 
-| Response | command |
-| --- | --- |
-| whoami | execute whoami /all command |
-| ipconfig | execute ipconfig /all command |
+| Response    | command                                                                                                                             |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| whoami      | execute whoami /all command                                                                                                         |
+| ipconfig    | execute ipconfig /all command                                                                                                       |
 | screenshoot | take a snapshot of all the running processes of the victim machine using CreateToolhel32Snashot, Process32FirstW and Process32NextW |
 
 The data requested decoded in the following form to be sent to the attacker but to different subdirectory `messages/ADXDAG6`
 
 ```json
-{"uuid": "%s", "additional_type": "%s", "data": " "}
+{ "uuid": "%s", "additional_type": "%s", "data": " " }
 ```
 
 **How The Command are executed**
-The malware add  `%SystemRoot%\\SysWoW64\\cmd.exe` to the user environment variables and creates a pipe for covert communication and receiving the output. To get the output is uses the named pipe in `PeekNamedPipe` in an infinite loop and the break condition is when `WaitForSingleObject` sense an object state changing.
+The malware add `%SystemRoot%\\SysWoW64\\cmd.exe` to the user environment variables and creates a pipe for covert communication and receiving the output. To get the output is uses the named pipe in `PeekNamedPipe` in an infinite loop and the break condition is when `WaitForSingleObject` sense an object state changing.
 
 ### C2 commands
 
@@ -547,7 +536,7 @@ If the command is **task** the malware do a specified task received from the C2 
 The output of the commands is sent to another subdirectory `messages/TRCsUVyMigZyuUQ` with the same encoding schema followed before. The commands are the following:
 
 **knock timeout**
-Seems to be not fully implemented but from the current state, it sends  `Knock Timeout Changed!` to the server in the following JSON.  It's used to delay any code execution on the victim machine.
+Seems to be not fully implemented but from the current state, it sends `Knock Timeout Changed!` to the server in the following JSON. It's used to delay any code execution on the victim machine.
 
 ```
  {"uuid": "%s", "task_id": %s, "execution_code": %d, "data": "
@@ -629,14 +618,20 @@ rule pikabot{
 
 ## IoCs
 
-| IoC | description |
-| --- | --- |
-| dff2122bb516f71675f766cc1dd87c07ce3c985f98607c25e53dcca87239c5f6 | packed loader |
+| IoC                                                              | description     |
+| ---------------------------------------------------------------- | --------------- |
+| dff2122bb516f71675f766cc1dd87c07ce3c985f98607c25e53dcca87239c5f6 | packed loader   |
 | 2411b23bab7703e94897573f3758e1849fdc6f407ea1d1e5da20a4e07ecf3c09 | unpacked loader |
 | 59f42ecde152f78731e54ea27e761bba748c9309a6ad1c2fd17f0e8b90f8aed1 | unpacked loader |
-| 37.1.215[.]220 | C2 Server IP |
-| {99C10657-633C-4165-9D0A-082238CB9FE0} | mutex value |
+| 37.1.215[.]220                                                   | C2 Server IP    |
+| {99C10657-633C-4165-9D0A-082238CB9FE0}                           | mutex value     |
 
 ## References
 
-[https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html](https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html)[https://www.zscaler.com/blogs/security-research/technical-analysis-pikabot](https://www.zscaler.com/blogs/security-research/technical-analysis-pikabot)[https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/](https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/)[https://github.com/qilingframework/qiling](https://github.com/qilingframework/qiling)[https://anti-debug.checkpoint.com/techniques/assembly.html](https://anti-debug.checkpoint.com/techniques/assembly.html)[https://unprotect.it/technique/int-0x2d/](https://unprotect.it/technique/int-0x2d/)[https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/](https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/)
+- [https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html](https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html)
+- [https://www.zscaler.com/blogs/security-research/technical-analysis-pikabot](https://www.zscaler.com/blogs/security-research/technical-analysis-pikabot)
+- [https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/](https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/)[https://github.com/qilingframework/qiling](https://github.com/qilingframework/qiling)
+- [https://anti-debug.checkpoint.com/techniques/assembly.html](https://anti-debug.checkpoint.com/techniques/assembly.html)
+- [https://unprotect.it/technique/int-0x2d/](https://unprotect.it/technique/int-0x2d/)
+- [https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/](https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/)
+

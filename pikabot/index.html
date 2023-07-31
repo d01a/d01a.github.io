@@ -9,7 +9,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://d01a.github.io/pikabot/" /><meta property="og:image" content="https://d01a.github.io/pikabot/featured-image.jpg"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-07-31T09:04:49+08:00" />
-<meta property="article:modified_time" content="2023-07-31T19:14:51+03:00" /><meta property="og:site_name" content="d01a" />
+<meta property="article:modified_time" content="2023-07-31T19:31:48+03:00" /><meta property="og:site_name" content="d01a" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://d01a.github.io/pikabot/featured-image.jpg"/>
@@ -34,8 +34,8 @@
                             "url": "https:\/\/d01a.github.io\/pikabot\/featured-image.jpg",
                             "width":  1200 ,
                             "height":  628 
-                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  3889 ,
-        "url": "https:\/\/d01a.github.io\/pikabot\/","datePublished": "2023-07-31T09:04:49+08:00","dateModified": "2023-07-31T19:14:51+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  3896 ,
+        "url": "https:\/\/d01a.github.io\/pikabot\/","datePublished": "2023-07-31T09:04:49+08:00","dateModified": "2023-07-31T19:31:48+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Mohamed Adel","logo": {
                     "@type": "ImageObject",
@@ -113,7 +113,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Pikabot deep analysis</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/malware-analysis/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Malware Analysis</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-07-31">2023-07-31</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3889 words&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-07-31">2023-07-31</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3896 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;19 minutes&nbsp;<span id="/pikabot/" class="leancloud_visitors" data-flag-title="Pikabot deep analysis">
                         <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;views
                     </span>&nbsp;</div>
@@ -194,7 +194,7 @@ I Enabled PowerShell Logging and Transcript logging that get the full PowerShell
         data-sizes="auto"
         alt="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%202.png"
         title="Untitled" width="1895" height="630" /></p>
-<p>The first script is the RAW data the retrieved from the JS file and the second one is the decoded one. Let&rsquo;s look at the script.  <a href="https://pastebin.com/emNXb6uN" target="_blank" rel="noopener noreffer ">pastebin</a></p>
+<p>The first script is the RAW data the retrieved from the JS file and the second one is the decoded one. Let&rsquo;s look at the script. <a href="https://pastebin.com/emNXb6uN" target="_blank" rel="noopener noreffer ">pastebin</a></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -803,8 +803,8 @@ Works well for most of the strings. But it fails at two cases where the strings 
 </li>
 <li>
 <p>Function <code>sub_10002315</code> has a couple of <em>Anti debugging &amp; Anti Emulation</em> checks. The first it Uses <code>GetWriteWatch</code> and <code>VirtualAlloc</code> APIs To test for a Debugger attached or Sandbox environment by making a call to <code>VirtualAlloc</code> with <code>MEM_WRITE_WATCH</code> Flag specified, then call <code>GetWriteWatch</code> to retrieve the addresses of the allocated pages that has been written to since the allocation or the write-track state has been reset. <a href="https://github.com/BaumFX/cpp-anti-debug/blob/master/anti_debug.cpp#L260" target="_blank" rel="noopener noreffer ">PoC</a>.
-The second check is a series of function calls that are responsible for checking if the malware runs in sandbox or emulation environment. its return values will determine if the system is running normal or something is happening (Sandbox or emulation). It starts by checking the atom name using <code>GlobalGetAtomNameW</code> passing invalid <code>nAtom = 0</code> parameter and checking the return value <em>(Should be 0)</em>.</p>
-<p><img
+The second check is a series of function calls that are responsible for checking if the malware runs in sandbox or emulation environment. its return values will determine if the system is running normal or something is happening (Sandbox or emulation). It starts by checking the atom name using <code>GlobalGetAtomNameW</code> passing invalid <code>nAtom = 0</code> parameter and checking the return value <em>(Should be 0)</em>.
+<img
         class="lazyload"
         src="/svg/loading.min.svg"
         data-src="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2010.png"
@@ -812,10 +812,11 @@ The second check is a series of function calls that are responsible for checking
         data-sizes="auto"
         alt="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2010.png"
         title="Untitled" width="1031" height="218" /></p>
-<p>The next is to call <code>GetEnvirnmentVariableA</code> with <code>lpName =  %random_file_name_that_doesnt_exist?[]&lt;&gt;@\\;*!-{}#:/~%</code> expecting it to return 0 as it is likely to have an environment variable name like that.
-Then, it calls <code>GetBinaryTypeA</code> with <code>lpApplicationName = %random_file_name_that_doesnt_exist?[]&lt;&gt;@\\;*!-{}#:/~%</code> expecting it to return 0 as well.
-Then it calls <code>HeapQueryInformation</code> with invalid <code>HEAP_INFORMATION_CLASS</code> value (69). Same thing with  <code>ReadProcessMemory</code> API passing invalid address <code>0x69696969</code>.
-Then, it is called <code>GetThreadContext</code> passing reused allocated memory and not a pointer to <code>Context</code> structure.</p>
+<pre><code>The next is to call `GetEnvirnmentVariableA` with `lpName =  %random_file_name_that_doesnt_exist?[]&lt;&gt;@\\;*!-{}#:/~%` expecting it to return 0 as it is likely to have an environment variable name like that.
+Then, it calls `GetBinaryTypeA` with `lpApplicationName = %random_file_name_that_doesnt_exist?[]&lt;&gt;@\\;*!-{}#:/~%` expecting it to return 0 as well.
+Then it calls `HeapQueryInformation` with invalid `HEAP_INFORMATION_CLASS` value (69). Same thing with  `ReadProcessMemory` API passing invalid address `0x69696969`.
+Then, it is called `GetThreadContext` passing reused allocated memory and not a pointer to `Context` structure.
+</code></pre>
 </li>
 <li>
 <p>Uses <code>SetLastError</code> and <code>GetLastError</code> with <em>OutputDebugStringA(&ldquo;anti-debugging test.&rdquo;)</em> to check if the debugger attached, the debug message will be printed successfully and. If the debugger is not attached, the error code will be changed indicating that no debugger is attached.</p>
@@ -904,7 +905,7 @@ After Decrypting the Core module, it is injected in <code>C:\\Windows\\SysWOW64\
 </blockquote>
 <p>The core module uses the same string encryption method so applying the previous script works well.
 The DLL contains a small number of functions and exports. <code>DllRegisterServer</code> contains a call to <code>sub_100025FF</code> function that has all the functionality of the Core module.
-The same API dynamic resolving function (<em>sub_100036BA</em>) is used but more DLLs are added to use network and other functionalities required. The Additional DLLs are:  <code>Wininet.dll</code>, <code>Advapi32.dll</code> and <code>NetApi32.dll</code></p>
+The same API dynamic resolving function (<em>sub_100036BA</em>) is used but more DLLs are added to use network and other functionalities required. The Additional DLLs are: <code>Wininet.dll</code>, <code>Advapi32.dll</code> and <code>NetApi32.dll</code></p>
 <h3 id="system-language-check">System language check</h3>
 <p>The first thing the malware does is to check the language code of the victim machine.</p>
 <p><img
@@ -934,20 +935,16 @@ The same API dynamic resolving function (<em>sub_100036BA</em>) is used but more
 </ul>
 <p>And it uses two Anti VM checks (<code>sub_10001AA6</code>):</p>
 <ul>
-<li>
-<p>It executes <code>cpuid</code> instruction with <code>EAX = 0x40000000</code> to return Hypervisor brand and compare the returned value in the <em>ECX == 0x4D566572</em> and <em>EDX == 0x65726177</em> which are VMware CPUID value (for more explanation and how to defeat it, check this <a href="https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/" target="_blank" rel="noopener noreffer ">blog</a>).</p>
-</li>
-<li>
-<p>Check the existence of Virtual Box related registry key <code>HARDWARE\\\\ACPI\\\\DSDT\\\\VBOX__</code></p>
-<p><img
+<li>It executes <code>cpuid</code> instruction with <code>EAX = 0x40000000</code> to return Hypervisor brand and compare the returned value in the <em>ECX == 0x4D566572</em> and <em>EDX == 0x65726177</em> which are VMware CPUID value (for more explanation and how to defeat it, check this <a href="https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/" target="_blank" rel="noopener noreffer ">blog</a>).</li>
+<li>Check the existence of Virtual Box related registry key <code>HARDWARE\\\\ACPI\\\\DSDT\\\\VBOX__</code>
+<img
         class="lazyload"
         src="/svg/loading.min.svg"
         data-src="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2015.png"
         data-srcset="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2015.png, /pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2015.png 1.5x, /pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2015.png 2x"
         data-sizes="auto"
         alt="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2015.png"
-        title="Untitled" width="601" height="47" /></p>
-</li>
+        title="Untitled" width="601" height="47" /></li>
 </ul>
 <p>The malware then checks the command execution functionality using a command that vary across the samples.</p>
 <div class="highlight"><div class="chroma">
@@ -982,7 +979,7 @@ The same API dynamic resolving function (<em>sub_100036BA</em>) is used but more
         alt="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2017.png"
         title="Untitled" width="635" height="94" /></p>
 <h3 id="collect-victim-info">Collect victim info.</h3>
-<p>The next step is to collect some information about the victim system to send them to the C2 server (<code>sub_10008263</code>).  The first thing you will see at the beginning of this function is a big stack string. This string is the schema that will be filled with the victim info, decoding this string will give us the following.</p>
+<p>The next step is to collect some information about the victim system to send them to the C2 server (<code>sub_10008263</code>). The first thing you will see at the beginning of this function is a big stack string. This string is the schema that will be filled with the victim info, decoding this string will give us the following.</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -991,7 +988,7 @@ The same API dynamic resolving function (<em>sub_100036BA</em>) is used but more
         data-sizes="auto"
         alt="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2018.png"
         title="Untitled" width="1042" height="84" /></p>
-<p>The <strong>stream</strong> =  <code>bb_d2@T@dd48940b389148069ffc1db3f2f38c0e</code> and <strong>version</strong> = <code>0.1.7</code> are predefined in the binary.
+<p>The <strong>stream</strong> = <code>bb_d2@T@dd48940b389148069ffc1db3f2f38c0e</code> and <strong>version</strong> = <code>0.1.7</code> are predefined in the binary.
 The information collection process is done as follows (<code>sub_1000241E</code>):</p>
 <ul>
 <li>Get the <code>os_version</code> from <code>OSMajorVersion</code> , <code>OSMinorVersion</code> and <code>OSBuildNumber</code> from the PEB structure and <code>GetProductInfo</code> API.</li>
@@ -1104,11 +1101,11 @@ The request header is included in the binary as follows:</p>
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;uuid&#34;</span><span class="p">:</span> <span class="s2">&#34;%s&#34;</span><span class="p">,</span> <span class="nt">&#34;additional_type&#34;</span><span class="p">:</span> <span class="s2">&#34;%s&#34;</span><span class="p">,</span> <span class="nt">&#34;data&#34;</span><span class="p">:</span> <span class="s2">&#34; &#34;</span><span class="p">}</span>
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span> <span class="nt">&#34;uuid&#34;</span><span class="p">:</span> <span class="s2">&#34;%s&#34;</span><span class="p">,</span> <span class="nt">&#34;additional_type&#34;</span><span class="p">:</span> <span class="s2">&#34;%s&#34;</span><span class="p">,</span> <span class="nt">&#34;data&#34;</span><span class="p">:</span> <span class="s2">&#34; &#34;</span> <span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><strong>How The Command are executed</strong>
-The malware add  <code>%SystemRoot%\\SysWoW64\\cmd.exe</code> to the user environment variables and creates a pipe for covert communication and receiving the output. To get the output is uses the named pipe in <code>PeekNamedPipe</code> in an infinite loop and the break condition is when <code>WaitForSingleObject</code> sense an object state changing.</p>
+The malware add <code>%SystemRoot%\\SysWoW64\\cmd.exe</code> to the user environment variables and creates a pipe for covert communication and receiving the output. To get the output is uses the named pipe in <code>PeekNamedPipe</code> in an infinite loop and the break condition is when <code>WaitForSingleObject</code> sense an object state changing.</p>
 <h3 id="c2-commands">C2 commands</h3>
 <p>The Malware contains some other commands to do but not all of them are implemented yet.</p>
 <h3 id="task">task</h3>
@@ -1123,7 +1120,7 @@ The malware add  <code>%SystemRoot%\\SysWoW64\\cmd.exe</code> to the user enviro
         title="Untitled" width="477" height="531" /></p>
 <p>The output of the commands is sent to another subdirectory <code>messages/TRCsUVyMigZyuUQ</code> with the same encoding schema followed before. The commands are the following:</p>
 <p><strong>knock timeout</strong>
-Seems to be not fully implemented but from the current state, it sends  <code>Knock Timeout Changed!</code> to the server in the following JSON.  It&rsquo;s used to delay any code execution on the victim machine.</p>
+Seems to be not fully implemented but from the current state, it sends <code>Knock Timeout Changed!</code> to the server in the following JSON. It&rsquo;s used to delay any code execution on the victim machine.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -1273,13 +1270,20 @@ the following example script from <a href="https://research.openanalysis.net/pik
 </tbody>
 </table>
 <h2 id="references">References</h2>
-<p><a href="https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html" target="_blank" rel="noopener noreffer ">https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html</a><a href="https://www.zscaler.com/blogs/security-research/technical-analysis-pikabot" target="_blank" rel="noopener noreffer ">https://www.zscaler.com/blogs/security-research/technical-analysis-pikabot</a><a href="https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/" target="_blank" rel="noopener noreffer ">https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/</a><a href="https://github.com/qilingframework/qiling" target="_blank" rel="noopener noreffer ">https://github.com/qilingframework/qiling</a><a href="https://anti-debug.checkpoint.com/techniques/assembly.html" target="_blank" rel="noopener noreffer ">https://anti-debug.checkpoint.com/techniques/assembly.html</a><a href="https://unprotect.it/technique/int-0x2d/" target="_blank" rel="noopener noreffer ">https://unprotect.it/technique/int-0x2d/</a><a href="https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/" target="_blank" rel="noopener noreffer ">https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/</a></p>
+<ul>
+<li><a href="https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html" target="_blank" rel="noopener noreffer ">https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html</a></li>
+<li><a href="https://www.zscaler.com/blogs/security-research/technical-analysis-pikabot" target="_blank" rel="noopener noreffer ">https://www.zscaler.com/blogs/security-research/technical-analysis-pikabot</a></li>
+<li><a href="https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/" target="_blank" rel="noopener noreffer ">https://n1ght-w0lf.github.io/tutorials/qiling-for-malware-analysis-part-1/</a><a href="https://github.com/qilingframework/qiling" target="_blank" rel="noopener noreffer ">https://github.com/qilingframework/qiling</a></li>
+<li><a href="https://anti-debug.checkpoint.com/techniques/assembly.html" target="_blank" rel="noopener noreffer ">https://anti-debug.checkpoint.com/techniques/assembly.html</a></li>
+<li><a href="https://unprotect.it/technique/int-0x2d/" target="_blank" rel="noopener noreffer ">https://unprotect.it/technique/int-0x2d/</a></li>
+<li><a href="https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/" target="_blank" rel="noopener noreffer ">https://rayanfam.com/topics/defeating-malware-anti-vm-techniques-cpuid-based-instructions/</a></li>
+</ul>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2023-07-31&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/913092cd61dcb5f11b55b2208cc7d083fc8e477f" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) 913092cd61dcb5f11b55b2208cc7d083fc8e477f: Pikabot blog">
-                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>913092c</a></span>
+                <span>Updated on 2023-07-31&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/12f85b4018e254c94cd2f91310ce585fd1e14e59" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) 12f85b4018e254c94cd2f91310ce585fd1e14e59: update pikabot">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>12f85b4</a></span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
