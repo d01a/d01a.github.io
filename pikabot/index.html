@@ -9,7 +9,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://d01a.github.io/pikabot/" /><meta property="og:image" content="https://d01a.github.io/pikabot/featured-image.jpg"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-07-31T09:04:49+08:00" />
-<meta property="article:modified_time" content="2023-07-31T19:45:32+03:00" /><meta property="og:site_name" content="d01a" />
+<meta property="article:modified_time" content="2023-08-01T03:18:11+03:00" /><meta property="og:site_name" content="d01a" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://d01a.github.io/pikabot/featured-image.jpg"/>
@@ -34,8 +34,8 @@
                             "url": "https:\/\/d01a.github.io\/pikabot\/featured-image.jpg",
                             "width":  1200 ,
                             "height":  628 
-                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  3897 ,
-        "url": "https:\/\/d01a.github.io\/pikabot\/","datePublished": "2023-07-31T09:04:49+08:00","dateModified": "2023-07-31T19:45:32+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  3884 ,
+        "url": "https:\/\/d01a.github.io\/pikabot\/","datePublished": "2023-07-31T09:04:49+08:00","dateModified": "2023-08-01T03:18:11+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Mohamed Adel","logo": {
                     "@type": "ImageObject",
@@ -113,7 +113,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Pikabot deep analysis</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/malware-analysis/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Malware Analysis</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-07-31">2023-07-31</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3897 words&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-07-31">2023-07-31</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3884 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;19 minutes&nbsp;<span id="/pikabot/" class="leancloud_visitors" data-flag-title="Pikabot deep analysis">
                         <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;views
                     </span>&nbsp;</div>
@@ -1199,41 +1199,33 @@ the following example script from <a href="https://research.openanalysis.net/pik
 </span><span class="lnt">24
 </span><span class="lnt">25
 </span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">rule</span> <span class="n">pikabot</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">meta</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">        <span class="n">malware</span> <span class="o">=</span> <span class="s2">&#34;Pikabot&#34;</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">hash</span> <span class="o">=</span> <span class="s2">&#34;59f42ecde152f78731e54ea27e761bba748c9309a6ad1c2fd17f0e8b90f8aed1&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">hash</span> <span class="o">=</span> <span class="s2">&#34;11cbb0233aff83d54e0d9189d3a08d02a6bbb0ffa5c3b161df462780e0ee2d2d&#34;</span>
 </span></span><span class="line"><span class="cl">        <span class="n">reference</span> <span class="o">=</span> <span class="s2">&#34;https://d01a.github.io/&#34;</span>
 </span></span><span class="line"><span class="cl">        <span class="n">author</span> <span class="o">=</span> <span class="s2">&#34;d01a&#34;</span>
 </span></span><span class="line"><span class="cl">        <span class="n">description</span> <span class="o">=</span> <span class="s2">&#34;detect pikabot loader and core module&#34;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">strings</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s1</span> <span class="o">=</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="mi">8</span><span class="n">A</span> <span class="mi">44</span> <span class="mi">0</span><span class="n">D</span> <span class="n">C0</span>
-</span></span><span class="line"><span class="cl">			<span class="mi">34</span> <span class="err">??</span>
-</span></span><span class="line"><span class="cl">			<span class="mi">88</span> <span class="mi">84</span> <span class="mi">0</span><span class="n">D</span> <span class="err">??</span> <span class="err">??</span> <span class="err">??</span> <span class="err">??</span>
-</span></span><span class="line"><span class="cl">			<span class="mi">4</span><span class="err">?</span>
-</span></span><span class="line"><span class="cl">			<span class="mi">83</span> <span class="err">??</span> <span class="err">??</span>
-</span></span><span class="line"><span class="cl">			<span class="mi">7</span><span class="n">C</span> <span class="err">??</span>
-</span></span><span class="line"><span class="cl">		<span class="p">}</span>
-</span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s2</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="mi">8</span><span class="n">A</span> <span class="mi">44</span> <span class="mi">0</span><span class="n">D</span> <span class="n">C0</span>
+</span></span><span class="line"><span class="cl">      <span class="err">??</span> <span class="err">??</span> 
+</span></span><span class="line"><span class="cl">      <span class="mi">88</span> <span class="mi">84</span> <span class="mi">0</span><span class="n">D</span> <span class="err">??</span> <span class="err">??</span> <span class="n">FF</span> <span class="n">FF</span> 
+</span></span><span class="line"><span class="cl">      <span class="mi">4</span><span class="err">?</span>
 </span></span><span class="line"><span class="cl">      <span class="mi">83</span> <span class="err">??</span> <span class="err">??</span>
-</span></span><span class="line"><span class="cl">			<span class="mi">74</span> <span class="err">??</span>
-</span></span><span class="line"><span class="cl">			<span class="mi">4</span><span class="err">?</span>
-</span></span><span class="line"><span class="cl">			<span class="mi">83</span> <span class="err">??</span> <span class="err">??</span>
-</span></span><span class="line"><span class="cl">			<span class="mi">7</span><span class="n">C</span> <span class="err">??</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="mi">7</span><span class="n">C</span> <span class="err">??</span>
+</span></span><span class="line"><span class="cl">      <span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">16</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="p">(</span><span class="n">C7</span> <span class="mi">45</span> <span class="o">|</span> <span class="mi">88</span> <span class="mi">95</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
 </span></span><span class="line"><span class="cl">    <span class="n">condition</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">        <span class="n">uint16</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x5A4D</span>
 </span></span><span class="line"><span class="cl">        <span class="ow">and</span> <span class="p">(</span><span class="n">uint32</span><span class="p">(</span><span class="n">uint32</span><span class="p">(</span><span class="mh">0x3C</span><span class="p">))</span> <span class="o">==</span> <span class="mh">0x00004550</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="ow">and</span> <span class="nb">any</span> <span class="n">of</span> <span class="n">them</span>
+</span></span><span class="line"><span class="cl">        <span class="ow">and</span> <span class="nb">all</span> <span class="n">of</span> <span class="n">them</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -1282,8 +1274,8 @@ the following example script from <a href="https://research.openanalysis.net/pik
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2023-07-31&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/e0ad4065e1d3367fc84cc3aaee6a4250093ff1e6" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) e0ad4065e1d3367fc84cc3aaee6a4250093ff1e6: update pikabot">
-                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>e0ad406</a></span>
+                <span>Updated on 2023-08-01&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/6c4e2676970a2f44ae50837246b8210a4429abe9" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) 6c4e2676970a2f44ae50837246b8210a4429abe9: update pikabot yara rule">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>6c4e267</a></span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
