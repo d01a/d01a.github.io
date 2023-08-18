@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation - d01a</title><meta name="Description" content="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike"><meta property="og:title" content="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation" />
+<meta property="og:description" content="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://d01a.github.io/syscalls/" /><meta property="og:image" content="https://d01a.github.io/syscalls/featured-image.jpg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-08-18T09:04:49+08:00" />
+<meta property="article:modified_time" content="2023-08-18T22:58:12+03:00" /><meta property="og:site_name" content="d01a" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://d01a.github.io/syscalls/featured-image.jpg"/>
+<meta name="twitter:title" content="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"/>
+<meta name="twitter:description" content="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike"/>
+<meta name="application-name" content="d01a">
+<meta name="apple-mobile-web-app-title" content="d01a"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://d01a.github.io/syscalls/" /><link rel="prev" href="https://d01a.github.io/pikabot/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/d01a.github.io\/syscalls\/"
+        },"image": [{
+                            "@type": "ImageObject",
+                            "url": "https:\/\/d01a.github.io\/syscalls\/featured-image.jpg",
+                            "width":  1200 ,
+                            "height":  628 
+                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering, Research, Post-exploitation","wordcount":  3244 ,
+        "url": "https:\/\/d01a.github.io\/syscalls\/","datePublished": "2023-08-18T09:04:49+08:00","dateModified": "2023-08-18T22:58:12+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Mohamed Adel","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/d01a.github.io\/images\/avatar.png",
+                    "width":  715 ,
+                    "height":  715 
+                }},"author": {
+                "@type": "Person",
+                "name": "Mohamed Adel"
+            },"description": "Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike"
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="d01a">d01a</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="d01a">d01a</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/reverse-engineering/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Reverse Engineering</a>&nbsp;<a href="/categories/research/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Research</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-08-18">2023-08-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3244 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;16 minutes&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/featured-image.jpg"
+        data-srcset="/syscalls/featured-image.jpg, /syscalls/featured-image.jpg 1.5x, /syscalls/featured-image.jpg 2x"
+        data-sizes="auto"
+        alt="/syscalls/featured-image.jpg"
+        title="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike" /></div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#syscalls-why">Syscalls? Why?</a>
+      <ul>
+        <li><a href="#user-mood-hooks">User-mood Hooks</a></li>
+      </ul>
+    </li>
+    <li><a href="#direct-syscalls">Direct syscalls</a></li>
+    <li><a href="#indirect-syscalls">Indirect syscalls</a></li>
+    <li><a href="#indirect-syscalls-in-cobalt-strike">Indirect syscalls in Cobalt Strike</a></li>
+    <li><a href="#detecting-syscalls">Detecting syscalls</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>In case images fail to load, it might be due to jsDelivr CDN ban in Egypt. To resolve this, consider using a VPN. :)</p>
+</blockquote>
+<h2 id="syscalls-why">Syscalls? Why?</h2>
+<ul>
+<li>To Bypass user-mood hooks. why?
+<ul>
+<li>For Hiding a code inside a legitimate process (Process Injection)</li>
+<li>Avoiding EDR alerts!</li>
+</ul>
+</li>
+</ul>
+<h3 id="user-mood-hooks">User-mood Hooks</h3>
+<p>Hooking user-mode functions by placing a jump to another code section. EDRs use hooks to check the function parameters. For example, if you are trying to change the memory protections of some data to add executable protections. This is a very suspicious activity so EDRs will be alert to that. Most Hooks are on the lowest level of the user-mode interface in <strong>ntdll.dll</strong> which are the system calls.</p>
+<h2 id="direct-syscalls">Direct syscalls</h2>
+<p>Windows has a defined schema of how <code>syscalls</code> are used. Most of the documented windows APIs are just a wrapper of a lower-level Functions in <code>ntdll.dll</code> which are compiled to a <code>syscall</code> with the right SSN (System Service Number). To look at how <code>Nt*</code> version of the higher-level API is implemented.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:018&gt; uf NtOpenProcess
+</span></span><span class="line"><span class="cl">ntdll!NtOpenProcess:
+</span></span><span class="line"><span class="cl">00007ffa`4874d4c0 4c8bd1          mov     r10,rcx
+</span></span><span class="line"><span class="cl">00007ffa`4874d4c3 b826000000      mov     eax,26h
+</span></span><span class="line"><span class="cl">00007ffa`4874d4c8 f604250803fe7f01 test    byte ptr [SharedUserData+0x308 (00000000`7ffe0308)],1
+</span></span><span class="line"><span class="cl">00007ffa`4874d4d0 7503            jne     ntdll!NtOpenProcess+0x15 (00007ffa`4874d4d5)  Branch
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ntdll!NtOpenProcess+0x12:
+</span></span><span class="line"><span class="cl">00007ffa`4874d4d2 0f05            syscall
+</span></span><span class="line"><span class="cl">00007ffa`4874d4d4 c3              ret
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ntdll!NtOpenProcess+0x15:
+</span></span><span class="line"><span class="cl">00007ffa`4874d4d5 cd2e            int     2Eh
+</span></span><span class="line"><span class="cl">00007ffa`4874d4d7 c3              ret
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>At address <code>00007ffa~4874d4d2</code> there <code>syscall</code> instruction. This instruction transfers the execution to the system-handler at the kernel. The handler is specified using pre-defined SSN number loaded into <code>EAX</code> Register (In this case <code>EAX = 0x26</code> at address <code>00007ffa~4874d4c3</code>).
+So, to make a <code>syscall</code> The SSN associated.
+The code stub of the <code>syscalls</code> is simple.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nasm" data-lang="nasm"><span class="line"><span class="cl"><span class="nf">mov</span> <span class="nv">r10</span><span class="p">,</span> <span class="nb">rcx</span>
+</span></span><span class="line"><span class="cl"><span class="nf">mov</span> <span class="nb">eax</span><span class="p">,</span> <span class="o">&lt;</span><span class="nv">syscall_number</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nf">syscall</span>
+</span></span><span class="line"><span class="cl"><span class="nf">ret</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Now, the missing thing is the <code>syscall_number</code>. These numbers are changing based on the Build version of windows. There are some techniques to get these numbers.</p>
+<ol>
+<li><strong>SysWhispers</strong></li>
+</ol>
+<p><a href="https://github.com/jthuraisamy/SysWhispers" target="_blank" rel="noopener noreffer ">SysWhispers</a> That generate the table of these numbers in the form of a header file and assembly file that can be embedded in the code. The generated code contains <code>syscall</code> number for multiple versions, The right windows build version is detected at runtime using PEB structure.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">+0x118 OSMajorVersion   : Uint4B
+</span></span><span class="line"><span class="cl">+0x11c OSMinorVersion   : Uint4B
+</span></span><span class="line"><span class="cl">+0x120 OSBuildNumber    : Uint2B
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The assembly code generated (Full document at <a href="https://raw.githubusercontent.com/jthuraisamy/SysWhispers/master/example-output/syscalls.asm" target="_blank" rel="noopener noreffer ">example-output</a>)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nasm" data-lang="nasm"><span class="line"><span class="cl"><span class="nf">...</span>
+</span></span><span class="line"><span class="cl"><span class="nf">NtOpenProcess</span> <span class="nv">PROC</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">mov</span> <span class="nb">rax</span><span class="p">,</span> <span class="nb">gs</span><span class="p">:[</span><span class="mh">60h</span><span class="p">]</span>                       <span class="c1">; Load PEB into RAX.</span>
+</span></span><span class="line"><span class="cl"><span class="nl">NtOpenProcess_Check_X_X_XXXX:</span>               <span class="c1">; Check major version.</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">118h</span><span class="p">],</span> <span class="mi">5</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_5_X_XXXX</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">118h</span><span class="p">],</span> <span class="mi">6</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_Check_6_X_XXXX</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">118h</span><span class="p">],</span> <span class="mi">10</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_Check_10_0_XXXX</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">jmp</span> <span class="nv">NtOpenProcess_SystemCall_Unknown</span>
+</span></span><span class="line"><span class="cl"><span class="nl">NtOpenProcess_Check_6_X_XXXX:</span>               <span class="c1">; Check minor version for Windows Vista/7/8.</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">11ch</span><span class="p">],</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_Check_6_0_XXXX</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">11ch</span><span class="p">],</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_Check_6_1_XXXX</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">11ch</span><span class="p">],</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_6_2_XXXX</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">11ch</span><span class="p">],</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_6_3_XXXX</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">jmp</span> <span class="nv">NtOpenProcess_SystemCall_Unknown</span>
+</span></span><span class="line"><span class="cl"><span class="nl">NtOpenProcess_Check_6_0_XXXX:</span>               <span class="c1">; Check build number for Windows Vista.</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">120h</span><span class="p">],</span> <span class="mi">6000</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_6_0_6000</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">120h</span><span class="p">],</span> <span class="mi">6001</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_6_0_6001</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">120h</span><span class="p">],</span> <span class="mi">6002</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_6_0_6002</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">jmp</span> <span class="nv">NtOpenProcess_SystemCall_Unknown</span>
+</span></span><span class="line"><span class="cl"><span class="nl">NtOpenProcess_Check_6_1_XXXX:</span>               <span class="c1">; Check build number for Windows 7.</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">120h</span><span class="p">],</span> <span class="mi">7600</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_6_1_7600</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">120h</span><span class="p">],</span> <span class="mi">7601</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_6_1_7601</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">jmp</span> <span class="nv">NtOpenProcess_SystemCall_Unknown</span>
+</span></span><span class="line"><span class="cl"><span class="nl">NtOpenProcess_Check_10_0_XXXX:</span>              <span class="c1">; Check build number for Windows 10.</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">120h</span><span class="p">],</span> <span class="mi">10240</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_10_0_10240</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">120h</span><span class="p">],</span> <span class="mi">10586</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_10_0_10586</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">...</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li><strong>SSN code stub</strong>
+This technique doesn&rsquo;t Look for SSN number, instead it gets the code stub of the required API. This can be done by opening the PE file and parsing the Export table of <code>ntdll</code></li>
+<li><strong>Extract SSN</strong>
+It Extract the SSN from <code>ntdll</code> by parsing the Export table. The difference between it and the previous one is that it only extracts the <code>syscall</code> number. Both methods load <code>ntdll.dll</code> from the disk first using win32 API <code>OpenFile</code> which might be hooked. <a href="https://github.com/am0nsec/HellsGate" target="_blank" rel="noopener noreffer ">hell&rsquo;s gate</a> for more.</li>
+<li><strong>Syscalls&rsquo; number sequence</strong>
+This method take advantage of the SSNs are in a sequence for example if a syscall number is 0x26 the following will be 0x27 and so on. This relies also on the fact that not all the system calls are hooked! So, to get the SSN of a function, you need to find the nearest unhooked syscall. this was presented by <a href="https://blog.sektor7.net/#!res/2021/halosgate.md" target="_blank" rel="noopener noreffer ">halos gate</a>. But This is not valid in newer versions of Windows as the SSNs sequence is no longer valid.</li>
+<li><strong>Parallel loading</strong>
+This is an interesting technique explained in this <a href="https://www.mdsec.co.uk/2022/01/edr-parallel-asis-through-analysis/" target="_blank" rel="noopener noreffer ">blog</a>. It uses windows feature introduced in windows 10 to load DLLs through multiple threads instead of one in older versions of windows. It was found that the syscall stub of native Functions <code>NtOpenFile()</code>, <code>NtCreateSection()</code>, <code>ZwQueryAttributeFile()</code>, <code>ZwOpenSection()</code> and <code>ZwMapViewOfFile()</code> -There is a lot of things happens between the two actions, detailed explanation in the previously mentioned <a href="https://www.mdsec.co.uk/2022/01/edr-parallel-asis-through-analysis/" target="_blank" rel="noopener noreffer ">blog</a> -are copied into <code>LdrpThunkSignature</code> array. This is done to check the integrity of the functions&rsquo; code. These APIs&rsquo; syscall numbers can be used to load a new version of ntdll.dll from the disk and avoid any user-mood hooks.</li>
+<li><strong>Sorting by system call address</strong>
+This technique uses the relation between the address of the system call stub and the SSN. It is known as <a href="https://github.com/crummie5/FreshyCalls" target="_blank" rel="noopener noreffer ">FreshyCalls</a> . In simple words, it walks the Export Address Table of <code>ntdll</code> and saves the Name -or a hash of the name- and Address of each entry in a table. Then, it sorts the entries by the addresses in ascending order. It was found that the first function <code>NtAccessCheck</code> (by address) has an SSN = 0</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:007&gt; uf NtAccessCheck
+</span></span><span class="line"><span class="cl">ntdll!NtAccessCheck:
+</span></span><span class="line"><span class="cl">00007ffa`4874d000 4c8bd1          mov     r10,rcx
+</span></span><span class="line"><span class="cl">00007ffa`4874d003 b800000000      mov     eax,0
+</span></span><span class="line"><span class="cl">00007ffa`4874d008 f604250803fe7f01 test    byte ptr [SharedUserData+0x308 (00000000`7ffe0308)],1
+</span></span><span class="line"><span class="cl">00007ffa`4874d010 7503            jne     ntdll!NtAccessCheck+0x15 (00007ffa`4874d015)  Branch
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ntdll!NtAccessCheck+0x12:
+</span></span><span class="line"><span class="cl">00007ffa`4874d012 0f05            syscall
+</span></span><span class="line"><span class="cl">00007ffa`4874d014 c3              ret
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ntdll!NtAccessCheck+0x15:
+</span></span><span class="line"><span class="cl">00007ffa`4874d015 cd2e            int     2Eh
+</span></span><span class="line"><span class="cl">00007ffa`4874d017 c3              ret
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>and if we unassembled the next function by adding one to the last address (as ret opcode is one byte) we will get that the next function&rsquo;s SSN is 1!</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:007&gt; uf 00007ffa`4874d017+1
+</span></span><span class="line"><span class="cl">ntdll!NtAccessCheck+0x18:
+</span></span><span class="line"><span class="cl">00007ffa`4874d018 0f1f840000000000 nop     dword ptr [rax+rax]
+</span></span><span class="line"><span class="cl">00007ffa`4874d020 4c8bd1          mov     r10,rcx
+</span></span><span class="line"><span class="cl">00007ffa`4874d023 b801000000      mov     eax,1
+</span></span><span class="line"><span class="cl">00007ffa`4874d028 f604250803fe7f01 test    byte ptr [SharedUserData+0x308 (00000000`7ffe0308)],1
+</span></span><span class="line"><span class="cl">00007ffa`4874d030 7503            jne     ntdll!NtWorkerFactoryWorkerReady+0x15 (00007ffa`4874d035)  Branch
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ntdll!NtWorkerFactoryWorkerReady+0x12:
+</span></span><span class="line"><span class="cl">00007ffa`4874d032 0f05            syscall
+</span></span><span class="line"><span class="cl">00007ffa`4874d034 c3              ret
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ntdll!NtWorkerFactoryWorkerReady+0x15:
+</span></span><span class="line"><span class="cl">00007ffa`4874d035 cd2e            int     2Eh
+</span></span><span class="line"><span class="cl">00007ffa`4874d037 c3              ret
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>So, by sorting the functions by the addresses, we have the SSN. for the code, look at <a href="https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams/#8.%20Sorting%20by%20System%20Call%20Address" target="_blank" rel="noopener noreffer ">MDSec</a> (8. Sorting by System Call Address) blog or see <a href="https://github.com/crummie5/FreshyCalls/blob/112bdf0db63a5f7104ba5243af6a672bc098a1ad/syscall.cpp#L65" target="_blank" rel="noopener noreffer ">FreshlyCalls</a> implementation.
+The execution of the system call is not direct by calling <code>syscall</code> instruction. Instead. It uses the method explained below. Briefly, it uses the <code>syscall</code> instructions from <code>ntdll</code>.</p>
+<h2 id="indirect-syscalls">Indirect syscalls</h2>
+<p>All the methods described are workarounds to get the system call number without getting caught. <code>syscall</code> instruction reveals that some suspicious activity is going on. This is done using <code>KPROCESS!InstrumentationCallback</code> in windows.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:030&gt; dt _kprocess
+</span></span><span class="line"><span class="cl">ntdll!_KPROCESS
+</span></span><span class="line"><span class="cl">   +0x000 Header           : _DISPATCHER_HEADER
+</span></span><span class="line"><span class="cl">   ...
+</span></span><span class="line"><span class="cl">   +0x3d8 InstrumentationCallback : Ptr64 Void
+</span></span><span class="line"><span class="cl">   ...
+</span></span><span class="line"><span class="cl">   +0x3f8 EndPadding       : [8] Uint8B
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Any time the windows is done with a syscall and returns to user-mode, it checks this member it is not <code>NULL</code>, the execution will be transferred to that pointer. To check if the syscall is legit, the return address after finishing the syscall is checked to see if it is not from a valid place. If the address is in the address space of the process running, it&rsquo;s not a legitimate place to make a syscall. This check was done by ScyllaHide to detect manual syscalls, the source code can be found <a href="https://github.com/x64dbg/ScyllaHide/blob/master/HookLibrary/HookedFunctions.cpp#L176-L187" target="_blank" rel="noopener noreffer ">here</a>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"> <span class="k">if</span> <span class="p">(</span><span class="n">InterlockedOr</span><span class="p">(</span><span class="n">TlsGetInstrumentationCallbackDisabled</span><span class="p">(),</span> <span class="mh">0x1</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ReturnVal</span><span class="p">;</span> <span class="c1">// Do not recurse
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">PVOID</span> <span class="n">ImageBase</span> <span class="o">=</span> <span class="n">NtCurrentPeb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ImageBaseAddress</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">PIMAGE_NT_HEADERS</span> <span class="n">NtHeaders</span> <span class="o">=</span> <span class="n">RtlImageNtHeader</span><span class="p">(</span><span class="n">ImageBase</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">NtHeaders</span> <span class="o">!=</span> <span class="n">nullptr</span> <span class="o">&amp;&amp;</span> <span class="n">ReturnAddress</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">ImageBase</span> <span class="o">&amp;&amp;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ReturnAddress</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">ImageBase</span> <span class="o">+</span> <span class="n">NtHeaders</span><span class="o">-&gt;</span><span class="n">OptionalHeader</span><span class="p">.</span><span class="n">SizeOfImage</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Syscall return address within the exe file
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">ReturnVal</span> <span class="o">=</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)(</span><span class="n">ULONG</span><span class="p">)</span><span class="n">STATUS_PORT_NOT_SET</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// Uninstall ourselves after we have completed the sequence { NtQIP, NtQIP }. More NtSITs will follow but we can&#39;t do anything about them
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">NumManualSyscalls</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">NumManualSyscalls</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">InstallInstrumentationCallbackHook</span><span class="p">(</span><span class="n">NtCurrentProcess</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">InterlockedAnd</span><span class="p">(</span><span class="n">TlsGetInstrumentationCallbackDisabled</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">ReturnVal</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It checks the return address of the successful system call. If it resides on the address space of the binary we are running, it is an indication of manual system call.</p>
+<p><strong>The Solution</strong>
+The solution to this hooking method is done by <a href="https://github.com/eversinc33/BouncyGate" target="_blank" rel="noopener noreffer ">Bouncy Gate</a> and <a href="https://github.com/thefLink/RecycledGate" target="_blank" rel="noopener noreffer ">Recycled Gate</a> method. The idea is quite simple, it is an adjusted version of <a href="https://github.com/eversinc33/BouncyGate" target="_blank" rel="noopener noreffer ">Hell&rsquo;s Gate</a>. Instead of directly executing <code>syscall</code> instruction and getting caught by static signatures and system call callbacks described above, the author replaces the <code>syscall</code> instruction with a trampoline jump (<code>JMP</code>) to a <code>syscall</code> instruction address from <code>ntdll.dll</code>. now there is no direct <code>syscall</code> instruction and the system call originated from a legitimate place <code>ntdll</code>. This is also implemented in <a href="https://github.com/klezVirus/SysWhispers3" target="_blank" rel="noopener noreffer ">SysWhispers3</a>. To get the address of the syscall instruction in <code>ntdll</code> we can parse the export table and search for syscall, ret opcodes <code>0F 05 0C</code> or the constant pattern of syscalls in <code>ntdll</code> can be used to get the syscall address. If the function is not hooked, the syscall instruction is on offset <code>0x12</code> from the function&rsquo;s address, we can verify that by comparing the opcodes.</p>
+<h2 id="indirect-syscalls-in-cobalt-strike">Indirect syscalls in Cobalt Strike</h2>
+<p>The sample from <a href="https://github.com/dodo-sec/Malware-Analysis/blob/main/Cobalt%20Strike/Indirect%20Syscalls.md" target="_blank" rel="noopener noreffer ">Dodo&rsquo;s blog</a> Where he already analyzed how indirect syscalls implemented in Cobalt Strike. for easy access, here is <a href="https://www.unpac.me/results/4a29ad52-97b6-4208-a8e2-2cd99be3fff4#/" target="_blank" rel="noopener noreffer ">UnpacMe Results 020b20098f808301cad6025fe7e2f93fa9f3d0cc5d3d0190f27cf0cd374bcf04</a>. The sample is packed. The unpacking process is easy. Just put a breakpoint on <code>VirtualProtect</code> and get the base address (First Argument).
+Function <code>sub_18001B6B0</code> contains the important part, system call SSN retrieving and execution methods. You can get to this function by following the <code>call</code> instruction to <code>rax</code> which contains a <code>qword</code> memory area or a call to the <code>qword</code> directly. These locations are populated with addresses of the required APIs in this function.
+We can see multiple calls to <code>sub_18001A73C</code> with arguments: <code>qword_*</code>, a hash (such as <code>0B12B7A69h</code>), variable passed to the function <code>sub_18001A7F4</code> and another allocated memory which is also passed to <code>sub_18001A7F4</code>.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled.png"
+        title="Untitled" width="743" height="635" /></p>
+<p>Function <code>sub_18001A73C</code> is to resolve the function address (<code>syscall</code> stub address) by the hash. And function <code>sub_18001A7F4</code> used to populate the list with the system call SSN and system call stub. So, <code>sub_18001A7F4</code> is our target. In the following picture is the beginning of the function.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%201.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%201.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%201.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%201.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%201.png"
+        title="Untitled" width="746" height="198" /></p>
+<p>The function starts with getting a pointer to the first entry in <code>InLoadOrderModuleList</code> structure by going through reading the Process Environment Block (PEB). here in the picture, r10 is holding the current entry of the structure and r9 is like a variable to get each entry, this is the breaking condition of the loop as the <code>_LIST_ENTRY</code> structure wrap around itself (doubly linked list).</p>
+<p>The next step is to get the Export directory of <code>ntdll.dll</code> but first, get <code>ntdll</code> address in memory.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%202.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%202.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%202.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%202.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%202.png"
+        title="Untitled" width="913" height="574" /></p>
+<p>It is looking for the right module in the <code>InLoadOrderModuleList</code> by going through each entry, the <code>flink</code> is a pointer to <code>LDR_DATA_TABLE_ENTRY</code> where we can get a pointer to the module. By parsing the module (going through PE file headers) to get the name of the DLL which resides in the Export directory (First member) which is the first member of <code>IMAGE_DATA_DIRECTORY</code> structure. It is then tested to see if it is the target module (<code>ntdll</code>).
+If the module is <code>ntdll</code>, it saves a pointer to <code>AddressOfFunctions</code>, <code>AddressOfNames</code> and <code>AddressOfNameOrdinals</code>. A memory region of size 0x1f40 is then zeroed as it will hold the structures of the system call information needed.
+The next part is checking the function prefix <code>Ki</code> and <code>Zw</code>. It looks for only one function prefixed by <code>Ki</code> with the hash <code>8DCD4499h</code>, but I couldn&rsquo;t find function with this hash (using debugger). Then, a call to a hashing function is made. The hashing function is simple.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%203.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%203.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%203.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%203.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%203.png"
+        title="Untitled" width="750" height="362" /></p>
+<p>It uses <code>0x52964EE9</code> as an initial key value to start the process then:</p>
+<ul>
+<li>Get 2-bytes of the Function name (little endian).</li>
+<li>Rotate the key by 8 (2 characters).</li>
+<li>Add the key and the 2-bytes of the name.</li>
+<li>Increment the counter by 1 (Resulting that all the chars in between the start and end taken two times in the calculation for example <code>ZwOpenProcess</code> will take <code>Wz</code> in the first iteration and <code>Ow</code> in the second and so on).</li>
+<li>The result of the addition is XORed with the key to produce the new key.
+The hash value returned is the last result of the XOR operation.</li>
+</ul>
+<p>The resulting value is stored in the following form, in the pre-allocated space.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%204.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%204.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%204.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%204.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%204.png"
+        title="Untitled" width="574" height="96" /></p>
+<ul>
+<li>The first <code>DWORD</code> is the hash.</li>
+<li>The second <code>DWORD</code> is the Relative Virtual Address (RVA) of the system call0.</li>
+<li>The third <code>QWORD</code> is the Virtual Address (VA) of the system call stub (RVA + ntdll Base Address).</li>
+</ul>
+<p>So, it can be written as:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">syscall_info</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="n">DWORD</span> <span class="n">API_hash</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">DWORD</span> <span class="n">syscall_stub_RVA</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">QWORD</span> <span class="n">syscall_stub_address</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After populating the structure with the addresses. The structure elements are being sorted by the RVA of the system call stub (second entry in the structure).</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%205.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%205.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%205.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%205.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%205.png"
+        title="Untitled" width="1071" height="609" /></p>
+<p>After the sorting algorithm is done, the memory structure look like the following:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%206.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%206.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%206.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%206.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%206.png"
+        title="Untitled" width="579" height="210" /></p>
+<p>The first address is the address to the Lowest address <code>ZwMapUserPhysicalPagesScatter</code> (Could be different at newer versions of windows) at address <code>00000000774E1340</code> If we see the system call SSN of it:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%207.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%207.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%207.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%207.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%207.png"
+        title="Untitled" width="830" height="47" /></p>
+<p>system call number is zero. This is how it gets the SSN for any function, by iterating the structure to get the right hash, the counter will be used to get the SSN (SSN = counter).
+So far, this is remarkably like <a href="https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams/#8.%20Sorting%20by%20System%20Call%20Address" target="_blank" rel="noopener noreffer ">MDSec</a> (8. Sorting by System Call Address) implementation of the technique known as <code>FreshlyCalls</code>.
+We could rewrite the technique using MDSec implementation as follows:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#define RVA2VA(Type, DllBase, Rva) (Type)((ULONG_PTR) DllBase + Rva)
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span>
+</span></span><span class="line"><span class="cl"><span class="nf">GetSyscallList</span><span class="p">(</span><span class="n">PSYSCALL_LIST</span> <span class="n">List</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PPEB_LDR_DATA</span>           <span class="n">Ldr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PLDR_DATA_TABLE_ENTRY</span>   <span class="n">LdrEntry</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PIMAGE_DOS_HEADER</span>       <span class="n">DosHeader</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PIMAGE_NT_HEADERS</span>       <span class="n">NtHeaders</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">DWORD</span>                   <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">NumberOfNames</span><span class="p">,</span> <span class="n">VirtualAddress</span><span class="p">,</span> <span class="n">Entries</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PIMAGE_DATA_DIRECTORY</span>   <span class="n">DataDirectory</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PIMAGE_EXPORT_DIRECTORY</span> <span class="n">ExportDirectory</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PDWORD</span>                  <span class="n">Functions</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PDWORD</span>                  <span class="n">Names</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PWORD</span>                   <span class="n">Ordinals</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PCHAR</span>                   <span class="n">DllName</span><span class="p">,</span> <span class="n">FunctionName</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PVOID</span>                   <span class="n">DllBase</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PSYSCALL_ENTRY</span>          <span class="n">Table</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">SYSCALL_ENTRY</span>           <span class="n">Entry</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// Get the DllBase address of NTDLL.dll
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// NTDLL is not guaranteed to be the second in the list.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// so it&#39;s safer to loop through the full list and find it.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Ldr</span> <span class="o">=</span> <span class="p">(</span><span class="n">PPEB_LDR_DATA</span><span class="p">)</span><span class="n">NtCurrentTeb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ProcessEnvironmentBlock</span><span class="o">-&gt;</span><span class="n">Ldr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// For each DLL loaded
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="n">LdrEntry</span><span class="o">=</span><span class="p">(</span><span class="n">PLDR_DATA_TABLE_ENTRY</span><span class="p">)</span><span class="n">Ldr</span><span class="o">-&gt;</span><span class="n">Reserved2</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">         <span class="n">LdrEntry</span><span class="o">-&gt;</span><span class="n">DllBase</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">         <span class="n">LdrEntry</span><span class="o">=</span><span class="p">(</span><span class="n">PLDR_DATA_TABLE_ENTRY</span><span class="p">)</span><span class="n">LdrEntry</span><span class="o">-&gt;</span><span class="n">Reserved1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">DllBase</span> <span class="o">=</span> <span class="n">LdrEntry</span><span class="o">-&gt;</span><span class="n">DllBase</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="n">DosHeader</span> <span class="o">=</span> <span class="p">(</span><span class="n">PIMAGE_DOS_HEADER</span><span class="p">)</span><span class="n">DllBase</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="n">NtHeaders</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PIMAGE_NT_HEADERS</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">DosHeader</span><span class="o">-&gt;</span><span class="n">e_lfanew</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">DataDirectory</span> <span class="o">=</span> <span class="p">(</span><span class="n">PIMAGE_DATA_DIRECTORY</span><span class="p">)</span><span class="n">NtHeaders</span><span class="o">-&gt;</span><span class="n">OptionalHeader</span><span class="p">.</span><span class="n">DataDirectory</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="n">VirtualAddress</span> <span class="o">=</span> <span class="n">DataDirectory</span><span class="p">[</span><span class="n">IMAGE_DIRECTORY_ENTRY_EXPORT</span><span class="p">].</span><span class="n">VirtualAddress</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">(</span><span class="n">VirtualAddress</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="n">ExportDirectory</span> <span class="o">=</span> <span class="p">(</span><span class="n">PIMAGE_EXPORT_DIRECTORY</span><span class="p">)</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">VirtualAddress</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">DllName</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PCHAR</span><span class="p">,</span><span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">((</span><span class="o">*</span><span class="p">(</span><span class="n">ULONG</span><span class="o">*</span><span class="p">)</span><span class="n">DllName</span> <span class="o">|</span> <span class="mh">0x20202020</span><span class="p">)</span> <span class="o">!=</span> <span class="err">&#39;</span><span class="n">ldtn</span><span class="err">&#39;</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">((</span><span class="o">*</span><span class="p">(</span><span class="n">ULONG</span><span class="o">*</span><span class="p">)(</span><span class="n">DllName</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span> <span class="o">|</span> <span class="mh">0x20202020</span><span class="p">)</span> <span class="o">==</span> <span class="err">&#39;</span><span class="n">ld</span><span class="p">.</span><span class="n">l</span><span class="err">&#39;</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">NumberOfNames</span> <span class="o">=</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">NumberOfNames</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Functions</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PDWORD</span><span class="p">,</span><span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">AddressOfFunctions</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Names</span>     <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PDWORD</span><span class="p">,</span><span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">AddressOfNames</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Ordinals</span>  <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PWORD</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">AddressOfNameOrdinals</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Table</span>     <span class="o">=</span> <span class="n">List</span><span class="o">-&gt;</span><span class="n">Table</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">do</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">FunctionName</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PCHAR</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">Names</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">USHORT</span><span class="o">*</span><span class="p">)</span><span class="n">FunctionName</span> <span class="o">==</span> <span class="err">&#39;</span><span class="n">iK</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">HashSyscall</span><span class="p">(</span><span class="n">FunctionName</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x8DCD4499</span><span class="p">)</span>  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">API_Hash</span> <span class="o">=</span> <span class="n">HashSyscall</span><span class="p">(</span><span class="o">&amp;</span><span class="n">FunctionName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">syscall_stub_RVA</span> <span class="o">=</span> <span class="n">Functions</span><span class="p">[</span><span class="n">Ordinals</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">syscall_stub_address</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="kt">void</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span><span class="n">Functions</span><span class="p">[</span><span class="n">Ordinals</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]]);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">Entries</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">Entries</span> <span class="o">==</span> <span class="n">MAX_SYSCALLS</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">USHORT</span><span class="o">*</span><span class="p">)</span><span class="n">FunctionName</span> <span class="o">==</span> <span class="err">&#39;</span><span class="n">wZ</span><span class="err">&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">API_Hash</span> <span class="o">=</span> <span class="n">HashSyscall</span><span class="p">(</span><span class="o">&amp;</span><span class="n">FunctionName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">syscall_stub_RVA</span> <span class="o">=</span> <span class="n">Functions</span><span class="p">[</span><span class="n">Ordinals</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">syscall_stub_address</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="kt">void</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span><span class="n">Functions</span><span class="p">[</span><span class="n">Ordinals</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]]);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">Entries</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">Entries</span> <span class="o">==</span> <span class="n">MAX_SYSCALLS</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">NumberOfNames</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// Save total number of system calls found.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">List</span><span class="o">-&gt;</span><span class="n">Entries</span> <span class="o">=</span> <span class="n">Entries</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// Sort the list by address in ascending order.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Entries</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">for</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Entries</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">syscall_stub_RVA</span> <span class="o">&gt;</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">syscall_stub_RVA</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="c1">// Swap entries.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="n">Entry</span><span class="p">.</span><span class="n">Hash</span> <span class="o">=</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">Hash</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="n">Entry</span><span class="p">.</span><span class="n">Address</span> <span class="o">=</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">Address</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">          <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">API_Hash</span> <span class="o">=</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">API_Hash</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">syscall_stub_RVA</span> <span class="o">=</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">syscall_stub_RVA</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">syscall_stub_address</span> <span class="o">=</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">syscall_stub_address</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">          <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">API_Hash</span> <span class="o">=</span> <span class="n">Entry</span><span class="p">.</span><span class="n">API_Hash</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">syscall_stub_RVA</span> <span class="o">=</span> <span class="n">Entry</span><span class="p">.</span><span class="n">syscall_stub_RVA</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">syscall_stub_address</span> <span class="o">=</span> <span class="n">Entry</span><span class="p">.</span><span class="n">syscall_stub_address</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The next thing is to use the structure to get the SSN. and <code>syscall</code> instruction to call. This is done by function <code>sub_18001A73C</code>.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%208.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%208.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%208.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%208.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%208.png"
+        title="Untitled" width="714" height="362" /></p>
+<p>The function takes the following parameters:</p>
+<ul>
+<li>The array of structures that has the system call info (called <code>syscall_info</code> above)</li>
+<li>constant value 0x1F4 the maximum length of the structure members (structure size = 0x1F4 * 0x10).</li>
+<li>Pre-Allocated memory</li>
+<li>The function hash.</li>
+<li>Global variable to get the system call SSN and stub.
+The function is simple, it searches the populated structure to find the given hash. If it&rsquo;s found, the counter value is taken and to get the Address of the system call stub. To get the address, the base address of the structure is added to the offset multiplied by 0x10 (struct size) and add 8 to get the last QWORD.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">API_Address = *(STRUCT_BASE_ADDR + COUNTER * 0x10 + 8)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The address the passed to <code>get_syscall_ret_address</code> to get the <code>syscall ret</code> addresses to use it to execute the system call to bypass the callback mentioned before (call stack tracing is be used to detect this trick).</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%209.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%209.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%209.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%209.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%209.png"
+        title="Untitled" width="745" height="393" /></p>
+<p>The global variable is used to store:</p>
+<ul>
+<li>QWORD to store System call address (function address at <code>ntdll</code>)</li>
+<li>QWORD to store <code>syscall</code> , <code>ret</code> instruction sequence address.</li>
+<li>DWORD to store system call number SSN.
+We can rewrite it as follows:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">syscall_required_addresses</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="n">QWORD</span> <span class="n">syscall_stub_address</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">QWORD</span> <span class="n">syscall_intruction_address</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">DWORD</span> <span class="n">syscall_number</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>(Creative names I know :) )</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%2010.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%2010.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%2010.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%2010.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%2010.png"
+        title="Untitled" width="1038" height="61" /></p>
+<p>There are some choices to call the required function. This is done based on the value at a global variable (0x18004BC6C):</p>
+<ul>
+<li>1 : Direct call using the first member of the structure (Address of the function in <code>ntdll</code>)</li>
+<li>2 : Indirect system call using trampoline jump using the system call number and the <code>syscall</code> address stored before.</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%2011.png"
+        data-srcset="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%2011.png, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%2011.png 1.5x, /syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%2011.png 2x"
+        data-sizes="auto"
+        alt="/syscalls/Syscalls%20usag%20fbb8d8171051465da6fe612f944e8a0f/Untitled%2011.png"
+        title="Untitled" width="711" height="125" /></p>
+<ul>
+<li>anything else: Direct call to Win32 API.</li>
+</ul>
+<h2 id="detecting-syscalls">Detecting syscalls</h2>
+<p>System calls can be used to bypass user mood hooks but there are other methods to detect Direct and Indirect syscalls.
+To detect Direct system calls, Windows provides a large set of callback functions, one of them is <code>KPROCESS!InstrumentationCallback</code> . This callback is triggered whenever the system returns from the kernel mode to user mode. This could be used to check the return address of the <code>syscall</code> which reveals the location of <code>syscall</code> instruction execution. This location should be <code>ntdll</code> but in case of the direct system calls, it will be from the <code>.text</code> section of the PE file. This was used by <a href="https://github.com/x64dbg/ScyllaHide/blob/master/HookLibrary/HookedFunctions.cpp" target="_blank" rel="noopener noreffer ">ScyllaHide</a>.
+Indirect system calls solved this problem by getting the address of <code>syscall</code> instruction in <code>ntdll</code> and jump to it. To detect indirect syscalls the call stack tracing method can be used to check from where the system call originated -before jumping to <code>ntdll</code>-. This also can be bypassed by creating a new thread to get a new call stack using callback functions like <code>TpAllocWork</code> and <code>RtlQueueWorkItem</code>. If you want to know more about this, you can read <a href="https://0xdarkvortex.dev/hiding-in-plainsight/" target="_blank" rel="noopener noreffer ">Hiding In PlainSight 1&amp;2</a></p>
+<p><strong>Note: This was a personal note I wrote when I was learning about syscalls, if there&rsquo;s anything not accurate, please let me know</strong></p>
+<h2 id="references">References</h2>
+<p><a href="https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams/" target="_blank" rel="noopener noreffer ">https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams/</a></p>
+<p><a href="https://www.youtube.com/watch?v=elA_eiqWefw&amp;t=3176s" target="_blank" rel="noopener noreffer ">https://www.youtube.com/watch?v=elA_eiqWefw&amp;t=3176s</a></p>
+<p><a href="https://offensivedefence.co.uk/posts/dinvoke-syscalls/" target="_blank" rel="noopener noreffer ">https://offensivedefence.co.uk/posts/dinvoke-syscalls/</a></p>
+<p><a href="https://www.felixcloutier.com/x86/syscall.html" target="_blank" rel="noopener noreffer ">https://www.felixcloutier.com/x86/syscall.html</a></p>
+<p><a href="https://www.mdsec.co.uk/2022/04/resolving-system-service-numbers-using-the-exception-directory/" target="_blank" rel="noopener noreffer ">https://www.mdsec.co.uk/2022/04/resolving-system-service-numbers-using-the-exception-directory/</a></p>
+<p><a href="https://github.com/j00ru/windows-syscalls/" target="_blank" rel="noopener noreffer ">https://github.com/j00ru/windows-syscalls/</a></p>
+<p><a href="https://cocomelonc.github.io/malware/2023/06/07/syscalls-1.html" target="_blank" rel="noopener noreffer ">https://cocomelonc.github.io/malware/2023/06/07/syscalls-1.html</a></p>
+<p><a href="https://www.crummie5.club/freshycalls/" target="_blank" rel="noopener noreffer ">https://www.crummie5.club/freshycalls/</a></p>
+<p><a href="https://github.com/x64dbg/ScyllaHide/blob/master/HookLibrary/HookedFunctions.cpp" target="_blank" rel="noopener noreffer ">https://github.com/x64dbg/ScyllaHide/blob/master/HookLibrary/HookedFunctions.cpp</a></p>
+<p><a href="https://eversinc33.com/posts/avoiding-direct-syscall-instructions/" target="_blank" rel="noopener noreffer ">https://eversinc33.com/posts/avoiding-direct-syscall-instructions/</a></p>
+<p><a href="https://redops.at/en/blog/direct-syscalls-a-journey-from-high-to-low" target="_blank" rel="noopener noreffer ">https://redops.at/en/blog/direct-syscalls-a-journey-from-high-to-low</a></p>
+<p><a href="https://github.com/dodo-sec/Malware-Analysis/blob/main/Cobalt%20Strike/Indirect%20Syscalls.md" target="_blank" rel="noopener noreffer ">https://github.com/dodo-sec/Malware-Analysis/blob/main/Cobalt Strike/Indirect Syscalls.md</a></p>
+<p><a href="https://github.com/crummie5/FreshyCalls/blob/112bdf0db63a5f7104ba5243af6a672bc098a1ad/syscall.cpp#L65" target="_blank" rel="noopener noreffer ">https://github.com/crummie5/FreshyCalls/blob/112bdf0db63a5f7104ba5243af6a672bc098a1ad/syscall.cpp#L65</a></p>
+<p><a href="https://0xdarkvortex.dev/hiding-in-plainsight/" target="_blank" rel="noopener noreffer ">https://0xdarkvortex.dev/hiding-in-plainsight/</a></p>
+<p><a href="https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/" target="_blank" rel="noopener noreffer ">https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-08-18&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/174503f1c81bcd5d2d29b83fafbda395b88eed17" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) 174503f1c81bcd5d2d29b83fafbda395b88eed17: syscalls">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>174503f</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/syscalls/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation" data-via="0xd01a" data-hashtags="Malware Analysis,Reverse Engineering,Research,Post-exploitation"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://d01a.github.io/syscalls/" data-hashtag="Malware Analysis"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Linkedin" data-sharer="linkedin" data-url="https://d01a.github.io/syscalls/"><i class="fab fa-linkedin fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Reddit" data-sharer="reddit" data-url="https://d01a.github.io/syscalls/"><i class="fab fa-reddit fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Trello" data-sharer="trello" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation" data-description="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike"><i class="fab fa-trello fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/malware-analysis/">Malware Analysis</a>,&nbsp;<a href="/tags/reverse-engineering/">Reverse Engineering</a>,&nbsp;<a href="/tags/research/">Research</a>,&nbsp;<a href="/tags/post-exploitation/">Post-exploitation</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/pikabot/" class="prev" rel="prev" title="Pikabot deep analysis"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Pikabot deep analysis</a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.102.3">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Mohamed Adel</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"lightgallery":true};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

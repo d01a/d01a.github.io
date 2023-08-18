@@ -4,7 +4,16 @@
         <link>https://d01a.github.io/tags/reverse-engineering/</link>
         <description>Reverse Engineering - Tag - d01a</description>
         <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>dola.elbehairy2173@gmail.com (Mohamed Adel)</managingEditor>
-            <webMaster>dola.elbehairy2173@gmail.com (Mohamed Adel)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 31 Jul 2023 09:04:49 &#43;0800</lastBuildDate><atom:link href="https://d01a.github.io/tags/reverse-engineering/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>dola.elbehairy2173@gmail.com (Mohamed Adel)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 18 Aug 2023 09:04:49 &#43;0800</lastBuildDate><atom:link href="https://d01a.github.io/tags/reverse-engineering/" rel="self" type="application/rss+xml" /><item>
+    <title>Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation</title>
+    <link>https://d01a.github.io/syscalls/</link>
+    <pubDate>Fri, 18 Aug 2023 09:04:49 &#43;0800</pubDate>
+    <author>Mohamed Adel</author>
+    <guid>https://d01a.github.io/syscalls/</guid>
+    <description><![CDATA[In case images fail to load, it might be due to jsDelivr CDN ban in Egypt. To resolve this, consider using a VPN. :)
+Syscalls? Why? To Bypass user-mood hooks. why? For Hiding a code inside a legitimate process (Process Injection) Avoiding EDR alerts! User-mood Hooks Hooking user-mode functions by placing a jump to another code section. EDRs use hooks to check the function parameters. For example, if you are trying to change the memory protections of some data to add executable protections.]]></description>
+</item>
+<item>
     <title>Pikabot deep analysis</title>
     <link>https://d01a.github.io/pikabot/</link>
     <pubDate>Mon, 31 Jul 2023 09:04:49 &#43;0800</pubDate>
