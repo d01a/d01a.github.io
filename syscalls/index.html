@@ -9,7 +9,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://d01a.github.io/syscalls/" /><meta property="og:image" content="https://d01a.github.io/syscalls/featured-image.jpg"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-08-18T09:04:49+08:00" />
-<meta property="article:modified_time" content="2023-08-18T22:58:12+03:00" /><meta property="og:site_name" content="d01a" />
+<meta property="article:modified_time" content="2023-08-18T23:07:02+03:00" /><meta property="og:site_name" content="d01a" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://d01a.github.io/syscalls/featured-image.jpg"/>
@@ -34,8 +34,8 @@
                             "url": "https:\/\/d01a.github.io\/syscalls\/featured-image.jpg",
                             "width":  1200 ,
                             "height":  628 
-                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering, Research, Post-exploitation","wordcount":  3244 ,
-        "url": "https:\/\/d01a.github.io\/syscalls\/","datePublished": "2023-08-18T09:04:49+08:00","dateModified": "2023-08-18T22:58:12+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering, Research, Post-exploitation","wordcount":  3243 ,
+        "url": "https:\/\/d01a.github.io\/syscalls\/","datePublished": "2023-08-18T09:04:49+08:00","dateModified": "2023-08-18T23:07:02+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Mohamed Adel","logo": {
                     "@type": "ImageObject",
@@ -81,7 +81,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/reverse-engineering/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Reverse Engineering</a>&nbsp;<a href="/categories/research/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Research</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-08-18">2023-08-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3244 words&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-08-18">2023-08-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3243 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;16 minutes&nbsp;</div>
         </div><div class="featured-image"><img
         class="lazyload"
@@ -860,7 +860,7 @@ We can rewrite it as follows:</li>
 <p>System calls can be used to bypass user mood hooks but there are other methods to detect Direct and Indirect syscalls.
 To detect Direct system calls, Windows provides a large set of callback functions, one of them is <code>KPROCESS!InstrumentationCallback</code> . This callback is triggered whenever the system returns from the kernel mode to user mode. This could be used to check the return address of the <code>syscall</code> which reveals the location of <code>syscall</code> instruction execution. This location should be <code>ntdll</code> but in case of the direct system calls, it will be from the <code>.text</code> section of the PE file. This was used by <a href="https://github.com/x64dbg/ScyllaHide/blob/master/HookLibrary/HookedFunctions.cpp" target="_blank" rel="noopener noreffer ">ScyllaHide</a>.
 Indirect system calls solved this problem by getting the address of <code>syscall</code> instruction in <code>ntdll</code> and jump to it. To detect indirect syscalls the call stack tracing method can be used to check from where the system call originated -before jumping to <code>ntdll</code>-. This also can be bypassed by creating a new thread to get a new call stack using callback functions like <code>TpAllocWork</code> and <code>RtlQueueWorkItem</code>. If you want to know more about this, you can read <a href="https://0xdarkvortex.dev/hiding-in-plainsight/" target="_blank" rel="noopener noreffer ">Hiding In PlainSight 1&amp;2</a></p>
-<p><strong>Note: This was a personal note I wrote when I was learning about syscalls, if there&rsquo;s anything not accurate, please let me know</strong></p>
+<p><strong>Note: This was personal notes I wrote when I was learning about syscalls, if there&rsquo;s anything not accurate, please let me know</strong></p>
 <h2 id="references">References</h2>
 <p><a href="https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams/" target="_blank" rel="noopener noreffer ">https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams/</a></p>
 <p><a href="https://www.youtube.com/watch?v=elA_eiqWefw&amp;t=3176s" target="_blank" rel="noopener noreffer ">https://www.youtube.com/watch?v=elA_eiqWefw&amp;t=3176s</a></p>
@@ -881,8 +881,8 @@ Indirect system calls solved this problem by getting the address of <code>syscal
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2023-08-18&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/174503f1c81bcd5d2d29b83fafbda395b88eed17" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) 174503f1c81bcd5d2d29b83fafbda395b88eed17: syscalls">
-                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>174503f</a></span>
+                <span>Updated on 2023-08-18&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/ad703d5792835bb482b5dfaa18dd60ab432e3ebb" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) ad703d5792835bb482b5dfaa18dd60ab432e3ebb: syscalls">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>ad703d5</a></span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>

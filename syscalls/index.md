@@ -443,7 +443,7 @@ System calls can be used to bypass user mood hooks but there are other methods t
 To detect Direct system calls, Windows provides a large set of callback functions, one of them is `KPROCESS!InstrumentationCallback` . This callback is triggered whenever the system returns from the kernel mode to user mode. This could be used to check the return address of the `syscall` which reveals the location of `syscall` instruction execution. This location should be `ntdll` but in case of the direct system calls, it will be from the `.text` section of the PE file. This was used by [ScyllaHide](https://github.com/x64dbg/ScyllaHide/blob/master/HookLibrary/HookedFunctions.cpp).
 Indirect system calls solved this problem by getting the address of `syscall` instruction in `ntdll` and jump to it. To detect indirect syscalls the call stack tracing method can be used to check from where the system call originated -before jumping to `ntdll`-. This also can be bypassed by creating a new thread to get a new call stack using callback functions like `TpAllocWork` and `RtlQueueWorkItem`. If you want to know more about this, you can read [Hiding In PlainSight 1&2](https://0xdarkvortex.dev/hiding-in-plainsight/)
 
-**Note: This was a personal note I wrote when I was learning about syscalls, if there's anything not accurate, please let me know**
+**Note: This was personal notes I wrote when I was learning about syscalls, if there's anything not accurate, please let me know**
 
 ## References
 
