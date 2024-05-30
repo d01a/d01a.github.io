@@ -4,7 +4,24 @@
         <link>https://d01a.github.io/tags/reverse-engineering/</link>
         <description>Reverse Engineering - Tag - d01a</description>
         <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>dola.elbehairy2173@gmail.com (Mohamed Adel)</managingEditor>
-            <webMaster>dola.elbehairy2173@gmail.com (Mohamed Adel)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 18 Aug 2023 09:04:49 &#43;0800</lastBuildDate><atom:link href="https://d01a.github.io/tags/reverse-engineering/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>dola.elbehairy2173@gmail.com (Mohamed Adel)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 12 Sep 2023 11:04:49 &#43;0800</lastBuildDate><atom:link href="https://d01a.github.io/tags/reverse-engineering/" rel="self" type="application/rss+xml" /><item>
+    <title>ALPHV ransomware</title>
+    <link>https://d01a.github.io/alphv/</link>
+    <pubDate>Tue, 12 Sep 2023 11:04:49 &#43;0800</pubDate>
+    <author>Mohamed Adel</author>
+    <guid>https://d01a.github.io/alphv/</guid>
+    <description><![CDATA[Introduction ALPHV/Blackcat is a ransomware family that uses Ransomware-as-a-service (RaaS) business model. The ransomware is written in Rust Programming language. It is highly configurable using embedded configurations or provided as command line arguments. The malware family has Windows, Linux and ESXi versions. The malware uses AES or ChaCha20 to encrypt the files and delete the volume shadow copies to decrease the possibility of any data survival. It also kills predefined set of services and Processes related to Anti-malware products, Virtualization software and other business-related and backup software.]]></description>
+</item>
+<item>
+    <title>Redline stealer</title>
+    <link>https://d01a.github.io/redline/</link>
+    <pubDate>Tue, 12 Sep 2023 11:04:49 &#43;0800</pubDate>
+    <author>Mohamed Adel</author>
+    <guid>https://d01a.github.io/redline/</guid>
+    <description><![CDATA[Introduction Redline stealer is one of the most popular info stealers out there. The malware is available for sale on underground forums for a different subscription options. The malware has a large set of stealing modules. It harvests:
+Victim information (such as hostname, hardware specs, location, and live screenshot) Browser data (such as saved passwords, cookies, and autofill fields) Crypto wallets Telegram data Discord tokens Specific files from the victim machine FTP server credentials Game launcher data (Steam login files) VPN credentials Also, it has a component that can be used as a loader to execute other malware families or download a newer version of the stealer.]]></description>
+</item>
+<item>
     <title>Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation</title>
     <link>https://d01a.github.io/syscalls/</link>
     <pubDate>Fri, 18 Aug 2023 09:04:49 &#43;0800</pubDate>

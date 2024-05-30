@@ -32,7 +32,7 @@
                             "url": "https:\/\/d01a.github.io\/redline\/featured-image.jpg",
                             "width":  3600 ,
                             "height":  2400 
-                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  0 ,
+                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  5499 ,
         "url": "https:\/\/d01a.github.io\/redline\/","datePublished": "2023-09-12T11:04:49+08:00","dateModified": "2024-05-30T03:27:54+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Mohamed Adel","logo": {
@@ -79,8 +79,8 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Redline stealer</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/malware-analysis/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Malware Analysis</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-09-12">2023-09-12</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;0 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;0 minutes&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-09-12">2023-09-12</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;5499 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;26 minutes&nbsp;</div>
         </div><div class="featured-image"><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -93,8 +93,1844 @@
                     <span>Contents</span>
                     <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
                 </div>
-                <div class="details-content toc-content" id="toc-content-static"></div>
-            </div><div class="content" id="content"></div><div class="post-footer" id="post-footer">
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#analysis">Analysis</a>
+      <ul>
+        <li><a href="#sample-unpacking">Sample Unpacking</a></li>
+        <li><a href="#it-is-redline">It is RedLine!</a></li>
+        <li><a href="#c2-server-decryption">C2 server decryption</a></li>
+        <li><a href="#malware-configuration">Malware Configuration</a></li>
+        <li><a href="#malware-core">Malware Core</a></li>
+        <li><a href="#geo-location-harvester-and-filter">Geo location harvester and filter</a></li>
+        <li><a href="#real-stealer-action">Real Stealer Action</a></li>
+        <li><a href="#collecting-victim-machine-information">Collecting Victim machine Information</a></li>
+        <li><a href="#collect-installed-browsers">Collect Installed Browsers</a></li>
+        <li><a href="#capture-installed-programs-and-firewall-services">Capture Installed Programs and Firewall services.</a></li>
+        <li><a href="#capture-running-processes">Capture Running Processes</a></li>
+        <li><a href="#screenshot-capturer">Screenshot capturer</a></li>
+        <li><a href="#steal-telegram-data">Steal Telegram Data</a></li>
+        <li><a href="#steal-browsers-data">Steal Browsers Data</a></li>
+        <li><a href="#file-grabber">File Grabber</a></li>
+        <li><a href="#steal-ftp-credentials">Steal FTP credentials</a></li>
+        <li><a href="#steal-crypto-wallets">Steal Crypto Wallets</a></li>
+        <li><a href="#steal-discord-tokens">Steal Discord Tokens</a></li>
+        <li><a href="#steal-steam-data">Steal Steam data</a></li>
+        <li><a href="#steal-vpn-credentials">Steal VPN credentials</a></li>
+      </ul>
+    </li>
+    <li><a href="#all-targeted-data">All targeted data</a>
+      <ul>
+        <li><a href="#is-it-infected">Is it infected?</a></li>
+        <li><a href="#additional-features-task-runner-and-update-manager">Additional Features: Task runner and update manager</a></li>
+      </ul>
+    </li>
+    <li><a href="#config-extractor">Config Extractor</a></li>
+    <li><a href="#yara">YARA</a></li>
+    <li><a href="#iocs">IOCs</a></li>
+    <li><a href="#mitre-attck">MITRE ATT&amp;CK</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="introduction">Introduction</h2>
+<p>Redline stealer is one of the most popular info stealers out there. The malware is available for sale on underground forums for a different subscription options. The malware has a large set of stealing modules. It harvests:</p>
+<ul>
+<li>Victim information (such as hostname, hardware specs, location, and live screenshot)</li>
+<li>Browser data (such as saved passwords, cookies, and autofill fields)</li>
+<li>Crypto wallets</li>
+<li>Telegram data</li>
+<li>Discord tokens</li>
+<li>Specific files from the victim machine</li>
+<li>FTP server credentials</li>
+<li>Game launcher data (Steam login files)</li>
+<li>VPN credentials</li>
+</ul>
+<p>Also, it has a component that can be used as a loader to execute other malware families or download a newer version of the stealer.</p>
+<p>The attack flow can be represented by the following graph:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/sample2.png"
+        data-srcset="/redline/img/sample2.png, /redline/img/sample2.png 1.5x, /redline/img/sample2.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/sample2.png"
+        title="sample2.png" width="2777" height="1216" /></p>
+<h2 id="analysis">Analysis</h2>
+<h3 id="sample-unpacking">Sample Unpacking</h3>
+<p>To get an overview of the sample I’m dealing with, I use <code>Detect It Easy</code> to get some basic information about what the Programming language is used and if there is known Packer/Obfuscator used.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled.png"
+        data-srcset="/redline/img/Untitled.png, /redline/img/Untitled.png 1.5x, /redline/img/Untitled.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled.png"
+        title="Untitled" width="638" height="176" /></p>
+<p>The sample is written in .NET and uses a protector .NET Reactor. This is a commercial protector but, in most cases, it is just a generic rule that matches many packers.</p>
+<p>Opening the sample in <code>dnSpyEx</code> to see what’s going on.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%201.png"
+        data-srcset="/redline/img/Untitled%201.png, /redline/img/Untitled%201.png 1.5x, /redline/img/Untitled%201.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%201.png"
+        title="Untitled" width="1178" height="550" /></p>
+<p>There are no strings, and the control flow is not so good. Now I will focus on restoring the strings first. Trying the default options of <code>de4dot</code> gives us the following result.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%202.png"
+        data-srcset="/redline/img/Untitled%202.png, /redline/img/Untitled%202.png 1.5x, /redline/img/Untitled%202.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%202.png"
+        title="Untitled" width="1444" height="536" /></p>
+<p>Not too much happened. sill no strings. Now I must get the method that did the string deobfuscation to instrument <code>de4dot</code> to decrypt the strings.</p>
+<p>I noticed that the method <code>tLZpq04kop</code> takes an integer number. This could be an index of string table.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%203.png"
+        data-srcset="/redline/img/Untitled%203.png, /redline/img/Untitled%203.png 1.5x, /redline/img/Untitled%203.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%203.png"
+        title="Untitled" width="1473" height="512" /></p>
+<p>The sample references a resource named <code>F1EpF55XYo6TY0Asiq.kluPYdoAXZXQRoIC8u</code> which consists of some bytes. it Also references <code>RSACryptoServiceProvider.UseMachineKeyStore</code> so it might be used in the string decryption process. without going into details, we know enough to use <code>de4dot</code> to decrypt the strings.</p>
+<p>Using the following command, I gave <code>de4dot</code> a hint about where the decryption function is.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">de4dot</span><span class="o">.</span><span class="n">exe</span> <span class="n">sample2</span> <span class="o">--</span><span class="n">strtyp</span> <span class="n">delegate</span> <span class="o">--</span><span class="n">strtok</span> <span class="mi">06000133</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The result, the strings appeared finally.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%204.png"
+        data-srcset="/redline/img/Untitled%204.png, /redline/img/Untitled%204.png 1.5x, /redline/img/Untitled%204.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%204.png"
+        title="Untitled" width="830" height="440" /></p>
+<p>After spending some time trying to get an idea of what it is trying to do. The sample did some things that did not look malicious. print some Russian sentences, it looks like a game. The sample did not look like it was the final payload, it was a loader that executes the final payload process. I found a noticeably big array that might be the encrypted payload but first I need to verify my assumption.</p>
+<p>I decided to execute the sample and watch what will happen. The sample Spawns another process and exit. so, my assumption is right -I guess-.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%205.png"
+        data-srcset="/redline/img/Untitled%205.png, /redline/img/Untitled%205.png 1.5x, /redline/img/Untitled%205.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%205.png"
+        title="Untitled" width="612" height="54" /></p>
+<ul>
+<li>Reddish color means exited process.</li>
+</ul>
+<p>To extract the final payload, I will use <a href="https://github.com/hasherezade/hollows_hunter" target="_blank" rel="noopener noreffer ">https://github.com/hasherezade/hollows_hunter</a> with <code>/loop</code> option to scan the memory all the time. It will detect and extract the injected code.</p>
+<p>I wanted to verify that it was unpacked right so, I used unpacme and here is the report <a href="https://www.unpac.me/results/b17f5121-0485-499e-9c70-41a66186dbb8" target="_blank" rel="noopener noreffer ">UnpacMe Results d1fe4cf589c8852fbc60fdcdc39bf944e27ccc2ae634b98ee841d9a9c4c6f55f</a></p>
+<p>It Extract 2 child processes, hollows hunter just got one. one of the children is the same as the one extracted with <code>hollows_hunter</code> and the second one is a DLL named <code>RGBCore.dll</code>.</p>
+<h3 id="it-is-redline">It is RedLine!</h3>
+<p>After skimming over the functions in <code>dnSpyEx</code> I see some functionality that the thieves should have. So, to make sure that the guess was right and to get the malware family too, I uploaded the sample to <a href="https://www.virustotal.com/gui/file/d1fe4cf589c8852fbc60fdcdc39bf944e27ccc2ae634b98ee841d9a9c4c6f55f/detection" target="_blank" rel="noopener noreffer ">VirusTotal</a>. And it immediately triggered a lot of AV vendors because it is the infamous <code>Redline Stealer</code>.</p>
+<p>By opening the sample in <code>dnSpyEx</code> , the payload is not obfuscated. only the configuration encrypted and will discuss that in a moment.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%206.png"
+        data-srcset="/redline/img/Untitled%206.png, /redline/img/Untitled%206.png 1.5x, /redline/img/Untitled%206.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%206.png"
+        title="Untitled" width="1414" height="782" /></p>
+<p>The malware executing a thread to execute empty hidden message box.</p>
+<h3 id="c2-server-decryption">C2 server decryption</h3>
+<p>Inside <code>MessageBox.Show</code> method there is an interesting method named <code>StringDecrypt.Decrypt</code> .</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%207.png"
+        data-srcset="/redline/img/Untitled%207.png, /redline/img/Untitled%207.png 1.5x, /redline/img/Untitled%207.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%207.png"
+        title="Untitled" width="1174" height="475" /></p>
+<p>The method takes two arguments: <code>string b64</code> and <code>string stringKey</code> . The first argument is the target string and the second is the key to decrypt the string. The decryption method is quite simple it consists of:</p>
+<ul>
+<li>Decode Base64 string.</li>
+<li>XOR the decoded string with the Key.</li>
+<li>Decode the resulting string using Base64.</li>
+</ul>
+<p>The malware then instantiate  <code>EndpointConnection()</code> object to use in connecting to C2 server.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%208.png"
+        data-srcset="/redline/img/Untitled%208.png, /redline/img/Untitled%208.png 1.5x, /redline/img/Untitled%208.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%208.png"
+        title="Untitled" width="1055" height="336" /></p>
+<p>It then resolves the C2 server IP address. The configuration of the malware is hardcoded in the <code>EntryPoint</code> class.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%209.png"
+        data-srcset="/redline/img/Untitled%209.png, /redline/img/Untitled%209.png 1.5x, /redline/img/Untitled%209.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%209.png"
+        title="Untitled" width="791" height="494" /></p>
+<p>To get the configuration we can use CyberChef (For now, C2 extractor will be explained &amp; implemented at the end of the report).</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2010.png"
+        data-srcset="/redline/img/Untitled%2010.png, /redline/img/Untitled%2010.png 1.5x, /redline/img/Untitled%2010.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2010.png"
+        title="Untitled" width="1185" height="632" /></p>
+<p>The configuration used in this sample:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">IP = &#34;46.8.19.196:53773&#34;
+</span></span><span class="line"><span class="cl">ID = &#34;ytmaloy8&#34;
+</span></span><span class="line"><span class="cl">Message = &#34;&#34;
+</span></span><span class="line"><span class="cl">Key = &#34;Pythonic&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If there are multiple C2 IP addresses, they will be separated by <code>|</code> but in this case, only one IP is used.</p>
+<p>The malware will try to send HTTP request to the IP using <code>endpointConnection.RequestConnection</code> and wait for the response.</p>
+<h3 id="malware-configuration">Malware Configuration</h3>
+<p>The malware continues to prepare some structures and objects. The next thing is to declare  <code>ScanningArgs</code> Class to hold the types of information that the stealer will grab. The configuration is received from the C2 Server. And  <code>ScanResult</code> structure to hold some collected information about the victim machine.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2011.png"
+        data-srcset="/redline/img/Untitled%2011.png, /redline/img/Untitled%2011.png 1.5x, /redline/img/Untitled%2011.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2011.png"
+        title="Untitled" width="697" height="188" /></p>
+<p>The following snippet is a cleaned version of the <code>ScanningArgs</code> Class.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;ScanningArgs&#34;, Namespace = &#34;BrowserExtension&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">ScanningArgs</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanBrowsers&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">ScanBrowsers</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanFiles&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">ScanFiles</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanFTP&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">ScanFTP</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanWallets&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">ScanWallets</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanScreen&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">ScanScreen</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanTelegram&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">ScanTelegram</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanVPN&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">ScanVPN</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanSteam&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">ScanSteam</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanDiscord&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">ScanDiscord</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanFilesPaths&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">ScanFilesPaths</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;BlockedCountry&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">BlockedCountry</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;BlockedIP&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">BlockedIP</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanChromeBrowsersPaths&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">ScanChromeBrowsersPaths</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanGeckoBrowsersPaths&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">ScanGeckoBrowsersPaths</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The following snippet is a cleaned version of the <code>ScanResult</code> structure.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;ScanResult&#34;, Namespace = &#34;BrowserExtension&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">struct</span> <span class="nc">ScanResult</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Hardware&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Hardware</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ReleaseID&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">ReleaseID</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;MachineName&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">MachineName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;OSVersion&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">OSVersion</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Language&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Language</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScreenSize&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">ScreenSize</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ScanDetails&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">ScanDetails</span> <span class="n">ScanDetails</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Country&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Country</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;City&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">City</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;TimeZone&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">TimeZone</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;IPv4&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">IPv4</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Monitor&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Monitor</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;ZipCode&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">ZipCode</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;FileLocation&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">FileLocation</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;SeenBefore&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">SeenBefore</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The ID (<code>ReleaseID</code>) from the configuration is used in this structure with collected information.</p>
+<h3 id="malware-core">Malware Core</h3>
+<p>The next call to <code>ResultFactory.sl9HSDF234</code> is used to populate these structures with collected data.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2012.png"
+        data-srcset="/redline/img/Untitled%2012.png, /redline/img/Untitled%2012.png 1.5x, /redline/img/Untitled%2012.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2012.png"
+        title="Untitled" width="810" height="559" /></p>
+<p>It instantiated <code>ScanDteails</code> object that stores information about the grabbed information as shown in the Variables names.</p>
+<h3 id="geo-location-harvester-and-filter">Geo location harvester and filter</h3>
+<p>The Method <code>ResultFactory.AKSFD8H23</code> is used to populate the <code>ScanResult</code> structure that stores information about the victim machine.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2013.png"
+        data-srcset="/redline/img/Untitled%2013.png, /redline/img/Untitled%2013.png 1.5x, /redline/img/Untitled%2013.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2013.png"
+        title="Untitled" width="1152" height="476" /></p>
+<p>The Important thing here is <code>GeoHelper.Get</code> method that populates the <code>GeoInfo</code> object.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2014.png"
+        data-srcset="/redline/img/Untitled%2014.png, /redline/img/Untitled%2014.png 1.5x, /redline/img/Untitled%2014.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2014.png"
+        title="Untitled" width="1145" height="703" /></p>
+<p>The malware uses public websites to get information about the Geo location of the IP address by making a request to the website and parsing the response data. It tries three websites:</p>
+<ul>
+<li>https[://]api.ip[.]sb/geoip</li>
+<li>https[://]ipinfo[.]io/ip</li>
+<li>https[://]api.ipify[.]org</li>
+</ul>
+<p>If any information were missing, it would be replaced with <code>UNKNOWN</code>. The Country and IP are checked against a Block List of countries and IPs that the malware gets from the configuration received from the C2 server. If There are any matches, the malware does not continue and exits immediately.</p>
+<h3 id="real-stealer-action">Real Stealer Action</h3>
+<p>Method <code>ResultFactory.Actions</code>  has some some other calls; it is the start of collecting victim info.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2015.png"
+        data-srcset="/redline/img/Untitled%2015.png, /redline/img/Untitled%2015.png 1.5x, /redline/img/Untitled%2015.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2015.png"
+        title="Untitled" width="1041" height="548" /></p>
+<p>This is how it looks like; each line of code contains a method call that collects a set of information. The names will be changed to some meaningful names as we go on.</p>
+<h3 id="collecting-victim-machine-information">Collecting Victim machine Information</h3>
+<p>Method <code>ResultFactory.asdkadu8</code> is used to get information about the victim computer:</p>
+<ul>
+<li>The user domain name</li>
+<li>The computer name using <code>WindowsIdentity.GetCurrent().Name</code></li>
+<li>Computer serial number using WMI Query <code>SELECT * FROM Win32_DiskDrive</code> and then get the serial number from the return data.</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2016.png"
+        data-srcset="/redline/img/Untitled%2016.png, /redline/img/Untitled%2016.png 1.5x, /redline/img/Untitled%2016.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2016.png"
+        title="Untitled" width="1531" height="137" /></p>
+<p>The MD5 checksum is calculated to the concatenated string. The value is then stored in <code>Hardware</code> member.</p>
+<p>The next method is <code>ResultFactory.sdfo8n234</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2017.png"
+        data-srcset="/redline/img/Untitled%2017.png, /redline/img/Untitled%2017.png 1.5x, /redline/img/Untitled%2017.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2017.png"
+        title="Untitled" width="901" height="109" /></p>
+<p>As shown, it gets the location of the loaded assembly (Current EXE file) and stored in <code>FileLocation</code> member.</p>
+<p>The next is <code>ResultFactory.sdfi35sdf</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2018.png"
+        data-srcset="/redline/img/Untitled%2018.png, /redline/img/Untitled%2018.png 1.5x, /redline/img/Untitled%2018.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2018.png"
+        title="Untitled" width="1034" height="177" /></p>
+<p>It collects the following information.</p>
+<ul>
+<li>computer Language (Keyboard layout) using <code>InputLanguage.CurrentInputLanguage.Culture.EnglishName</code> and stores the result in <code>Language</code> member.</li>
+<li>The Time Zone using <code>TimeZoneInfo.Local.DisplayName</code>  which get the readable name of the time zone for example <code>(UTC-08:00) Pacific Time (US &amp; Canada)</code> and the value is stored in <code>TimeZone</code> member.</li>
+<li>The display Resolution using <code>DisplayHelper.GetDisplayResolution()</code> and format it in <code>&lt;WIDTH&gt;x&lt;HEIGHT&gt;</code>, the value is then stored in <code>ScreenSize</code> member.</li>
+<li>The Windows OS Version using <code>SystemInfoHelper.GetWindowsVersion()</code> and stores the result in <code>OSVersion</code> member. It decides if the architecture <code>x86</code> or <code>x64</code> using Environment.Is64BitOperatingSystem And to get the computer build and version info, It Query two registry values:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="n">SOFTWARE</span><span class="err">\\</span><span class="n">Microsoft</span><span class="err">\\</span><span class="n">Windows</span> <span class="n">NT</span><span class="err">\\</span><span class="n">CurrentVersion</span><span class="err">\\</span><span class="n">ProductName</span>
+</span></span><span class="line"><span class="cl"><span class="n">SOFTWARE</span><span class="err">\\</span><span class="n">Microsoft</span><span class="err">\\</span><span class="n">Windows</span> <span class="n">NT</span><span class="err">\\</span><span class="n">CurrentVersion</span><span class="err">\\</span><span class="n">CSDVersion</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The values are then concatenated to form <code>&lt;WIN_VERSION_INFO&gt; &lt;ARCH&gt;</code>.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2019.png"
+        data-srcset="/redline/img/Untitled%2019.png, /redline/img/Untitled%2019.png 1.5x, /redline/img/Untitled%2019.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2019.png"
+        title="Untitled" width="1519" height="519" /></p>
+<p>Then, the method <code>ResultFactory.sdf934asd</code> is called.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2020.png"
+        data-srcset="/redline/img/Untitled%2020.png, /redline/img/Untitled%2020.png 1.5x, /redline/img/Untitled%2020.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2020.png"
+        title="Untitled" width="1037" height="85" /></p>
+<p>It gets the computer name and stores it in <code>MachineName</code> member.</p>
+<p>The next is <code>ResultFactory.asdk9345asd</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2021.png"
+        data-srcset="/redline/img/Untitled%2021.png, /redline/img/Untitled%2021.png 1.5x, /redline/img/Untitled%2021.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2021.png"
+        title="Untitled" width="812" height="147" /></p>
+<p>It gets information about the CPU using <code>GetProcessors()</code> that execute the Same WMI Query <code>SELECT * FROM Win32_Processor</code> and retrieves the name and number of cores from the result. The CPU info is stored in <code>SystemHardwares</code> with specifying <code>HardwareType</code> to be <code>HardwareType.Processor</code> (The other value is Graphics)</p>
+<p>The next method <code>ResultFactory.a03md9ajsd</code> Add another element to <code>HardwareType</code> member. It adds graphics card information using <code>SystemInfoHelper.GetGraphicCards()</code> which works the same way as <code>SystemInfoHelper.GetProcessors()</code>. It executes WMI Query to get the graphics card information <code>SELECT * FROM Win32_VideoController</code>, and it stores the Adapter RAM and Name to <code>HardwareType</code> .</p>
+<h3 id="collect-installed-browsers">Collect Installed Browsers</h3>
+<p>The next one is <code>ResultFactory.asdk8jasd</code>. This method calls <code>SystemInfoHelper.GetBrowsers()</code> which as the name implies, Gets the Browsers.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2022.png"
+        data-srcset="/redline/img/Untitled%2022.png, /redline/img/Untitled%2022.png 1.5x, /redline/img/Untitled%2022.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2022.png"
+        title="Untitled" width="1246" height="718" /></p>
+<p>It gets the list of all installed Browsers by querying the subkey <code>&quot;SOFTWARE\\WOW6432Node\\Clients\\StartMenuInternet&quot;</code> which contains a subkey for every installed browser. Then it loops over all the subkeys and gets the name, the executable path, and the version. The result is then stored at a Class to keep the Browser information:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;BrowserVersion&#34;, Namespace = &#34;BrowserExtension&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">BrowserVersion</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;NameOfBrowser&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">NameOfBrowser</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Version&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;PathOfFile&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">PathOfFile</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The next method is <code>ResultFactory.лыв7рыва2</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2023.png"
+        data-srcset="/redline/img/Untitled%2023.png, /redline/img/Untitled%2023.png 1.5x, /redline/img/Untitled%2023.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2023.png"
+        title="Untitled" width="833" height="261" /></p>
+<p>It makes a new instance of <code>SystemHardware</code> class and fills it with the RAM size.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;SystemHardware&#34;, Namespace = &#34;BrowserExtension&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">SystemHardware</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Name&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Counter&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Counter</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;HardType&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">HardwareType</span> <span class="n">HardType</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>the function <code>SystemInfoHelper.TotalOfRAM()</code> gets the total amount of RAM using WMI Query <code>&quot;SELECT * FROM Win32_OperatingSystem&quot;</code> by reading <code>TotalVisibleMemorySize</code> of the resulted structure.</p>
+<h3 id="capture-installed-programs-and-firewall-services">Capture Installed Programs and Firewall services.</h3>
+<p>The next method is <code>ResultFactory.ылв92р34выа</code>, which calls <code>SystemInfoHelper.ListOfPrograms()</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2024.png"
+        data-srcset="/redline/img/Untitled%2024.png, /redline/img/Untitled%2024.png 1.5x, /redline/img/Untitled%2024.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2024.png"
+        title="Untitled" width="1002" height="739" /></p>
+<p>It opens the Registry key <code>SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall</code> which has a subkey for every program installed on the system. It then opens every subkey and gets the Display Name of the program and the Version installed. The values are then added to an ordered list and stored in <code>ScanDetails.Softwares</code>.</p>
+<p>The next call is to <code>ResultFactory.аловй</code> which just calls <code>SystemInfoHelper.GetFirewalls()</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2025.png"
+        data-srcset="/redline/img/Untitled%2025.png, /redline/img/Untitled%2025.png 1.5x, /redline/img/Untitled%2025.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2025.png"
+        title="Untitled" width="1497" height="756" /></p>
+<p>It uses WMI to get information about Firewalls, Antiviruses and AntiSpyWare. There is some kind of obfuscation as it adds <code>WindowsService</code> into the strings and then will be replaced. So, the values are.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="n">SELECT</span> <span class="p">*</span> <span class="n">FROM</span> <span class="n">AntivirusProduct</span>
+</span></span><span class="line"><span class="cl"><span class="n">SELECT</span> <span class="p">*</span> <span class="n">FROM</span> <span class="n">AntiSpyWareProduct</span> 
+</span></span><span class="line"><span class="cl"><span class="n">SELECT</span> <span class="p">*</span> <span class="n">FROM</span> <span class="n">FisrewallProduct</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>And limiting the searching scope to <code>ROOT\\SecurityCenter2</code>, <code>ROOT\\SecurityCenter</code> namespaces which are not documented by Microsoft, but It Holds information about security solutions installed.  The malware then stores the Display name of the security solution found and its version in an ordered list<code>.ScanDetails.SecurityUtils</code>.</p>
+<h3 id="capture-running-processes">Capture Running Processes</h3>
+<p>The next function is <code>ResultFactory.ыал8р45</code> which calls <code>SystemInfoHelper.ListOfProcesses()</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2026.png"
+        data-srcset="/redline/img/Untitled%2026.png, /redline/img/Untitled%2026.png 1.5x, /redline/img/Untitled%2026.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2026.png"
+        title="Untitled" width="996" height="759" /></p>
+<p>It uses WMI to get the list of running processes using the query <code>SELECT * FROM Win32_Process Where SessionId='&lt;SESSION_ID&gt;</code>, the session ID is retrieved from <code>Process.GetCurrentProcess().SessionId</code> which get the session ID for all the currently running processes. It stores <code>ProcessesID</code> , <code>Process Name</code> and <code>CommandLine</code>  for each process. Then it will be stored in a list and saved to <code>ScanDetails.Processes</code> .</p>
+<p>The next method is <code>ResultFactory.ываш9р34</code> which calls <code>SystemInfoHelper.AvailableLanguages()</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2027.png"
+        data-srcset="/redline/img/Untitled%2027.png, /redline/img/Untitled%2027.png 1.5x, /redline/img/Untitled%2027.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2027.png"
+        title="Untitled" width="792" height="259" /></p>
+<p>This method is used to construct a list of all the installed Input languages and stored then in <code>ScanDetails.AvailableLanguages</code></p>
+<h3 id="screenshot-capturer">Screenshot capturer</h3>
+<p>The Next method is <code>ResultFactory.длвап9345</code> which calls <code>DisplayHelper.Parse()</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2028.png"
+        data-srcset="/redline/img/Untitled%2028.png, /redline/img/Untitled%2028.png 1.5x, /redline/img/Untitled%2028.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2028.png"
+        title="Untitled" width="1006" height="442" /></p>
+<p>This method is used to copy the content of the screen to a bitmap object (Takes a screenshot) and then convert the bitmap to an array of bytes (<code>DisplayHelper.ImageToByte(bitmap)</code>) and then stores the resulting array in <code>Monitor</code> member.</p>
+<h3 id="steal-telegram-data">Steal Telegram Data</h3>
+<p>The next method is <code>ResultFactory.ывал8н34</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2029.png"
+        data-srcset="/redline/img/Untitled%2029.png, /redline/img/Untitled%2029.png 1.5x, /redline/img/Untitled%2029.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2029.png"
+        title="Untitled" width="904" height="190" /></p>
+<p>It checks if the member <code>ScanTelegram</code> member is set to True in the configuration. It it is the case, it instantiate an object from <code>FileScannerRule</code> . The function <code>FileScanner.Scan</code> did the scan work.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2030.png"
+        data-srcset="/redline/img/Untitled%2030.png, /redline/img/Untitled%2030.png 1.5x, /redline/img/Untitled%2030.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2030.png"
+        title="Untitled" width="1524" height="741" /></p>
+<p>in general, it gets all the files that met the specified pattern received from the C2 server. The file contents are saved <code>Body</code> attribute in <code>ScannedFile</code> class. <code>PathOfFile</code> , <code>NameOfFile</code> , <code>NameOfApplication</code> and <code>DirOfFile</code> of the target pattern are also stored. The malware uses <code>Overwrite</code> property in the methods so, this might be misleading as there are multiple implementations of the same method. The first one is <code>GetScanArgs</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2031.png"
+        data-srcset="/redline/img/Untitled%2031.png, /redline/img/Untitled%2031.png 1.5x, /redline/img/Untitled%2031.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2031.png"
+        title="Untitled" width="1279" height="789" /></p>
+<p>This function is used to get the directory of telegram data <code>tdata</code>. It uses the information of the running Telegram process. If it fails, it will use the default installation path in the APPDATA folder.</p>
+<p>The second method is <code>GetFolder</code> which gets the Profile directory of the logged user. If it fails, it uses <code>Profile_Unknown</code> as default path.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2032.png"
+        data-srcset="/redline/img/Untitled%2032.png, /redline/img/Untitled%2032.png 1.5x, /redline/img/Untitled%2032.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2032.png"
+        title="Untitled" width="917" height="441" /></p>
+<h3 id="steal-browsers-data">Steal Browsers Data</h3>
+<p>The Next function is <code>ResultFactory.вал93тфыв</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2033.png"
+        data-srcset="/redline/img/Untitled%2033.png, /redline/img/Untitled%2033.png 1.5x, /redline/img/Untitled%2033.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2033.png"
+        title="Untitled" width="897" height="139" /></p>
+<p>It checks for <code>ScanBrowsers</code> in the configuration. Then it calls <Browser>.Scan() with the scan settings. All chromium-based browsers are handled by the first method which takes the paths of the target browsers as an argument.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2034.png"
+        data-srcset="/redline/img/Untitled%2034.png, /redline/img/Untitled%2034.png 1.5x, /redline/img/Untitled%2034.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2034.png"
+        title="Untitled" width="911" height="270" /></p>
+<p>The malware looks for <code>Login Data</code>, <code>Web Data</code> and <code>Cookies</code> for each browser in the list. To copy these files, it calls a helper function <code>FileCopier.FindPaths</code> . The function <code>FindPaths</code>  build the path to <code>App Data</code>,<code>Program Files</code> and <code>Program Files (x86)</code>.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2035.png"
+        data-srcset="/redline/img/Untitled%2035.png, /redline/img/Untitled%2035.png 1.5x, /redline/img/Untitled%2035.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2035.png"
+        title="Untitled" width="932" height="528" /></p>
+<p>Then, it loops over all the files in every path of the paths list. Looking for the file names passed (Last argument).  and then saves the full path to the file in a list. Back to the <code>Scan</code> function, now <code>text2</code> in the loop will be the full path to <code>Login Data</code>, <code>Web Data</code> or <code>Cookies</code> file. Then it instantiates an object from <code>ScannedBrowser</code> class to hold the information collected.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;ScannedBrowser&#34;, Namespace = &#34;BrowserExtension&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">ScannedBrowser</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;BrowserName&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">BrowserName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;BrowserProfile&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">BrowserProfile</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Logins&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">IList</span><span class="p">&lt;</span><span class="n">Account</span><span class="p">&gt;</span> <span class="n">Logins</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Autofills&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">IList</span><span class="p">&lt;</span><span class="n">Autofill</span><span class="p">&gt;</span> <span class="n">Autofills</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;CC&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">IList</span><span class="p">&lt;</span><span class="n">CC</span><span class="p">&gt;</span> <span class="n">CC</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Cookies&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">IList</span><span class="p">&lt;</span><span class="n">ScannedCookie</span><span class="p">&gt;</span> <span class="n">Cookies</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It then checks the name of browser, if it contains <code>Opera GX Stable</code> set the <code>BrwoserName</code> to <code>Opera GX</code>. If it is not the case, it is a chromium-based browser so, it changes the path of the files to <code>%USERPROFILE%\\AppData\\Roaming\\&lt;BROWSER_NAME&gt;</code> and <code>AppData\\Local\\</code> if it returns an error. It gets the profile name by parsing the folder name before <code>User Data</code> folder and stores it in <code>BrowserProfile</code> . In the case of Chromium based browsers, this will be the browser name.</p>
+<p>Then, it saves the target data of the browsers’ local saved data.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2036.png"
+        data-srcset="/redline/img/Untitled%2036.png, /redline/img/Untitled%2036.png 1.5x, /redline/img/Untitled%2036.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2036.png"
+        title="Untitled" width="1371" height="242" /></p>
+<p>It looks for <code>Passwords</code>, <code>Cookies</code>, <code>Autofill fields</code> and <code>Credit Card information</code></p>
+<p>The first method in the browser stealer module is <code>ScanPasswords()</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2037.png"
+        data-srcset="/redline/img/Untitled%2037.png, /redline/img/Untitled%2037.png 1.5x, /redline/img/Untitled%2037.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2037.png"
+        title="Untitled" width="1093" height="802" /></p>
+<p>First it adds <code>Login Data</code> to the passed path to get a full path which contains the encrypted passwords. It then calls <code>C_h_r_o_m_e.ParseLocalStateKey()</code> method. <code>ParseLocalStateKey</code>  is used to look for <code>Local State</code> or <code>LocalPrefs.json</code> files.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2038.png"
+        data-srcset="/redline/img/Untitled%2038.png, /redline/img/Untitled%2038.png 1.5x, /redline/img/Untitled%2038.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2038.png"
+        title="Untitled" width="811" height="223" /></p>
+<p>Then, it retrieves the <code>encrypted_key</code> from <code>os_crypt</code> member, this key will be used later to crack the saved passwords.</p>
+<p>Back to <code>ScanPasswords</code> , the next step to crack the passwords is to open <code>Login Data</code> database. but first it copies the file to temporary directory. After opening <code>Login Data</code>, it reads <code>logins</code> table.</p>
+<p>For each entry, it uses <code>Account</code> class instance to hold its information.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;Account&#34;, Namespace = &#34;BrowserExtension&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">Account</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;URL&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">URL</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Username&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Username</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Password&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Password</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>URL</code> and <code>Username</code> are in clear text. The <code>Password</code> is encrypted, to decrypt it, uses <code>C_h_r_o_m_e.DecryptChromium</code> and passing the encrypted password and the previously saved <code>encrypted_key</code> .</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2039.png"
+        data-srcset="/redline/img/Untitled%2039.png, /redline/img/Untitled%2039.png 1.5x, /redline/img/Untitled%2039.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2039.png"
+        title="Untitled" width="961" height="326" /></p>
+<p>The Result of the entire process is a clear text password and usernames associated with a URL, it saved in <code>scannedBrowser.Logins</code> .</p>
+<p>The next method in the browser stealer module is <code>C_h_r_o_m_e.ScanCook</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2040.png"
+        data-srcset="/redline/img/Untitled%2040.png, /redline/img/Untitled%2040.png 1.5x, /redline/img/Untitled%2040.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2040.png"
+        title="Untitled" width="1354" height="807" /></p>
+<p>It gets the path to <code>Cookies</code> database by appending <code>Cookies</code> to the User Data full path. This is not valid path to the cookies database now, it moved to <code>Default\Network</code> under <code>User Data</code> Directory. Assuming it is right (In older version or any other reason) It opens a database connection to the copied <code>Cookies</code> file and gets its information to <code>ScannedCookie</code> class.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;ScannedCookie&#34;, Namespace = &#34;BrowserExtension&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">ScannedCookie</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Host&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Host</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Http&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">Http</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Path&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Path</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Secure&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">bool</span> <span class="n">Secure</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Expires&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">long</span> <span class="n">Expires</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Name&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Value&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <code>Value</code> is decrypted using the same <code>C_h_r_o_m_e.DecryptChromium</code> method with the key from <code>Local State</code>. If the expiration value is below zero, it extends it by adding a large number.</p>
+<p>The next part of the Browser data stealing module is <code>C_h_r_o_m_e.ScanFills(dataFolder)</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2041.png"
+        data-srcset="/redline/img/Untitled%2041.png, /redline/img/Untitled%2041.png 1.5x, /redline/img/Untitled%2041.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2041.png"
+        title="Untitled" width="1274" height="589" /></p>
+<p>In this function, it targets the Auto Saved fields of the browser which are stored in <code>Web Data</code> database. The functionality is like the previous method. it opens a database connection to <code>Web Data</code> and reads <code>autofill</code> table. Then, it saves the content (after decrypting the <code>Value</code> field) in <code>AutoFill</code> class which has only two attributes: <code>Name</code> and <code>Value</code>.</p>
+<p>The last method in the browser data stealing module is <code>C_h_r_o_m_e.ScanCC</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2042.png"
+        data-srcset="/redline/img/Untitled%2042.png, /redline/img/Untitled%2042.png 1.5x, /redline/img/Untitled%2042.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2042.png"
+        title="Untitled" width="946" height="790" /></p>
+<p>The method is also like the previous ones. It Opens <code>Web Data</code> database and read <code>credit_cards</code> table. Then, for each row, it stores the content of the credit card information (After decrypting the card number) in <code>CC</code> Class instance. —There is some kind of obfuscation which adds some random string and then removes it with a call to<code>. replace(string, string.empty)</code> —.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;CC&#34;, Namespace = &#34;BrowserExtension&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">CC</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;HolderName&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">HolderName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Month&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">int</span> <span class="n">Month</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Year&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">int</span> <span class="n">Year</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Number&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Number</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>That’s all for the browser data stealing module for Chromium based browsers. There is another method used to get the data from <code>Gecko</code> Browser. But it harvests the cookies only, with the same method explained before but the data folder is different.</p>
+<h3 id="file-grabber">File Grabber</h3>
+<p>The next function in the Actions is <code>ResultFactory.вашу0л34</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2043.png"
+        data-srcset="/redline/img/Untitled%2043.png, /redline/img/Untitled%2043.png 1.5x, /redline/img/Untitled%2043.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2043.png"
+        title="Untitled" width="797" height="130" /></p>
+<p>This method is used to grab files from the victim machine -If enabled-. The <code>RecoursiveFileGrabber.Scan</code> method is used to look for the file pattern in all the logical drives.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2044.png"
+        data-srcset="/redline/img/Untitled%2044.png, /redline/img/Untitled%2044.png 1.5x, /redline/img/Untitled%2044.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2044.png"
+        title="Untitled" width="1022" height="535" /></p>
+<p>If the file is found in any place on the system. It creates an object of <code>ScannedFile</code> class. The body (Content) of the file is copied using the constructor method. Other information like <code>PathOfFile</code> , <code>NameOfFile</code> and <code>DirOfFile</code> are stored in the created object. This information is stored back into <code>ScanDetails.ScannedFiles</code> list.</p>
+<h3 id="steal-ftp-credentials">Steal FTP credentials</h3>
+<p>The next method is <code>ResultFactory.навева</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2045.png"
+        data-srcset="/redline/img/Untitled%2045.png, /redline/img/Untitled%2045.png 1.5x, /redline/img/Untitled%2045.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2045.png"
+        title="Untitled" width="615" height="121" /></p>
+<p>It scans for <code>Filezilla</code> FTP server (if enabled in the configuration) using <code>FileZilla.Scan()</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2046.png"
+        data-srcset="/redline/img/Untitled%2046.png, /redline/img/Untitled%2046.png 1.5x, /redline/img/Untitled%2046.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2046.png"
+        title="Untitled" width="731" height="572" /></p>
+<p>It looks for <code>FileZilla</code> directory in the App Data folder. Specifically, it searches for <code>recentservers.xml</code> and <code>sitemanager.xml</code>. For both, it calls <code>FileZilla.ScanCredentials</code> which loads the XML file and calls <code>FileZilla.GetRecent</code> to get the information stored in the XML file. It stores the FTP server information in <code>Account</code> object:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;Account&#34;, Namespace = &#34;BrowserExtension&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">Account</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;URL&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">URL</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Username&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Username</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Password&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">Password</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The URL is holding the <code>URL&lt;:PORT&gt;</code> and the username and password in their fields.</p>
+<h3 id="steal-crypto-wallets">Steal Crypto Wallets</h3>
+<p>The next method is <code>ResultFactory.ащы9р34</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2047.png"
+        data-srcset="/redline/img/Untitled%2047.png, /redline/img/Untitled%2047.png 1.5x, /redline/img/Untitled%2047.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2047.png"
+        title="Untitled" width="788" height="413" /></p>
+<p>It creates <code>ScannedFile</code> object that will be used to copy the found target files and its metadata.</p>
+<p>It looks for Crypto wallets. The method <code>browserExtensionsRule.ScanPaths</code>  is used to prepare a dictionary of the crypto-wallets browser extensions names and addresses. The method looks for a large set of extensions.</p>
+<table>
+<thead>
+<tr>
+<th>ffnbelfdoeiohenkjibnmadjiehjhajb</th>
+<th>YoroiWallet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ibnejdfjmmkpcnlpebklmnkoeoihofec</td>
+<td>Tronlink</td>
+</tr>
+<tr>
+<td>jbdaocneiiinmjbjlgalhcelgbejmnid</td>
+<td>NiftyWallet</td>
+</tr>
+<tr>
+<td>nkbihfbeogaeaoehlefnkodbefgpgknn</td>
+<td>Metamask</td>
+</tr>
+<tr>
+<td>afbcbjpbpfadlkmhmclhkeeodmamcflc</td>
+<td>MathWallet</td>
+</tr>
+<tr>
+<td>hnfanknocfeofbddgcijnmhnfnkdnaad</td>
+<td>Coinbase</td>
+</tr>
+<tr>
+<td>fhbohimaelbohpjbbldcngcnapndodjp</td>
+<td>BinanceChain</td>
+</tr>
+<tr>
+<td>odbfpeeihdkbihmopkbjmoonfanlbfcl</td>
+<td>BraveWallet</td>
+</tr>
+<tr>
+<td>hpglfhgfnhbgpjdenjgmdgoeiappafln</td>
+<td>GuardaWallet</td>
+</tr>
+<tr>
+<td>blnieiiffboillknjnepogjhkgnoapac</td>
+<td>EqualWallet</td>
+</tr>
+<tr>
+<td>cjelfplplebdjjenllpjcblmjkfcffne</td>
+<td>JaxxxLiberty</td>
+</tr>
+<tr>
+<td>fihkakfobkmkjojpchpfgcmhfjnmnfpi</td>
+<td>BitAppWallet</td>
+</tr>
+<tr>
+<td>kncchdigobghenbbaddojjnnaogfppfj</td>
+<td>iWallet</td>
+</tr>
+<tr>
+<td>amkmjjmmflddogmhpjloimipbofnfjih</td>
+<td>Wombat</td>
+</tr>
+<tr>
+<td>fhilaheimglignddkjgofkcbgekhenbh</td>
+<td>AtomicWallet</td>
+</tr>
+<tr>
+<td>nlbmnnijcnlegkjjpcfjclmcfggfefdm</td>
+<td>MewCx</td>
+</tr>
+<tr>
+<td>nanjmdknhkinifnkgdcggcfnhdaammmj</td>
+<td>GuildWallet</td>
+</tr>
+<tr>
+<td>nkddgncdjgjfcddamfgcmfnlhccnimig</td>
+<td>SaturnWallet</td>
+</tr>
+<tr>
+<td>fnjhmkhhmkbjkkabndcnnogagogbneec</td>
+<td>RoninWallet</td>
+</tr>
+</tbody>
+</table>
+<p>Then, it reuses <code>FileScanner.Scan</code> to scan for the extensions. It adds some Rules or patterns for the search which are all the mentioned extensions and some other applications in the following list:</p>
+<p>The result data is stored in <code>ScanDetails.ScannedWallets</code></p>
+<p>(All the folders are on <code>App Data</code> Directory)</p>
+<table>
+<thead>
+<tr>
+<th>Wallet Name</th>
+<th>Target Files</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Armory</td>
+<td>Any file with .wallet extension in \Armory folder</td>
+</tr>
+<tr>
+<td>Atomic</td>
+<td>All files in \atomic folder</td>
+</tr>
+<tr>
+<td>Coinomi</td>
+<td>All files in \Coinomi folder</td>
+</tr>
+<tr>
+<td>Electrum</td>
+<td>All files in \Electrum\wallets folder</td>
+</tr>
+<tr>
+<td>Ethereum</td>
+<td>All files in \Ethereum\wallets folder</td>
+</tr>
+<tr>
+<td>Exodus</td>
+<td>Exodus\exodus.wallet and Any .JSON file in Exodus folder</td>
+</tr>
+<tr>
+<td>Guarda</td>
+<td>All files in \Guarda folder</td>
+</tr>
+<tr>
+<td>Jaax</td>
+<td>\com.liberty.jaxx</td>
+</tr>
+<tr>
+<td>All Wallets: wallet.dat in App Data and App Data Local</td>
+<td>Any file contains wallet in it.</td>
+</tr>
+<tr>
+<td>Browser Extensions</td>
+<td>Extensions Folder in the browser Data Folder</td>
+</tr>
+</tbody>
+</table>
+<h3 id="steal-discord-tokens">Steal Discord Tokens</h3>
+<p>The next method is <code>ResultFactory.ыва83о4тфыв</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2048.png"
+        data-srcset="/redline/img/Untitled%2048.png, /redline/img/Untitled%2048.png 1.5x, /redline/img/Untitled%2048.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2048.png"
+        title="Untitled" width="796" height="156" /></p>
+<p>It is used to steal Discord tokens, this is done by <code>DiscordRule.GetTokens()</code> It scans the <code>%appdata%\\discord\\Local Storage\\leveldb</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2049.png"
+        data-srcset="/redline/img/Untitled%2049.png, /redline/img/Untitled%2049.png 1.5x, /redline/img/Untitled%2049.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2049.png"
+        title="Untitled" width="803" height="528" /></p>
+<p>It searches for any <code>.log</code> and <code>.db</code> file in the discord app folder. And it uses the following Regex to filter out the result and get a specific wanted pattern <code>[A-Za-z\\d]{24}\\.[\\w-]{6}\\.[\\w-]{27}</code></p>
+<p>The patterns get the data in format <code>&lt;24 digit and letter&gt;.&lt;6 letters, digits or hyphens&gt;.&lt;27 letter, digit or hyphen&gt;</code> . This pattern is matching for Discord Tokens. These Tokens are stored in <code>scanDetails.GameChatFiles</code> .</p>
+<h3 id="steal-steam-data">Steal Steam data</h3>
+<p>The next Function is <code>ResultFactory.askd435</code>.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2050.png"
+        data-srcset="/redline/img/Untitled%2050.png, /redline/img/Untitled%2050.png 1.5x, /redline/img/Untitled%2050.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2050.png"
+        title="Untitled" width="801" height="172" /></p>
+<p>The <code>GameLauncherRule</code> object two methods. <code>GetFolder</code> and <code>GetScanArgs</code> which are used in the same <code>Scan</code> Method.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2051.png"
+        data-srcset="/redline/img/Untitled%2051.png, /redline/img/Untitled%2051.png 1.5x, /redline/img/Untitled%2051.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2051.png"
+        title="Untitled" width="1071" height="640" /></p>
+<p>It Reads the registry value <code>Software\\Valve\\Steam\\SteamPath</code> to get the installation path of Steam. It adds <code>**ssfn*</code>* as a searching pattern which searches for any file contains <code>ssfn</code> string. The <code>ssfn</code> files are used to login to steam account without 2FA.</p>
+<p>It adds another search target is <code>config</code> inside steam installation Directory and looks for <code>.vdf</code> files. Which stores metadata about the games installed and installation scripts.</p>
+<h3 id="steal-vpn-credentials">Steal VPN credentials</h3>
+<p>The last method is <code>ResultFactory.sdi845sa</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2052.png"
+        data-srcset="/redline/img/Untitled%2052.png, /redline/img/Untitled%2052.png 1.5x, /redline/img/Untitled%2052.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2052.png"
+        title="Untitled" width="698" height="262" /></p>
+<p>It makes a list of Nord VPN accounts, but the stealing functionality is not present.</p>
+<p>It initiates two scans: one for <code>OpenVPN</code> files and the second for <code>ProtonVPN</code>.</p>
+<p>First, <code>OpenVPNRule</code> . it scans the folder <code>%USERPROFILE%\\AppData\\Roaming\\OpenVPNConnect\\profiles</code> for any <code>.ovpn</code> files. The stolen files will be stored in <code>ScanDetails.Open</code>.</p>
+<p>Second, <code>ProtonVPNRule</code> . It scans the folder <code>%USERPROFILE%\\AppData\\Local\\ProtonVPN</code> for any <code>.ovpn</code> files. The stolen files will be stored in <code>ScanDetails.Open</code>.</p>
+<p>This is the end of the Stealing functionality in the malware. And here is the action object After renaming the methods to represent its functionality.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2053.png"
+        data-srcset="/redline/img/Untitled%2053.png, /redline/img/Untitled%2053.png 1.5x, /redline/img/Untitled%2053.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2053.png"
+        title="Untitled" width="854" height="458" /></p>
+<h2 id="all-targeted-data">All targeted data</h2>
+<p>The Data that the stealer is targeting can be summarized in the following table:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IPv4</td>
+<td>String</td>
+<td>Victim’s IP address</td>
+</tr>
+<tr>
+<td>City</td>
+<td>String</td>
+<td>Victim’s City</td>
+</tr>
+<tr>
+<td>Country</td>
+<td>String</td>
+<td>Victim’s Country</td>
+</tr>
+<tr>
+<td>ZipCode</td>
+<td>String</td>
+<td>Victim’s Zip Code</td>
+</tr>
+<tr>
+<td>Hardware</td>
+<td>String</td>
+<td>MD5 hash of (User Domain + Username + Serial number) Used as a unique parameter of the victim.</td>
+</tr>
+<tr>
+<td>FileLocation</td>
+<td>String</td>
+<td>The path of the malware</td>
+</tr>
+<tr>
+<td>Language</td>
+<td>String</td>
+<td>The language the victim machine</td>
+</tr>
+<tr>
+<td>TimeZone</td>
+<td>String</td>
+<td>The time zone of the victim machine</td>
+</tr>
+<tr>
+<td>ScreenSize</td>
+<td>String</td>
+<td>Screen size <Width>x<Height></td>
+</tr>
+<tr>
+<td>OSVersion</td>
+<td>String</td>
+<td>Windows version running on the victim machine</td>
+</tr>
+<tr>
+<td>MachineName</td>
+<td>String</td>
+<td>Name of the logged in user</td>
+</tr>
+<tr>
+<td>ScanDetails.SystemHardwares</td>
+<td>List</td>
+<td>Hardware information. CPU, GPU, and RAM</td>
+</tr>
+<tr>
+<td>ScanDetails.InstalledBrowsers</td>
+<td>List</td>
+<td>List of all browsers installed</td>
+</tr>
+<tr>
+<td>ScanDetails.Softwares</td>
+<td>List</td>
+<td>List of all installed programs</td>
+</tr>
+<tr>
+<td>ScanDetails.SecurityUtils</td>
+<td>List</td>
+<td>List of all installed firewalls, antivirus, and antispyware</td>
+</tr>
+<tr>
+<td>ScanDetails.Processes</td>
+<td>List</td>
+<td>List of all running processes</td>
+</tr>
+<tr>
+<td>ScanDetails.AvailableLanguages</td>
+<td>List</td>
+<td>List of all languages on the victim machine (Keyboard layouts used)</td>
+</tr>
+<tr>
+<td>Monitor</td>
+<td>Byte Array</td>
+<td>Screenshot from the victim machine</td>
+</tr>
+<tr>
+<td>ScanDetails.MessageClientFiles</td>
+<td>List</td>
+<td>List of stolen files from Telegram data files</td>
+</tr>
+<tr>
+<td>ScanDetails.Browsers</td>
+<td>List</td>
+<td>List of ScannedBrowers object that saves the stolen data from the installed browsers.</td>
+</tr>
+<tr>
+<td>ScanDetails.ScannedFiles</td>
+<td>List</td>
+<td>List of files to be sent to the attacker (File names and petterns recieved from C2 server)</td>
+</tr>
+<tr>
+<td>ScanDetails.FtpConnections</td>
+<td>List</td>
+<td>List of Account object that stores the stolen credentials from FileZilla FTP server -if installed-</td>
+</tr>
+<tr>
+<td>ScanDetails.ScannedWallets</td>
+<td>List</td>
+<td>List of stolen crypto-wallets local file and extensions data</td>
+</tr>
+<tr>
+<td>ScanDetails.GameChatFiles</td>
+<td>List</td>
+<td>List of stolen discord tokens</td>
+</tr>
+<tr>
+<td>ScanDetails.GameLauncherFiles</td>
+<td>List</td>
+<td>List of stolen steam account data and authentication files</td>
+</tr>
+<tr>
+<td>ScanDetails.NordAccounts</td>
+<td>List</td>
+<td>List if Account object that stores stolen Nord VPN account credentials -Not Implemented-</td>
+</tr>
+<tr>
+<td>ScanDetails.Open</td>
+<td>List</td>
+<td>List of Open VPN files (.ovpn)</td>
+</tr>
+<tr>
+<td>ScanDetails.Proton</td>
+<td>List</td>
+<td>List of Proton VPN files (.ovpn)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="is-it-infected">Is it infected?</h3>
+<p>After collecting the user data. The malware does a check to see if the system is already infected or not.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2054.png"
+        data-srcset="/redline/img/Untitled%2054.png, /redline/img/Untitled%2054.png 1.5x, /redline/img/Untitled%2054.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2054.png"
+        title="Untitled" width="1097" height="300" /></p>
+<p>It checks the folder <code>Yandex\\Yaddon</code> in the App Data folder. If the Folder exists, it returns True which means that it’s already infected.</p>
+<p>If it does not exist, returns False which means that it is not infected. So, it adds the directory as a mark of infection.</p>
+<h3 id="additional-features-task-runner-and-update-manager">Additional Features: Task runner and update manager</h3>
+<p>The Next Step is to Send the collected data. So, it makes HTTP request to the Opened connection to the C2 server with the collected data.</p>
+<p>The malware can receive malware updates and tasks from the C2 server. The received task parameters stored in <code>UpdateTask</code> object.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;UpdateTask&#34;, Namespace = &#34;BrowserExtension&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">UpdateTask</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Nam
+</span></span></span><span class="line"><span class="cl"><span class="na">e = &#34;TaskID&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">int</span> <span class="n">TaskID</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;TaskArg&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">TaskArg</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;Action&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="n">UpdateAction</span> <span class="n">Action</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[DataMember(Name = &#34;DomainFilter&#34;)]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="kt">string</span> <span class="n">DomainFilter</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <code>TaskAction</code> Enum contains:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="na">[DataContract(Name = &#34;RemoteTaskAction&#34;)]</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">enum</span> <span class="n">UpdateAction</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[EnumMember]</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Download</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[EnumMember]</span>
+</span></span><span class="line"><span class="cl">	<span class="n">RunPE</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[EnumMember]</span>
+</span></span><span class="line"><span class="cl">	<span class="n">DownloadAndEx</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[EnumMember]</span>
+</span></span><span class="line"><span class="cl">	<span class="n">OpenLink</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="na">	[EnumMember]</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Cmd</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The tasks are Executed by <code>TaskResolver</code> method.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2055.png"
+        data-srcset="/redline/img/Untitled%2055.png, /redline/img/Untitled%2055.png 1.5x, /redline/img/Untitled%2055.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2055.png"
+        title="Untitled" width="473" height="183" /></p>
+<p>The Actions it can take are:</p>
+<ul>
+<li>
+<p><code>CommandLineUpdate</code></p>
+<p>Starts a new hidden CMD to execute received file and command in <code>TaskArg</code> .</p>
+</li>
+<li>
+<p><code>DownloadUpdate</code></p>
+<p>Download a file from a specified URL (or IP). The file location and source URL are specified in <code>TaskArg</code> with <code>|</code> is a separator between them.</p>
+</li>
+<li>
+<p><code>DownloadAndExecuteUpdate</code></p>
+<p>Downloads with the same method of <code>DownloadUpdate</code> And executes it once it is downloaded.</p>
+</li>
+<li>
+<p><code>OpenUpdate</code></p>
+<p>Opens a process to execute the received update file.</p>
+</li>
+</ul>
+<p>And with that, we&rsquo;ve reached the end of the analysis of Redline Steal.</p>
+<h2 id="config-extractor">Config Extractor</h2>
+<p>I’ve tried to match the config using <code>yara-python</code> module, and extract <code>mdtokens</code> but all the .NET parser -in python- does not keep the alignment and offsets that in the .NET header. All user string accumulated in array so, token index is not usefull.</p>
+<p>The current solution matching for the pattern of the strings: Base64 string followed by Base64 string followed by an empty string. This will work for a similar pattern but could be broken easily.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="n">import</span> <span class="n">argparse</span>
+</span></span><span class="line"><span class="cl"><span class="n">import</span> <span class="n">re</span>
+</span></span><span class="line"><span class="cl"><span class="n">import</span> <span class="n">base64</span>
+</span></span><span class="line"><span class="cl"><span class="k">from</span> <span class="n">dotnetfile</span> <span class="n">import</span> <span class="n">DotNetPE</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">##</span> <span class="n">slightly</span> <span class="n">modified</span> <span class="k">from</span> <span class="n">RussianPanda</span> <span class="n">base64</span> <span class="n">regex</span> <span class="n">to</span> <span class="n">match</span> <span class="n">strings</span> <span class="n">that</span> <span class="n">are</span> <span class="m">15</span> <span class="n">or</span> <span class="n">more</span> <span class="n">characters</span> <span class="kt">long</span>
+</span></span><span class="line"><span class="cl"><span class="n">base64_regex</span> <span class="p">=</span> <span class="n">r</span><span class="err">&#39;</span><span class="p">^(?!.*/)(?=.{</span><span class="m">15</span><span class="p">,})(?:[</span><span class="n">A</span><span class="p">-</span><span class="n">Za</span><span class="p">-</span><span class="n">z0</span><span class="p">-</span><span class="m">9</span><span class="p">+/]{</span><span class="m">4</span><span class="p">})*(?:[</span><span class="n">A</span><span class="p">-</span><span class="n">Za</span><span class="p">-</span><span class="n">z0</span><span class="p">-</span><span class="m">9</span><span class="p">+/]{</span><span class="m">2</span><span class="p">}==|[</span><span class="n">A</span><span class="p">-</span><span class="n">Za</span><span class="p">-</span><span class="n">z0</span><span class="p">-</span><span class="m">9</span><span class="p">+/]{</span><span class="m">3</span><span class="p">}=)?</span><span class="err">$&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">def</span> <span class="n">XOR</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">out</span> <span class="p">=</span>  <span class="err">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">range</span><span class="p">(</span><span class="n">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">out</span> <span class="p">+=</span><span class="n">chr</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">^</span> <span class="n">ord</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="p">%</span> <span class="n">len</span><span class="p">(</span><span class="n">key</span><span class="p">)])</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">out</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">def</span> <span class="n">decrypt_config</span><span class="p">(</span><span class="n">user_strings</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">config</span> <span class="p">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">IP</span> <span class="p">=</span> <span class="n">user_strings</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ID</span> <span class="p">=</span> <span class="n">user_strings</span><span class="p">[</span><span class="n">i</span><span class="p">+</span><span class="m">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">key</span> <span class="p">=</span> <span class="n">user_strings</span><span class="p">[</span><span class="n">i</span><span class="p">+</span><span class="m">3</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">config</span><span class="p">[</span><span class="err">&#39;</span><span class="n">IP</span><span class="err">&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="n">base64</span><span class="p">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">XOR</span><span class="p">(</span><span class="n">base64</span><span class="p">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">IP</span><span class="p">),</span> <span class="n">key</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">config</span><span class="p">[</span><span class="err">&#39;</span><span class="n">ID</span><span class="err">&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="n">base64</span><span class="p">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">XOR</span><span class="p">(</span><span class="n">base64</span><span class="p">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">ID</span><span class="p">),</span> <span class="n">key</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">config</span><span class="p">[</span><span class="err">&#39;</span><span class="n">key</span><span class="err">&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="n">key</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">config</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">def</span> <span class="n">print_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">print</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Config</span><span class="p">:</span><span class="err">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">print</span><span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="p">*</span><span class="m">40</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">print</span><span class="p">(</span><span class="err">&#39;</span><span class="n">IP</span><span class="p">:</span> <span class="p">{}</span><span class="err">&#39;</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="err">&#39;</span><span class="n">IP</span><span class="err">&#39;</span><span class="p">].</span><span class="n">decode</span><span class="p">(</span><span class="err">&#39;</span><span class="n">utf</span><span class="p">-</span><span class="m">8</span><span class="err">&#39;</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">print</span><span class="p">(</span><span class="err">&#39;</span><span class="n">ID</span><span class="p">:</span> <span class="p">{}</span><span class="err">&#39;</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="err">&#39;</span><span class="n">ID</span><span class="err">&#39;</span><span class="p">].</span><span class="n">decode</span><span class="p">(</span><span class="err">&#39;</span><span class="n">utf</span><span class="p">-</span><span class="m">8</span><span class="err">&#39;</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">print</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Key</span><span class="p">:</span> <span class="p">{}</span><span class="err">&#39;</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="err">&#39;</span><span class="n">key</span><span class="err">&#39;</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">def</span> <span class="n">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">parser</span> <span class="p">=</span> <span class="n">argparse</span><span class="p">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="p">=</span><span class="err">&#39;</span><span class="n">RedLine</span> <span class="n">config</span> <span class="n">extractor</span><span class="err">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="err">&#39;</span><span class="p">-</span><span class="n">f</span><span class="err">&#39;</span><span class="p">,</span> <span class="err">&#39;</span><span class="p">--</span><span class="n">file</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">help</span><span class="p">=</span><span class="err">&#39;</span><span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">PE</span> <span class="n">file</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">required</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">args</span> <span class="p">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">parse_args</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">dotnet_file</span> <span class="p">=</span> <span class="n">DotNetPE</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">file</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">user_strings</span> <span class="p">=</span> <span class="n">dotnet_file</span><span class="p">.</span><span class="n">get_user_stream_strings</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">range</span><span class="p">(</span><span class="n">len</span><span class="p">(</span><span class="n">user_strings</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">            <span class="err">#</span> <span class="n">match</span> <span class="k">for</span> <span class="n">two</span> <span class="n">base64</span> <span class="n">strings</span> <span class="k">in</span> <span class="n">a</span> <span class="n">row</span> <span class="n">with</span> <span class="n">a</span> <span class="n">blank</span> <span class="n">line</span> <span class="n">after</span> <span class="n">them</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">re</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">base64_regex</span><span class="p">,</span> <span class="n">user_strings</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="n">and</span> <span class="n">re</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">base64_regex</span><span class="p">,</span> <span class="n">user_strings</span><span class="p">[</span><span class="n">i</span><span class="p">+</span><span class="m">1</span><span class="p">])</span> <span class="n">and</span> <span class="n">user_strings</span><span class="p">[</span><span class="n">i</span><span class="p">+</span><span class="m">2</span><span class="p">]</span> <span class="p">==</span> <span class="err">&#39;&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">config</span> <span class="p">=</span> <span class="n">decrypt_config</span><span class="p">(</span><span class="n">user_strings</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">print_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span>
+</span></span><span class="line"><span class="cl">        <span class="n">print</span><span class="p">(</span><span class="s">&#34;No matches found&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">except</span> <span class="n">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">print</span><span class="p">(</span><span class="s">&#34;Unexpected error:&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">print</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Error</span><span class="p">:</span> <span class="p">{}</span><span class="err">&#39;</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">__name__</span> <span class="p">==</span> <span class="err">&#39;</span><span class="n">__main__</span><span class="err">&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Usage:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/Untitled%2056.png"
+        data-srcset="/redline/img/Untitled%2056.png, /redline/img/Untitled%2056.png 1.5x, /redline/img/Untitled%2056.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/Untitled%2056.png"
+        title="Untitled" width="491" height="85" /></p>
+<h2 id="yara">YARA</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="n">rule</span> <span class="n">RedLine_Stealer</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">meta</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">malware</span> <span class="p">=</span> <span class="s">&#34;Redline Stealer&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">hash</span> <span class="p">=</span> <span class="s">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">author</span> <span class="p">=</span> <span class="s">&#34;d01a&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">description</span> <span class="p">=</span> <span class="s">&#34;detect RedLine Stealer&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">strings</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s0</span> <span class="p">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="m">72</span> <span class="p">??</span> <span class="p">??</span> <span class="p">??</span> <span class="m">70</span>      <span class="c1">// IL_0007: ldstr &#34;Hj0tHSAtXRsfKkAQIDowVR4tOVshFCRe&#34; /* 70000424 */</span>
+</span></span><span class="line"><span class="cl">            <span class="m">7D</span> <span class="p">??</span> <span class="p">??</span> <span class="p">??</span> <span class="m">04</span>      <span class="c1">// IL_000c: stfld string EntryPoint::IP /* 0400000C */</span>
+</span></span><span class="line"><span class="cl">            <span class="m">02</span>                  <span class="c1">// IL_0011: ldarg.0</span>
+</span></span><span class="line"><span class="cl">            <span class="m">72</span> <span class="p">??</span> <span class="p">??</span> <span class="p">??</span> <span class="m">70</span>      <span class="c1">// IL_0012: ldstr &#34;NSEmHDY5ERU1LRNV&#34; /* 70000466 */</span>
+</span></span><span class="line"><span class="cl">            <span class="m">7D</span> <span class="p">??</span> <span class="p">??</span> <span class="p">??</span> <span class="m">04</span>      <span class="c1">// IL_0017: stfld string EntryPoint::ID /* 0400000D */</span>
+</span></span><span class="line"><span class="cl">            <span class="m">02</span>                  <span class="c1">// IL_001c: ldarg.0</span>
+</span></span><span class="line"><span class="cl">            <span class="m">72</span> <span class="p">??</span> <span class="p">??</span> <span class="p">??</span> <span class="m">70</span>      <span class="c1">// IL_001d ldstr &#34;&#34; /* 70000422 */</span>
+</span></span><span class="line"><span class="cl">            <span class="m">7D</span> <span class="p">??</span> <span class="p">??</span> <span class="p">??</span> <span class="m">04</span>      <span class="c1">// IL_0022: stfld string EntryPoint::Message /* 0400000E */</span>
+</span></span><span class="line"><span class="cl">            <span class="m">02</span>                  <span class="c1">// IL_0027: ldarg.0</span>
+</span></span><span class="line"><span class="cl">            <span class="m">72</span> <span class="p">??</span> <span class="p">??</span> <span class="p">??</span> <span class="m">70</span>      <span class="c1">// IL_0028: ldstr &#34;Pythonic&#34; /* 70000488 */</span>
+</span></span><span class="line"><span class="cl">            <span class="m">7D</span> <span class="p">??</span> <span class="p">??</span> <span class="p">??</span> <span class="m">04</span>      <span class="c1">// IL_002d: stfld string EntryPoint::Key /* 0400000F */</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s1</span> <span class="p">=</span> <span class="s">&#34;Yandex\\YaAddon&#34;</span> <span class="n">wide</span>
+</span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s2</span> <span class="p">=</span> <span class="s">&#34;Recoursive&#34;</span> <span class="n">ascii</span> 
+</span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s3</span> <span class="p">=</span> <span class="s">&#34;GameLauncherRule&#34;</span> <span class="n">ascii</span>
+</span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s4</span> <span class="p">=</span> <span class="s">&#34;FileScannerRule&#34;</span> <span class="n">ascii</span>
+</span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s5</span> <span class="p">=</span> <span class="s">&#34;SystemInfoHelper&#34;</span> <span class="n">ascii</span>
+</span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s6</span> <span class="p">=</span> <span class="s">&#34;ResultFactory&#34;</span> <span class="n">ascii</span>
+</span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s7</span> <span class="p">=</span> <span class="s">&#34;get_encrypted_key&#34;</span> <span class="n">ascii</span>
+</span></span><span class="line"><span class="cl">        <span class="err">$</span><span class="n">s8</span> <span class="p">=</span> <span class="s">&#34;ChromeGetLocalName&#34;</span> <span class="n">ascii</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">condition</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">uint16</span><span class="p">(</span><span class="m">0</span><span class="p">)</span> <span class="p">==</span> <span class="m">0x5A4D</span>
+</span></span><span class="line"><span class="cl">        <span class="n">and</span> <span class="p">(</span><span class="n">uint32</span><span class="p">(</span><span class="n">uint32</span><span class="p">(</span><span class="m">0x3C</span><span class="p">))</span> <span class="p">==</span> <span class="m">0x00004550</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">and</span> <span class="m">5</span> <span class="n">of</span> <span class="n">them</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Hybrid-analysis search result <a href="https://www.hybrid-analysis.com/yara-search/results/afc804e33de95832881d544e0f6872728a85ea86d542b807546c645cc3ff16c5" target="_blank" rel="noopener noreffer ">Free Automated Malware Analysis Service - powered by Falcon Sandbox - Search results from HA Community Files (hybrid-analysis.com)</a></p>
+<h2 id="iocs">IOCs</h2>
+<table>
+<thead>
+<tr>
+<th>IOC</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>d1fe4cf589c8852fbc60fdcdc39bf944e27ccc2ae634b98ee841d9a9c4c6f55f</td>
+<td>SHA256 of sample2 file</td>
+</tr>
+<tr>
+<td>e90f6d0a7b7d0f23d0b105003fce91959c2083c23394b5cf43101c84ae8be4d2</td>
+<td>SHA256 of the unpacked payload</td>
+</tr>
+<tr>
+<td>46.8.19[.]196[:]53773</td>
+<td>C2 server</td>
+</tr>
+<tr>
+<td>C:\Users\<USERNAME>\AppData\Local\Yandex\Taddon</td>
+<td>Path used to check previous infection</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mitre-attck">MITRE ATT&amp;CK</h2>
+<table>
+<thead>
+<tr>
+<th>Initial Access</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1189/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1189/</a></td>
+<td>Drive-by Compromise</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1566/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1566/</a></td>
+<td>Phishing</td>
+</tr>
+<tr>
+<td>Execution</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1059/003/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1059/003/</a></td>
+<td>Command and Scripting Interpreter: Windows Command Shell</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1204/002/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1204/002/</a></td>
+<td>User Execution: Malicious File</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1047/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1047/</a></td>
+<td>Windows Management Instrumentation</td>
+</tr>
+<tr>
+<td>Defense Evasion</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1564/003/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1564/003/</a></td>
+<td>Hide Artifacts: Hidden Window</td>
+</tr>
+<tr>
+<td>Credential Access</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1555/003/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1555/003/</a></td>
+<td>Credentials from Password Stores: Credentials from Web Browsers,</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1606/001/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1606/001/</a></td>
+<td>Forge Web Credentials: Web Cookies</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1528/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1528/</a></td>
+<td>Steal Application Access Token</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1539/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1539/</a></td>
+<td>Steal Web Session Cookie</td>
+</tr>
+<tr>
+<td>Discovery</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1087/001/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1087/001/</a></td>
+<td>Account Discovery: Local Account</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1217/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1217/</a></td>
+<td>Browser Information Discovery</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1057/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1057/</a></td>
+<td>Process Discovery</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1012/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1012/</a></td>
+<td>Query Registry</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1082/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1082/</a></td>
+<td>System Information Discovery</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1614/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1614/</a></td>
+<td>System Location Discovery</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1124/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1124/</a></td>
+<td>System Time Discovery</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1007/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1007/</a></td>
+<td>System Service Discovery</td>
+</tr>
+<tr>
+<td>Collection</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1005/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1005/</a></td>
+<td>Data from Local System</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1113/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1113/</a></td>
+<td>Screen Capture</td>
+</tr>
+<tr>
+<td>Command and Control</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1071/001/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1071/001/</a></td>
+<td>Application Layer Protocol: Web Protocols</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1105/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1105/</a></td>
+<td>Ingress Tool Transfer</td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1571/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1571/</a></td>
+<td>Non-Standard Port</td>
+</tr>
+<tr>
+<td>Exfiltration</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://attack.mitre.org/techniques/T1041/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1041/</a></td>
+<td>Exfiltration Over C2 Channel</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/redline/img/RedLine.png"
+        data-srcset="/redline/img/RedLine.png, /redline/img/RedLine.png 1.5x, /redline/img/RedLine.png 2x"
+        data-sizes="auto"
+        alt="/redline/img/RedLine.png"
+        title="RedLine.png" width="1056" height="816" /></p>
+<h2 id="references">References</h2>
+<p><a href="https://www.codeproject.com/Articles/362076/Understanding-Common-Intermediate-Language-CIL" target="_blank" rel="noopener noreffer ">Understanding Common Intermediate Language (CIL) - CodeProject</a></p>
+<p><a href="https://www.ntcore.com/files/dotnetformat.htm" target="_blank" rel="noopener noreffer ">https://www.ntcore.com/files/dotnetformat.htm</a></p>
+<p><a href="https://github.com/pan-unit42/dotnetfile" target="_blank" rel="noopener noreffer ">https://github.com/pan-unit42/dotnetfile</a></p>
+<p><a href="https://7d2dsdx.github.io/Tutorials/index.html?OpCodesExample.html" target="_blank" rel="noopener noreffer ">https://7d2dsdx.github.io/Tutorials/index.html?OpCodesExample.html</a></p>
+<p><a href="https://n1ght-w0lf.github.io/tutorials/yara-for-config-extraction/" target="_blank" rel="noopener noreffer ">https://n1ght-w0lf.github.io/tutorials/yara-for-config-extraction/</a></p>
+</div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
