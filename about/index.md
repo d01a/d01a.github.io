@@ -3,8 +3,7 @@
 
 ### About Me
 
-Mohamed Adel is my name, I'm a Computer science student and i'm trying to learn Malware Analysis and reverse engineering.
-> I'm Looking for a remote job/internship. If you have any opportunity, please contact me.
+Mohamed Adel is my name, I'm a malware analyst, reverse engineer, and DFIR investigator. If you're into pulling apart malicious code and connecting the dots in a cyber incident, you've come to the right place. This blog is where I share what I'm working on and what I'm learning in this world.
 
 ### Find Me
 
