@@ -29,8 +29,7 @@ Victim information (such as hostname, hardware specs, location, and live screens
     <pubDate>Fri, 18 Aug 2023 09:04:49 &#43;0800</pubDate>
     <author>Mohamed Adel</author>
     <guid>https://d01a.github.io/syscalls/</guid>
-    <description><![CDATA[In case images fail to load, it might be due to jsDelivr CDN ban in Egypt. To resolve this, consider using a VPN. :)
-Syscalls? Why? To Bypass user-mood hooks. why? For Hiding a code inside a legitimate process (Process Injection) Avoiding EDR alerts! User-mood Hooks Hooking user-mode functions by placing a jump to another code section. EDRs use hooks to check the function parameters. For example, if you are trying to change the memory protections of some data to add executable protections.]]></description>
+    <description><![CDATA[Syscalls? Why? To Bypass user-mood hooks. why? For Hiding a code inside a legitimate process (Process Injection) Avoiding EDR alerts! User-mood Hooks Hooking user-mode functions by placing a jump to another code section. EDRs use hooks to check the function parameters. For example, if you are trying to change the memory protections of some data to add executable protections. This is a very suspicious activity so EDRs will be alert to that.]]></description>
 </item>
 <item>
     <title>Pikabot deep analysis</title>
