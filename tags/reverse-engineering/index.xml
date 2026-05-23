@@ -3,12 +3,11 @@
         <title>Reverse Engineering - Tag - d01a</title>
         <link>https://d01a.github.io/tags/reverse-engineering/</link>
         <description>Reverse Engineering - Tag - d01a</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</managingEditor>
-            <webMaster>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</webMaster><atom:link href="https://d01a.github.io/tags/reverse-engineering/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="https://d01a.github.io/tags/reverse-engineering/" rel="self" type="application/rss+xml" /><item>
     <title>ALPHV ransomware</title>
     <link>https://d01a.github.io/alphv/</link>
     <pubDate>Thu, 30 May 2024 11:04:49 &#43;0800</pubDate>
-    <author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+    <author>Mohamed Adel</author>
     <guid>https://d01a.github.io/alphv/</guid>
     <description><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>ALPHV/Blackcat is a ransomware family that uses Ransomware-as-a-service (RaaS) business model. The ransomware is written in Rust Programming language. It is highly configurable using embedded configurations or provided as command line arguments. The malware family has Windows, Linux and ESXi versions. The malware uses AES or ChaCha20 to encrypt the files and delete the volume shadow copies to decrease the possibility of any data survival. It also kills predefined set of services and Processes related to Anti-malware products, Virtualization software and other business-related and backup software.  The following graph represents the attack flow of the ransomware.</p>]]></description>
@@ -17,7 +16,7 @@
     <title>Redline stealer</title>
     <link>https://d01a.github.io/redline/</link>
     <pubDate>Thu, 30 May 2024 11:04:49 &#43;0800</pubDate>
-    <author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+    <author>Mohamed Adel</author>
     <guid>https://d01a.github.io/redline/</guid>
     <description><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Redline stealer is one of the most popular info stealers out there. The malware is available for sale on underground forums for a different subscription options. The malware has a large set of stealing modules. It harvests:</p>
@@ -38,7 +37,7 @@
     <title>Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation</title>
     <link>https://d01a.github.io/syscalls/</link>
     <pubDate>Fri, 18 Aug 2023 09:04:49 &#43;0800</pubDate>
-    <author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+    <author>Mohamed Adel</author>
     <guid>https://d01a.github.io/syscalls/</guid>
     <description><![CDATA[<h2 id="syscalls-why">Syscalls? Why?</h2>
 <ul>
@@ -56,7 +55,7 @@
     <title>Pikabot deep analysis</title>
     <link>https://d01a.github.io/pikabot/</link>
     <pubDate>Mon, 31 Jul 2023 09:04:49 &#43;0800</pubDate>
-    <author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+    <author>Mohamed Adel</author>
     <guid>https://d01a.github.io/pikabot/</guid>
     <description><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Pikabot is a new malware first seen in early 2023. It has two components: Loader and core module. It is still in its initial stages, expected to see increasing activity in the future.
@@ -69,7 +68,7 @@ The core module has a lot of functionality that gives the attacker full control 
     <title>Aurora Stealer Builder</title>
     <link>https://d01a.github.io/aurora-stealer-builder/</link>
     <pubDate>Sun, 23 Apr 2023 09:04:49 &#43;0800</pubDate>
-    <author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+    <author>Mohamed Adel</author>
     <guid>https://d01a.github.io/aurora-stealer-builder/</guid>
     <description><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>in the previous article, I discussed what’s inside Aurora Stealer. After the release, <a href="https://twitter.com/gi7w0rm" target="_blank" rel="noopener noreffer ">@Gi7w0rm</a> provided me samples of some versions of Aurora Stealer builder, a new version that was created recently and another one that was created in 2022. The newer version has some improvements in the builder and new features we will discuss in this article. Before we start this article, it is important to note that the Builder also contains and creates the Web panel to control the bots. This means the binaries we are looking at are actually a hybrid between a builder and a panel.</p>]]></description>
@@ -78,7 +77,7 @@ The core module has a lot of functionality that gives the attacker full control 
     <title>Aurora Stealer</title>
     <link>https://d01a.github.io/aurora-stealer/</link>
     <pubDate>Wed, 12 Apr 2023 11:04:49 &#43;0800</pubDate>
-    <author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+    <author>Mohamed Adel</author>
     <guid>https://d01a.github.io/aurora-stealer/</guid>
     <description><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>Aurora Stealer is an information stealer Written in GO. It is a commercial stealer that costs around 250$ per month. The malware can steal Browser password and saved cookies, crypto information (Desktop and Web), Telegram, Steam and Specific files from the victim machine and can take a screenshot from it.</p>
@@ -90,7 +89,7 @@ The core module has a lot of functionality that gives the attacker full control 
     <title>OriginLogger Loader</title>
     <link>https://d01a.github.io/originlogger/</link>
     <pubDate>Mon, 16 Jan 2023 02:23:49 &#43;0800</pubDate>
-    <author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+    <author>Mohamed Adel</author>
     <guid>https://d01a.github.io/originlogger/</guid>
     <description><![CDATA[<h2 id="conclusion">Conclusion</h2>
 <p>Origin Logger is a variant of Agent tesla, it is build on top of it and uses all of its capabilities. The malware is spreading using spam emails with a malicious attachments. The malware exfiltrate user accounts and passwords and other information from the infected machine.</p>
@@ -102,7 +101,7 @@ The core module has a lot of functionality that gives the attacker full control 
     <title>Raccoon Stealer</title>
     <link>https://d01a.github.io/raccoon-stealer/</link>
     <pubDate>Mon, 12 Sep 2022 11:04:49 &#43;0800</pubDate>
-    <author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+    <author>Mohamed Adel</author>
     <guid>https://d01a.github.io/raccoon-stealer/</guid>
     <description><![CDATA[<h2 id="conclusion">Conclusion</h2>
 <p>Raccoon Stealer V2 (or RecordBreaker) Is a stealer that provided as a service with about 200$/m. It is a new version of Raccoon stealer that appeared in 2019 and died for a while then it returns with this new Stealer which known as RecordBreaker.<br>
