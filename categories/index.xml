@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on d01a</title>
+    <link>https://d01a.github.io/categories/</link>
+    <description>Recent content in Categories on d01a</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <managingEditor>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</managingEditor>
+    <webMaster>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</webMaster>
+    <lastBuildDate>Sun, 26 Apr 2026 20:37:42 +0300</lastBuildDate>
+    <atom:link href="https://d01a.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Research</title>
+      <link>https://d01a.github.io/categories/research/</link>
+      <pubDate>Fri, 18 Aug 2023 09:04:49 +0800</pubDate><author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+      <guid>https://d01a.github.io/categories/research/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>DFIR</title>
+      <link>https://d01a.github.io/categories/dfir/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+      <guid>https://d01a.github.io/categories/dfir/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Malware Analysis</title>
+      <link>https://d01a.github.io/categories/malware-analysis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+      <guid>https://d01a.github.io/categories/malware-analysis/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Reverse Engineering</title>
+      <link>https://d01a.github.io/categories/reverse-engineering/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>muhammed195826@feng.bu.edu.eg (Mohamed Adel)</author>
+      <guid>https://d01a.github.io/categories/reverse-engineering/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

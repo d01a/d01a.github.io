@@ -4,20 +4,27 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>ALPHV ransomware - d01a</title><meta name="Description" content="ALPHV ransomware analysis"><meta property="og:title" content="ALPHV ransomware" />
-<meta property="og:description" content="ALPHV ransomware analysis" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://d01a.github.io/alphv/" /><meta property="og:image" content="https://d01a.github.io/alphv/featured-image.jpg"/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2024-05-30T11:04:49+08:00" />
-<meta property="article:modified_time" content="2026-04-26T20:27:04+03:00" /><meta property="og:site_name" content="d01a" />
+        <title>ALPHV ransomware - d01a</title><meta name="Description" content="ALPHV ransomware analysis"><meta property="og:url" content="https://d01a.github.io/alphv/">
+  <meta property="og:site_name" content="d01a">
+  <meta property="og:title" content="ALPHV ransomware">
+  <meta property="og:description" content="ALPHV ransomware analysis">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-05-30T11:04:49+08:00">
+    <meta property="article:modified_time" content="2026-04-26T20:27:04+03:00">
+    <meta property="article:tag" content="Malware Analysis">
+    <meta property="article:tag" content="Reverse Engineering">
+    <meta property="og:image" content="https://d01a.github.io/alphv/featured-image.jpg">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://d01a.github.io/alphv/featured-image.jpg"/>
-<meta name="twitter:title" content="ALPHV ransomware"/>
-<meta name="twitter:description" content="ALPHV ransomware analysis"/>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://d01a.github.io/alphv/featured-image.jpg">
+  <meta name="twitter:title" content="ALPHV ransomware">
+  <meta name="twitter:description" content="ALPHV ransomware analysis">
 <meta name="application-name" content="d01a">
-<meta name="apple-mobile-web-app-title" content="d01a"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/Luffy.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://d01a.github.io/alphv/" /><link rel="prev" href="https://d01a.github.io/redline/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<meta name="apple-mobile-web-app-title" content="d01a">
+<meta name="referrer" content="no-referrer" /><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/Luffy.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://d01a.github.io/alphv/" /><link rel="prev" href="https://d01a.github.io/redline/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -32,8 +39,8 @@
                             "url": "https:\/\/d01a.github.io\/alphv\/featured-image.jpg",
                             "width":  3600 ,
                             "height":  2400 
-                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  3757 ,
-        "url": "https:\/\/d01a.github.io\/alphv\/","datePublished": "2024-05-30T11:04:49+08:00","dateModified": "2026-04-26T20:27:04+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering","wordcount":  3313 ,
+        "url": "https:\/\/d01a.github.io\/alphv\/","datePublished": "2024-05-30T11:04:49+08:00","dateModified": "2026-04-26T20:27:04+03:00","publisher": {
             "@type": "Organization",
             "name": "Mohamed Adel","logo": {
                     "@type": "ImageObject",
@@ -46,16 +53,38 @@
             },"description": "ALPHV ransomware analysis"
     }
     </script></head>
-    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script>
+          const query = window.matchMedia('(prefers-color-scheme: dark)');
+          function applyTheme() {
+            let theme = window.localStorage?.getItem('theme') || 'auto';
+            let isDark = theme === 'dark' || (theme === 'auto' && query.matches);
+            document.body.setAttribute('theme', isDark? 'dark' : 'light');
+            document.body.setAttribute('cfg-theme', theme);
+          }
+
+          applyTheme();
+          query.addEventListener('change', applyTheme);
+        </script>
 
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span><span id="id-1" class="typeit"></span></a>
+            <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span>d01a</a>
         </div>
         <div class="menu">
-            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            <div class="menu-inner"><a class="menu-item" href="/posts/" title="Posts"> Posts </a><a class="menu-item" href="/tags/" title="Tags"> Tags </a><a class="menu-item" href="/categories/" title="Categories"> Categories </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust" aria-hidden="true"></i>
                 </a></div>
         </div>
     </div>
@@ -63,24 +92,45 @@
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span><span id="id-2" class="typeit"></span></a>
+                <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span>d01a</a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="Posts">Posts</a><a class="menu-item" href="/tags/" title="Tags">Tags</a><a class="menu-item" href="/categories/" title="Categories">Categories</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust" aria-hidden="true"></i>
             </a></div>
     </div>
-</header><main class="main">
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">Contents</h2>
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">ALPHV ransomware</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/malware-analysis/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Malware Analysis</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-05-30">2024-05-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3757 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;18 minutes&nbsp;</div>
+            <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/malware-analysis/"><i class="far fa-folder" aria-hidden="true"></i>Malware Analysis</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt" aria-hidden="true"></i>&nbsp;<time datetime="2024-05-30">2024-05-30</time>&nbsp;<i class="fas fa-pencil-alt" aria-hidden="true"></i>&nbsp;3313 words&nbsp;
+                <i class="far fa-clock" aria-hidden="true"></i>&nbsp;16 minutes&nbsp;</div>
         </div><div class="featured-image"><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -133,23 +183,17 @@
 <h3 id="identifying-the-sample">Identifying the sample.</h3>
 <p>The sample was identified by <code>Detect It Easy</code> to be compiled with <code>mingw</code> , this should be some native application. But when I looked at the strings, I knew that it was <code>Rust</code> compiled malware.</p>
 <p>Opening the sample in IDA will take some time to do the analysis. Rust binaries are not easy to reverse, especially with stripped -release- binaries. It is statically linked so it is expected to have so many functions and most of them are library and crate functions. Another issue is the strings (all the type system actually), the strings are stored in a structure containing a pointer to the string, length, and capacity.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">String</span> <span class="p">{</span>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-c">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">String</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="n">DWORD</span> <span class="n">length</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">DWORD</span> <span class="n">buff</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">DWORD</span> <span class="n">capacity</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">};</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The string itself is not null-terminated string so the strings will be mixed. one way to identify the right string is to change the target region to raw data and select the start of the string to the next <code>Xref</code> , this is the termination of the string (Not working all the time).</p>
+</span></span><span class="line"><span class="cl"><span class="p">};</span></span></span></code></pre></div></div>
+<p>The string itself is not null-terminated string so the strings will be mixed. one way to identify the right string is to change the target region to raw data and select the start of the string to the next <code>Xref</code> , this is the termination of the string (Not working all the time).</p>
 <p>There are a lot of strange things related to types in rust but will be explained as we move on (if I had to). Another thing to keep in mind is that there will be a lot of function calls related to error checking and memory safety related to Rust so, I will try to avoid wasting too much time to recognize them.</p>
 <p>Now we could start, First The main function should be found. The main function will not be clear as in native binaries for example. The <code>start</code> or <code>main</code> function identified by IDA has a lot of unrelated functions to do the initializations and the checks that Rust compiler did (like CRT initializations). The main function is passed to another function, called <code>lang_start</code> .</p>
 <p><img
@@ -206,232 +250,12 @@
         title="Untitled" width="692" height="317" /></p>
 <p>Then it parses the command line string. it extracts the subcommand passed, <code>--access-token</code> was tested and seems like it did nothing with it. Out of this function, back to the previous one <code>sub_47DF80</code>, it continues to parse the Command line checking for <code>-h</code> or <code>--help</code> presence to print the help menu. The help menu is displayed by using the console of the currently running process so in case of using a debugger, <code>AttachConsole</code> argument <code>dwProcessId</code> should be edited to another console process (CMD).</p>
 <p>It then loads the hardcoded configurations (Config extractor code at the end of the report) as follows:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">  1
-</span><span class="lnt">  2
-</span><span class="lnt">  3
-</span><span class="lnt">  4
-</span><span class="lnt">  5
-</span><span class="lnt">  6
-</span><span class="lnt">  7
-</span><span class="lnt">  8
-</span><span class="lnt">  9
-</span><span class="lnt"> 10
-</span><span class="lnt"> 11
-</span><span class="lnt"> 12
-</span><span class="lnt"> 13
-</span><span class="lnt"> 14
-</span><span class="lnt"> 15
-</span><span class="lnt"> 16
-</span><span class="lnt"> 17
-</span><span class="lnt"> 18
-</span><span class="lnt"> 19
-</span><span class="lnt"> 20
-</span><span class="lnt"> 21
-</span><span class="lnt"> 22
-</span><span class="lnt"> 23
-</span><span class="lnt"> 24
-</span><span class="lnt"> 25
-</span><span class="lnt"> 26
-</span><span class="lnt"> 27
-</span><span class="lnt"> 28
-</span><span class="lnt"> 29
-</span><span class="lnt"> 30
-</span><span class="lnt"> 31
-</span><span class="lnt"> 32
-</span><span class="lnt"> 33
-</span><span class="lnt"> 34
-</span><span class="lnt"> 35
-</span><span class="lnt"> 36
-</span><span class="lnt"> 37
-</span><span class="lnt"> 38
-</span><span class="lnt"> 39
-</span><span class="lnt"> 40
-</span><span class="lnt"> 41
-</span><span class="lnt"> 42
-</span><span class="lnt"> 43
-</span><span class="lnt"> 44
-</span><span class="lnt"> 45
-</span><span class="lnt"> 46
-</span><span class="lnt"> 47
-</span><span class="lnt"> 48
-</span><span class="lnt"> 49
-</span><span class="lnt"> 50
-</span><span class="lnt"> 51
-</span><span class="lnt"> 52
-</span><span class="lnt"> 53
-</span><span class="lnt"> 54
-</span><span class="lnt"> 55
-</span><span class="lnt"> 56
-</span><span class="lnt"> 57
-</span><span class="lnt"> 58
-</span><span class="lnt"> 59
-</span><span class="lnt"> 60
-</span><span class="lnt"> 61
-</span><span class="lnt"> 62
-</span><span class="lnt"> 63
-</span><span class="lnt"> 64
-</span><span class="lnt"> 65
-</span><span class="lnt"> 66
-</span><span class="lnt"> 67
-</span><span class="lnt"> 68
-</span><span class="lnt"> 69
-</span><span class="lnt"> 70
-</span><span class="lnt"> 71
-</span><span class="lnt"> 72
-</span><span class="lnt"> 73
-</span><span class="lnt"> 74
-</span><span class="lnt"> 75
-</span><span class="lnt"> 76
-</span><span class="lnt"> 77
-</span><span class="lnt"> 78
-</span><span class="lnt"> 79
-</span><span class="lnt"> 80
-</span><span class="lnt"> 81
-</span><span class="lnt"> 82
-</span><span class="lnt"> 83
-</span><span class="lnt"> 84
-</span><span class="lnt"> 85
-</span><span class="lnt"> 86
-</span><span class="lnt"> 87
-</span><span class="lnt"> 88
-</span><span class="lnt"> 89
-</span><span class="lnt"> 90
-</span><span class="lnt"> 91
-</span><span class="lnt"> 92
-</span><span class="lnt"> 93
-</span><span class="lnt"> 94
-</span><span class="lnt"> 95
-</span><span class="lnt"> 96
-</span><span class="lnt"> 97
-</span><span class="lnt"> 98
-</span><span class="lnt"> 99
-</span><span class="lnt">100
-</span><span class="lnt">101
-</span><span class="lnt">102
-</span><span class="lnt">103
-</span><span class="lnt">104
-</span><span class="lnt">105
-</span><span class="lnt">106
-</span><span class="lnt">107
-</span><span class="lnt">108
-</span><span class="lnt">109
-</span><span class="lnt">110
-</span><span class="lnt">111
-</span><span class="lnt">112
-</span><span class="lnt">113
-</span><span class="lnt">114
-</span><span class="lnt">115
-</span><span class="lnt">116
-</span><span class="lnt">117
-</span><span class="lnt">118
-</span><span class="lnt">119
-</span><span class="lnt">120
-</span><span class="lnt">121
-</span><span class="lnt">122
-</span><span class="lnt">123
-</span><span class="lnt">124
-</span><span class="lnt">125
-</span><span class="lnt">126
-</span><span class="lnt">127
-</span><span class="lnt">128
-</span><span class="lnt">129
-</span><span class="lnt">130
-</span><span class="lnt">131
-</span><span class="lnt">132
-</span><span class="lnt">133
-</span><span class="lnt">134
-</span><span class="lnt">135
-</span><span class="lnt">136
-</span><span class="lnt">137
-</span><span class="lnt">138
-</span><span class="lnt">139
-</span><span class="lnt">140
-</span><span class="lnt">141
-</span><span class="lnt">142
-</span><span class="lnt">143
-</span><span class="lnt">144
-</span><span class="lnt">145
-</span><span class="lnt">146
-</span><span class="lnt">147
-</span><span class="lnt">148
-</span><span class="lnt">149
-</span><span class="lnt">150
-</span><span class="lnt">151
-</span><span class="lnt">152
-</span><span class="lnt">153
-</span><span class="lnt">154
-</span><span class="lnt">155
-</span><span class="lnt">156
-</span><span class="lnt">157
-</span><span class="lnt">158
-</span><span class="lnt">159
-</span><span class="lnt">160
-</span><span class="lnt">161
-</span><span class="lnt">162
-</span><span class="lnt">163
-</span><span class="lnt">164
-</span><span class="lnt">165
-</span><span class="lnt">166
-</span><span class="lnt">167
-</span><span class="lnt">168
-</span><span class="lnt">169
-</span><span class="lnt">170
-</span><span class="lnt">171
-</span><span class="lnt">172
-</span><span class="lnt">173
-</span><span class="lnt">174
-</span><span class="lnt">175
-</span><span class="lnt">176
-</span><span class="lnt">177
-</span><span class="lnt">178
-</span><span class="lnt">179
-</span><span class="lnt">180
-</span><span class="lnt">181
-</span><span class="lnt">182
-</span><span class="lnt">183
-</span><span class="lnt">184
-</span><span class="lnt">185
-</span><span class="lnt">186
-</span><span class="lnt">187
-</span><span class="lnt">188
-</span><span class="lnt">189
-</span><span class="lnt">190
-</span><span class="lnt">191
-</span><span class="lnt">192
-</span><span class="lnt">193
-</span><span class="lnt">194
-</span><span class="lnt">195
-</span><span class="lnt">196
-</span><span class="lnt">197
-</span><span class="lnt">198
-</span><span class="lnt">199
-</span><span class="lnt">200
-</span><span class="lnt">201
-</span><span class="lnt">202
-</span><span class="lnt">203
-</span><span class="lnt">204
-</span><span class="lnt">205
-</span><span class="lnt">206
-</span><span class="lnt">207
-</span><span class="lnt">208
-</span><span class="lnt">209
-</span><span class="lnt">210
-</span><span class="lnt">211
-</span><span class="lnt">212
-</span><span class="lnt">213
-</span><span class="lnt">214
-</span><span class="lnt">215
-</span><span class="lnt">216
-</span><span class="lnt">217
-</span><span class="lnt">218
-</span><span class="lnt">219
-</span><span class="lnt">220
-</span><span class="lnt">221
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
+    <div class="code-header language-json">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;config_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;public_key&#34;</span><span class="p">:</span> <span class="s2">&#34;MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq8kj5LQJngPsY7AhTaJsUXc5FrSGeKS5gw5PIqk2QPM9TY6+us8TRRzWZ7rGk1zns2klpzpRMUzLIqB8lpCkJjqkOUGfgqs+HN4VIOpoJgFY897xstJCxTc+8pYQEsSqClxJllscU0okkLSQqndIR2Gznlg3qfcwyncJAFBInyqM+L4kbwCQZ6x5HNiLe2lJn8RP2aDiMI+RS1uLYron2G7rxDTUQnxThMtgLAeko8ulaB3TpB0g4lmHCenkEZeBNs81986+MjHnv7KkiscZ7ZrezKjNaIxRs8BAcD9y+Q9QQxCvZMS01ITNXcgiItbA4dsGq1fPJ42yBkkiIodsEQIDAQAB&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;extension&#34;</span><span class="p">:</span> <span class="s2">&#34;kh1ftzx&#34;</span><span class="p">,</span>
@@ -651,10 +475,8 @@
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;enable_esxi_vm_snapshot_kill&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;strict_include_paths&#34;</span><span class="p">:</span> <span class="p">[],</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;esxi_vm_kill_exclude&#34;</span><span class="p">:</span> <span class="p">[]</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The malware uses open-source library to parse the command line arguments, it is <code>clap</code> crate.</p>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div>
+<p>The malware uses open-source library to parse the command line arguments, it is <code>clap</code> crate.</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -704,15 +526,13 @@
         alt="/alphv/img/Untitled%2010.png"
         title="Untitled" width="951" height="184" /></p>
 <p>After finding the target executable, the following command is executed.  The <code>UUID</code> will be used later to generate access key value to be used to access the malware website on the darknet.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;C:\Windows\system32\cmd.exe&#34; /c &#34;wmic csproduct get UUID&#34;
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The malware then Get a handle to a virtual file <code>\\?\nul</code> , I’m not sure but this could be used to redirect any messages to no place.</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;C:\Windows\system32\cmd.exe&#34; /c &#34;wmic csproduct get UUID&#34;</span></span></code></pre></div></div>
+<p>The malware then Get a handle to a virtual file <code>\\?\nul</code> , I’m not sure but this could be used to redirect any messages to no place.</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -831,26 +651,21 @@
         alt="/alphv/img/Untitled%2022.png"
         title="Untitled" width="461" height="148" /></p>
 <p>the following command is executed.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"> &#34;C:\Windows\system32\cmd.exe&#34; /c &#34;reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters /v MaxMpxCt /d 65535 /t REG_DWORD /f
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>In the same (previous) screenshot we see a usage of <code>fsutil</code> utility in windows that can deal with the windows file system. The commands executed are :</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">fsutil behavior set SymlinkEvaluation R2R:1
-</span></span><span class="line"><span class="cl">fsutil behavior set SymlinkEvaluation R2L:1
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>These commands will be executed to set symbolic links to enable:</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"> &#34;C:\Windows\system32\cmd.exe&#34; /c &#34;reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters /v MaxMpxCt /d 65535 /t REG_DWORD /f</span></span></code></pre></div></div>
+<p>In the same (previous) screenshot we see a usage of <code>fsutil</code> utility in windows that can deal with the windows file system. The commands executed are :</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">fsutil behavior set SymlinkEvaluation R2R:1
+</span></span><span class="line"><span class="cl">fsutil behavior set SymlinkEvaluation R2L:1</span></span></code></pre></div></div>
+<p>These commands will be executed to set symbolic links to enable:</p>
 <ul>
 <li>Remote to Remote Symbolic links</li>
 <li>Remote to Local symbolic links</li>
@@ -876,15 +691,13 @@
         alt="/alphv/img/Untitled%2024.png"
         title="Untitled" width="762" height="92" /></p>
 <p>The command executed is:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;C:\Windows\system32\cmd.exe&#34; /c &#34;vssadmin.exe Delete Shadows /all /quiet&#34;
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Then, it uses <code>wmic</code> utility to delete the shadow copies again.</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;C:\Windows\system32\cmd.exe&#34; /c &#34;vssadmin.exe Delete Shadows /all /quiet&#34;</span></span></code></pre></div></div>
+<p>Then, it uses <code>wmic</code> utility to delete the shadow copies again.</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -894,15 +707,13 @@
         alt="/alphv/img/Untitled%2025.png"
         title="Untitled" width="723" height="89" /></p>
 <p>The command executed is:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;C:\Windows\system32\cmd.exe&#34; /c &#34;wmic.exe Shadowcopy Delete&#34;
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Next, it modifies the Bootloader default to disable recovery mode using <code>bcdedit</code> utility. It runs two instances of the command line. The first was not complete so it returns an error message. The second is the following. And it runs successfully:</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;C:\Windows\system32\cmd.exe&#34; /c &#34;wmic.exe Shadowcopy Delete&#34;</span></span></code></pre></div></div>
+<p>Next, it modifies the Bootloader default to disable recovery mode using <code>bcdedit</code> utility. It runs two instances of the command line. The first was not complete so it returns an error message. The second is the following. And it runs successfully:</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -912,80 +723,29 @@
         alt="/alphv/img/Untitled%2026.png"
         title="Untitled" width="755" height="91" /></p>
 <p>The command executed is:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;C:\Windows\system32\cmd.exe&#34; /c &#34;bcdedit /set {default} recoveryenabled No&#34;
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h3 id="delete-event-logs">Delete Event logs.</h3>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;C:\Windows\system32\cmd.exe&#34; /c &#34;bcdedit /set {default} recoveryenabled No&#34;</span></span></code></pre></div></div>
+<h3 id="delete-event-logs">Delete Event logs.</h3>
 <p>Then, it runs the following script:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="s2">&#34;C:\Windows\system32\cmd.exe&#34;</span> <span class="p">/</span><span class="n">c</span> <span class="s2">&#34;cmd.exe /c  for /F \&#34;</span><span class="n">tokens</span><span class="p">=*\</span><span class="s2">&#34; %1 in (&#39;wevtutil.exe el&#39;) DO wevtutil.exe cl \&#34;</span><span class="k">%</span><span class="n">1</span><span class="p">\</span><span class="s2">&#34;&#34;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>This script is used to clear the Event logs entries. It gets all the event logs using <code>wevtutil.exe el</code> and uses <code>wevtutil.exe cl</code> to clear them.</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-powershell">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="s2">&#34;C:\Windows\system32\cmd.exe&#34;</span> <span class="p">/</span><span class="n">c</span> <span class="s2">&#34;cmd.exe /c  for /F \&#34;</span><span class="n">tokens</span><span class="p">=*\</span><span class="s2">&#34; %1 in (&#39;wevtutil.exe el&#39;) DO wevtutil.exe cl \&#34;</span><span class="k">%</span><span class="mf">1</span><span class="p">\</span><span class="s2">&#34;&#34;</span></span></span></code></pre></div></div>
+<p>This script is used to clear the Event logs entries. It gets all the event logs using <code>wevtutil.exe el</code> and uses <code>wevtutil.exe cl</code> to clear them.</p>
 <h3 id="kill-targeted-services--processes">Kill Targeted Services &amp; Processes</h3>
 <p>Then it is called Global\SvcctrlStartEvent_A3752DX and <code>OpenScManagerW</code> ****according to google, this is used to duplicate windows services.  Then it uses <code>EnumServicesStatusExW</code> to list all the services and then kills the services specified in the <code>kill_services</code> in the configurations.  For every service, it runs a loop to compare against every entry in the saved <code>kill_services</code> . The targeted services to kill are:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
-</span><span class="lnt">42
-</span><span class="lnt">43
-</span><span class="lnt">44
-</span><span class="lnt">45
-</span><span class="lnt">46
-</span><span class="lnt">47
-</span><span class="lnt">48
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl">   <span class="s">&#34;mepocs&#34;</span><span class="p">,</span>
+<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
+    <div class="code-header language-c">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl">   <span class="s">&#34;mepocs&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;memtas&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;veeam&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;svc$&#34;</span><span class="p">,</span>
@@ -1032,10 +792,8 @@
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;MVArmor&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;MVarmor64&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;VSNAPVSS&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="s">&#34;AcrSch2Svc&#34;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Same as <code>kill_services</code> , it searches for any running process that included in <code>kill_processes</code> . It gets a list of the currently running processes using <code>CreateToolhelp32Snapshot</code> and iterate through the snapshot using <code>Process32FirstW</code> and <code>Process32NextW</code></p>
+</span></span><span class="line"><span class="cl">    <span class="s">&#34;AcrSch2Svc&#34;</span></span></span></code></pre></div></div>
+<p>Same as <code>kill_services</code> , it searches for any running process that included in <code>kill_processes</code> . It gets a list of the currently running processes using <code>CreateToolhelp32Snapshot</code> and iterate through the snapshot using <code>Process32FirstW</code> and <code>Process32NextW</code></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -1045,74 +803,12 @@
         alt="/alphv/img/Untitled%2027.png"
         title="Untitled" width="668" height="517" /></p>
 <p>The targeted Processes are:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
-</span><span class="lnt">42
-</span><span class="lnt">43
-</span><span class="lnt">44
-</span><span class="lnt">45
-</span><span class="lnt">46
-</span><span class="lnt">47
-</span><span class="lnt">48
-</span><span class="lnt">49
-</span><span class="lnt">50
-</span><span class="lnt">51
-</span><span class="lnt">52
-</span><span class="lnt">53
-</span><span class="lnt">54
-</span><span class="lnt">55
-</span><span class="lnt">56
-</span><span class="lnt">57
-</span><span class="lnt">58
-</span><span class="lnt">59
-</span><span class="lnt">60
-</span><span class="lnt">61
-</span><span class="lnt">62
-</span><span class="lnt">63
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl">	 <span class="s">&#34;agntsvc&#34;</span><span class="p">,</span>
+<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
+    <div class="code-header language-c">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl">	 <span class="s">&#34;agntsvc&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;dbeng50&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;dbsnmp&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;encsvc&#34;</span><span class="p">,</span>
@@ -1174,10 +870,8 @@
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;EnterpriseClient&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;VeeamNFSSvc&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="s">&#34;VeeamTransportSvc&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="s">&#34;VeeamDeploymentSvc&#34;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The malware lists all the available servers using <code>NetServerEnum</code> to display all the servers on the verbose screen. It Also retrieves the computer name using <code>GetComputerNameW</code> , it will be used in the verbose output.</p>
+</span></span><span class="line"><span class="cl">    <span class="s">&#34;VeeamDeploymentSvc&#34;</span></span></span></code></pre></div></div>
+<p>The malware lists all the available servers using <code>NetServerEnum</code> to display all the servers on the verbose screen. It Also retrieves the computer name using <code>GetComputerNameW</code> , it will be used in the verbose output.</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -1204,15 +898,13 @@
 <li><code>Everywhere.search-ms.kh1ftzx</code> that will be encrypted.</li>
 </ul>
 <p>The malware then prepares a configuration data that describes the file being encrypted and it includes encryption mode, the encryption algorithm (chacha20 and AES) and the private key ….</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;version&#34;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="nt">&#34;mode&#34;</span><span class="p">:</span><span class="s2">&#34;Full&#34;</span><span class="p">,</span><span class="nt">&#34;cipher&#34;</span><span class="p">:</span><span class="s2">&#34;Aes&#34;</span><span class="p">,</span><span class="nt">&#34;private_key&#34;</span><span class="p">:[</span><span class="mi">86</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">83</span><span class="p">,</span><span class="mi">123</span><span class="p">,</span><span class="mi">105</span><span class="p">,</span><span class="mi">227</span><span class="p">,</span><span class="mi">184</span><span class="p">,</span><span class="mi">242</span><span class="p">,</span><span class="mi">209</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">42</span><span class="p">,</span><span class="mi">116</span><span class="p">,</span><span class="mi">235</span><span class="p">,</span><span class="mi">123</span><span class="p">,</span><span class="mi">117</span><span class="p">],</span><span class="nt">&#34;data_size&#34;</span><span class="p">:</span><span class="mi">248</span><span class="p">,</span><span class="nt">&#34;chunk_size&#34;</span><span class="p">:</span><span class="mi">25362816</span><span class="p">,</span><span class="nt">&#34;finished&#34;</span><span class="p">:</span><span class="kc">false</span><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The Encryption algorithm used is AES. The previous one was for <code>Everywhere.search-ms.kh1ftzx</code>. and the key is randomly generated. The JSON data are used to represent the file and its generated key.</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-json">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;version&#34;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="nt">&#34;mode&#34;</span><span class="p">:</span><span class="s2">&#34;Full&#34;</span><span class="p">,</span><span class="nt">&#34;cipher&#34;</span><span class="p">:</span><span class="s2">&#34;Aes&#34;</span><span class="p">,</span><span class="nt">&#34;private_key&#34;</span><span class="p">:[</span><span class="mi">86</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">83</span><span class="p">,</span><span class="mi">123</span><span class="p">,</span><span class="mi">105</span><span class="p">,</span><span class="mi">227</span><span class="p">,</span><span class="mi">184</span><span class="p">,</span><span class="mi">242</span><span class="p">,</span><span class="mi">209</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">42</span><span class="p">,</span><span class="mi">116</span><span class="p">,</span><span class="mi">235</span><span class="p">,</span><span class="mi">123</span><span class="p">,</span><span class="mi">117</span><span class="p">],</span><span class="nt">&#34;data_size&#34;</span><span class="p">:</span><span class="mi">248</span><span class="p">,</span><span class="nt">&#34;chunk_size&#34;</span><span class="p">:</span><span class="mi">25362816</span><span class="p">,</span><span class="nt">&#34;finished&#34;</span><span class="p">:</span><span class="kc">false</span><span class="p">}</span></span></span></code></pre></div></div>
+<p>The Encryption algorithm used is AES. The previous one was for <code>Everywhere.search-ms.kh1ftzx</code>. and the key is randomly generated. The JSON data are used to represent the file and its generated key.</p>
 <p>The encryption process starts with adjusting the file pointer to the beginning of the file using <code>SetFilePointerEx</code></p>
 <p><img
         class="lazyload"
@@ -1281,83 +973,12 @@
         alt="/alphv/img/RECOVER-kh1ftzx-FILES.txt.png"
         title="RECOVER-kh1ftzx-FILES.txt.png" width="1024" height="42" /></p>
 <h2 id="config-extractor">Config Extractor</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
-</span><span class="lnt">42
-</span><span class="lnt">43
-</span><span class="lnt">44
-</span><span class="lnt">45
-</span><span class="lnt">46
-</span><span class="lnt">47
-</span><span class="lnt">48
-</span><span class="lnt">49
-</span><span class="lnt">50
-</span><span class="lnt">51
-</span><span class="lnt">52
-</span><span class="lnt">53
-</span><span class="lnt">54
-</span><span class="lnt">55
-</span><span class="lnt">56
-</span><span class="lnt">57
-</span><span class="lnt">58
-</span><span class="lnt">59
-</span><span class="lnt">60
-</span><span class="lnt">61
-</span><span class="lnt">62
-</span><span class="lnt">63
-</span><span class="lnt">64
-</span><span class="lnt">65
-</span><span class="lnt">66
-</span><span class="lnt">67
-</span><span class="lnt">68
-</span><span class="lnt">69
-</span><span class="lnt">70
-</span><span class="lnt">71
-</span><span class="lnt">72
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">json</span>
+<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
+    <div class="code-header language-python">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">json</span>
 </span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">argparse</span>
 </span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">yara</span>
 </span></span><span class="line"><span class="cl">
@@ -1409,10 +1030,10 @@
 </span></span><span class="line"><span class="cl">    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span> 
 </span></span><span class="line"><span class="cl">        <span class="n">compiled_rule</span> <span class="o">=</span> <span class="n">yara</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">rule</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="n">matches</span> <span class="o">=</span> <span class="n">compiled_rule</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">matches</span> <span class="o">=</span> <span class="n">compiled_rule</span><span class="o">.</span><span class="k">match</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="n">start</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strings</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">        <span class="n">compiled_end</span> <span class="o">=</span> <span class="n">yara</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">end_rule</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="n">matches_end</span> <span class="o">=</span> <span class="n">compiled_end</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">matches_end</span> <span class="o">=</span> <span class="n">compiled_end</span><span class="o">.</span><span class="k">match</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">end_match</span> <span class="ow">in</span> <span class="n">matches_end</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strings</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">            <span class="c1"># print(start)</span>
@@ -1428,10 +1049,8 @@
 </span></span><span class="line"><span class="cl">        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Usage:</p>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span></span></span></code></pre></div></div>
+<p>Usage:</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -1441,37 +1060,12 @@
         alt="/alphv/img/Untitled%2036.png"
         title="Untitled" width="1078" height="492" /></p>
 <h2 id="yara">YARA</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">rule</span> <span class="n">ALPHV_BlackCat_Ransomware</span> <span class="p">{</span>
+<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
+    <div class="code-header language-python">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">rule</span> <span class="n">ALPHV_BlackCat_Ransomware</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">meta</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">        <span class="n">malware</span> <span class="o">=</span> <span class="s2">&#34;ALPHV/BlackCat Ransomware&#34;</span>
 </span></span><span class="line"><span class="cl">        <span class="nb">hash</span> <span class="o">=</span> <span class="s2">&#34;ecea6b772742758a2240898ef772ca11aa9d870aec711cffab8994c23044117c&#34;</span>
@@ -1496,231 +1090,229 @@
 </span></span><span class="line"><span class="cl">        <span class="n">uint16</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x5A4D</span>
 </span></span><span class="line"><span class="cl">        <span class="ow">and</span> <span class="p">(</span><span class="n">uint32</span><span class="p">(</span><span class="n">uint32</span><span class="p">(</span><span class="mh">0x3C</span><span class="p">))</span> <span class="o">==</span> <span class="mh">0x00004550</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="ow">and</span> <span class="mi">7</span> <span class="n">of</span> <span class="n">them</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Hybrid-analysis search result <a href="https://www.hybrid-analysis.com/yara-search/results/c2410a8ac36941bc25515b194f0a4efbd79739faaf4bd8bb77c232b0ffbea905" target="_blank" rel="noopener noreffer ">Free Automated Malware Analysis Service - powered by Falcon Sandbox - Search results from HA Community Files (hybrid-analysis.com)</a></p>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div>
+<p>Hybrid-analysis search result <a href="https://www.hybrid-analysis.com/yara-search/results/c2410a8ac36941bc25515b194f0a4efbd79739faaf4bd8bb77c232b0ffbea905" target="_blank" rel="noopener noreffer ">Free Automated Malware Analysis Service - powered by Falcon Sandbox - Search results from HA Community Files (hybrid-analysis.com)</a></p>
 <h2 id="iocs">IOCs</h2>
 <table>
-<thead>
-<tr>
-<th>IOC</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ecea6b772742758a2240898ef772ca11aa9d870aec711cffab8994c23044117c</td>
-<td>ALPHV sha256 checksum</td>
-</tr>
-<tr>
-<td>wmic csproduct get UUID</td>
-<td>WMIC command</td>
-</tr>
-<tr>
-<td>vssadmin.exe Delete Shadows /all /quiet</td>
-<td>command to delete shadow copies</td>
-</tr>
-<tr>
-<td>wmic.exe Shadowcopy Delete</td>
-<td>command to delete shadow copies</td>
-</tr>
-<tr>
-<td>bcdedit /set {default}</td>
-<td>wrong command used</td>
-</tr>
-<tr>
-<td>bcdedit /set {default} recoveryenabled No</td>
-<td>command to disable recovery</td>
-</tr>
-<tr>
-<td>cmd.exe /c  for /F &quot;tokens=*&quot; %1 in (&lsquo;wevtutil.exe el&rsquo;) DO wevtutil.exe cl &quot;%1&quot;</td>
-<td>CMD loop to delete event logs</td>
-</tr>
-<tr>
-<td>fsutil behavior set SymlinkEvaluation R2R:1</td>
-<td>change filesystem symbolic links</td>
-</tr>
-<tr>
-<td>fsutil behavior set SymlinkEvaluation R2L:1</td>
-<td>change filesystem symbolic links</td>
-</tr>
-<tr>
-<td>iisreset.exe /stop</td>
-<td>command to reset IIS service</td>
-</tr>
-<tr>
-<td>arp -a</td>
-<td>command to get the ARP table</td>
-</tr>
-<tr>
-<td>\.\pipe\rust_anonymous_pipe1.<PID>.<RandomValue></td>
-<td>named piped schema used</td>
-</tr>
-<tr>
-<td>\?\nul</td>
-<td>virtual file used</td>
-</tr>
-<tr>
-<td>{3E5FC7F9-9A51-4367-9063-A120244FBEC7}</td>
-<td>CLSID used to bypass UAC</td>
-</tr>
-<tr>
-<td>reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters /v MaxMpxCt /d 65535 /t REG_DWORD /f</td>
-<td>command to edit lanman server speed</td>
-</tr>
-<tr>
-<td>SOFTWARE\Microsoft\Cryptography\MachineGuid</td>
-<td>quired registry key</td>
-</tr>
-<tr>
-<td>checkpoints-&lt;Original_Filename&gt;.kh1ftzx</td>
-<td>ransomware-created file</td>
-</tr>
-<tr>
-<td>RECOVER-kh1ftzx-FILES.txt.png</td>
-<td>ransom note wallpaper</td>
-</tr>
-<tr>
-<td>RECOVER-kh1ftzx-FILES.txt</td>
-<td>the ransom notes</td>
-</tr>
-<tr>
-<td>src/bin/encrypt_app/app.rs</td>
-<td>malware source code file name</td>
-</tr>
-<tr>
-<td>src/core/os/windows/privilege_escalation.rs</td>
-<td>malware source code file name</td>
-</tr>
-<tr>
-<td>src/core/os/windows/samba.rs</td>
-<td>malware source code file name</td>
-</tr>
-<tr>
-<td>src/core/os/windows/system_info.rs</td>
-<td>malware source code file name</td>
-</tr>
-<tr>
-<td>rc/bin/encrypt_app/windows.rs</td>
-<td>malware source code file name</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>IOC</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>ecea6b772742758a2240898ef772ca11aa9d870aec711cffab8994c23044117c</td>
+          <td>ALPHV sha256 checksum</td>
+      </tr>
+      <tr>
+          <td>wmic csproduct get UUID</td>
+          <td>WMIC command</td>
+      </tr>
+      <tr>
+          <td>vssadmin.exe Delete Shadows /all /quiet</td>
+          <td>command to delete shadow copies</td>
+      </tr>
+      <tr>
+          <td>wmic.exe Shadowcopy Delete</td>
+          <td>command to delete shadow copies</td>
+      </tr>
+      <tr>
+          <td>bcdedit /set {default}</td>
+          <td>wrong command used</td>
+      </tr>
+      <tr>
+          <td>bcdedit /set {default} recoveryenabled No</td>
+          <td>command to disable recovery</td>
+      </tr>
+      <tr>
+          <td>cmd.exe /c  for /F &quot;tokens=*&quot; %1 in (&lsquo;wevtutil.exe el&rsquo;) DO wevtutil.exe cl &quot;%1&quot;</td>
+          <td>CMD loop to delete event logs</td>
+      </tr>
+      <tr>
+          <td>fsutil behavior set SymlinkEvaluation R2R:1</td>
+          <td>change filesystem symbolic links</td>
+      </tr>
+      <tr>
+          <td>fsutil behavior set SymlinkEvaluation R2L:1</td>
+          <td>change filesystem symbolic links</td>
+      </tr>
+      <tr>
+          <td>iisreset.exe /stop</td>
+          <td>command to reset IIS service</td>
+      </tr>
+      <tr>
+          <td>arp -a</td>
+          <td>command to get the ARP table</td>
+      </tr>
+      <tr>
+          <td>\.\pipe\rust_anonymous_pipe1.<PID>.<RandomValue></td>
+          <td>named piped schema used</td>
+      </tr>
+      <tr>
+          <td>\?\nul</td>
+          <td>virtual file used</td>
+      </tr>
+      <tr>
+          <td>{3E5FC7F9-9A51-4367-9063-A120244FBEC7}</td>
+          <td>CLSID used to bypass UAC</td>
+      </tr>
+      <tr>
+          <td>reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters /v MaxMpxCt /d 65535 /t REG_DWORD /f</td>
+          <td>command to edit lanman server speed</td>
+      </tr>
+      <tr>
+          <td>SOFTWARE\Microsoft\Cryptography\MachineGuid</td>
+          <td>quired registry key</td>
+      </tr>
+      <tr>
+          <td>checkpoints-&lt;Original_Filename&gt;.kh1ftzx</td>
+          <td>ransomware-created file</td>
+      </tr>
+      <tr>
+          <td>RECOVER-kh1ftzx-FILES.txt.png</td>
+          <td>ransom note wallpaper</td>
+      </tr>
+      <tr>
+          <td>RECOVER-kh1ftzx-FILES.txt</td>
+          <td>the ransom notes</td>
+      </tr>
+      <tr>
+          <td>src/bin/encrypt_app/app.rs</td>
+          <td>malware source code file name</td>
+      </tr>
+      <tr>
+          <td>src/core/os/windows/privilege_escalation.rs</td>
+          <td>malware source code file name</td>
+      </tr>
+      <tr>
+          <td>src/core/os/windows/samba.rs</td>
+          <td>malware source code file name</td>
+      </tr>
+      <tr>
+          <td>src/core/os/windows/system_info.rs</td>
+          <td>malware source code file name</td>
+      </tr>
+      <tr>
+          <td>rc/bin/encrypt_app/windows.rs</td>
+          <td>malware source code file name</td>
+      </tr>
+  </tbody>
 </table>
 <h2 id="mitre-attck">MITRE ATT&amp;CK</h2>
 <table>
-<thead>
-<tr>
-<th>Execution</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1059/003" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1059/003</a></td>
-<td>Command and Scripting Interpreter: Windows Command Shell</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1047/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1047/</a></td>
-<td>Windows Management Instrumentation</td>
-</tr>
-<tr>
-<td>Privilege Escalation</td>
-<td></td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1548/002/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1548/002/</a></td>
-<td>Abuse Elevation Control Mechanism: Bypass User Account Control</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1055/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1055/</a></td>
-<td>Process Injection</td>
-</tr>
-<tr>
-<td>Defense Evasion</td>
-<td></td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1548/002/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1548/002/</a></td>
-<td>Abuse Elevation Control Mechanism: Bypass User Account Control</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1222/001/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1222/001/</a></td>
-<td>File and Directory Permissions Modification: Windows File and Directory Permissions Modification</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1112/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1112/</a></td>
-<td>Modify Registry</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1562/001/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1562/001/</a></td>
-<td>Impair Defenses: Disable or Modify Tools</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1070/001/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1070/001/</a></td>
-<td>Indicator Removal: Clear Windows Event Logs</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1070/004/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1070/004/</a></td>
-<td>Indicator Removal: File Deletion</td>
-</tr>
-<tr>
-<td>Discovery</td>
-<td></td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1083" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1083</a></td>
-<td>File and Directory Discovery</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1135/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1135/</a></td>
-<td>Network Share Discovery</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1069/002/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1069/002/</a></td>
-<td>Permission Groups Discovery: Domain Groups</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1057/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1057/</a></td>
-<td>Process Discovery</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1018/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1018/</a></td>
-<td>Remote System Discovery</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1033/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1033/</a></td>
-<td>System Owner/User Discovery</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1007/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1007/</a></td>
-<td>System Service Discovery</td>
-</tr>
-<tr>
-<td>Impact</td>
-<td></td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1485/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1485/</a></td>
-<td>Data Destruction</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1486/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1486/</a></td>
-<td>Data Encrypted for Impact</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1490/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1490/</a></td>
-<td>Inhibit System Recovery</td>
-</tr>
-<tr>
-<td><a href="https://attack.mitre.org/techniques/T1489/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1489/</a></td>
-<td>Service Stop</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Execution</th>
+          <th></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1059/003" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1059/003</a></td>
+          <td>Command and Scripting Interpreter: Windows Command Shell</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1047/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1047/</a></td>
+          <td>Windows Management Instrumentation</td>
+      </tr>
+      <tr>
+          <td>Privilege Escalation</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1548/002/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1548/002/</a></td>
+          <td>Abuse Elevation Control Mechanism: Bypass User Account Control</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1055/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1055/</a></td>
+          <td>Process Injection</td>
+      </tr>
+      <tr>
+          <td>Defense Evasion</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1548/002/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1548/002/</a></td>
+          <td>Abuse Elevation Control Mechanism: Bypass User Account Control</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1222/001/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1222/001/</a></td>
+          <td>File and Directory Permissions Modification: Windows File and Directory Permissions Modification</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1112/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1112/</a></td>
+          <td>Modify Registry</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1562/001/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1562/001/</a></td>
+          <td>Impair Defenses: Disable or Modify Tools</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1070/001/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1070/001/</a></td>
+          <td>Indicator Removal: Clear Windows Event Logs</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1070/004/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1070/004/</a></td>
+          <td>Indicator Removal: File Deletion</td>
+      </tr>
+      <tr>
+          <td>Discovery</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1083" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1083</a></td>
+          <td>File and Directory Discovery</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1135/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1135/</a></td>
+          <td>Network Share Discovery</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1069/002/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1069/002/</a></td>
+          <td>Permission Groups Discovery: Domain Groups</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1057/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1057/</a></td>
+          <td>Process Discovery</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1018/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1018/</a></td>
+          <td>Remote System Discovery</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1033/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1033/</a></td>
+          <td>System Owner/User Discovery</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1007/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1007/</a></td>
+          <td>System Service Discovery</td>
+      </tr>
+      <tr>
+          <td>Impact</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1485/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1485/</a></td>
+          <td>Data Destruction</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1486/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1486/</a></td>
+          <td>Data Encrypted for Impact</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1490/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1490/</a></td>
+          <td>Inhibit System Recovery</td>
+      </tr>
+      <tr>
+          <td><a href="https://attack.mitre.org/techniques/T1489/" target="_blank" rel="noopener noreffer ">https://attack.mitre.org/techniques/T1489/</a></td>
+          <td>Service Stop</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td></td>
+      </tr>
+  </tbody>
 </table>
 <p><img
         class="lazyload"
@@ -1743,39 +1335,41 @@
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2026-04-26&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/de9b965a7bd92863b001c050b18516047402e9ff" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) de9b965a7bd92863b001c050b18516047402e9ff: Update dates">
-                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>de9b965</a></span>
+                <span>Updated on 2026-04-26</span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
                             <a class="link-to-markdown" href="/alphv/index.md" target="_blank">Read Markdown</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware" data-via="0xd01a" data-hashtags="Malware Analysis,Reverse Engineering"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://d01a.github.io/alphv/" data-hashtag="Malware Analysis"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Linkedin" data-sharer="linkedin" data-url="https://d01a.github.io/alphv/"><i class="fab fa-linkedin fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Reddit" data-sharer="reddit" data-url="https://d01a.github.io/alphv/"><i class="fab fa-reddit fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Trello" data-sharer="trello" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware" data-description="ALPHV ransomware analysis"><i class="fab fa-trello fa-fw" aria-hidden="true"></i></a></span>
+                <span><a href="javascript:void(0);" title="Share on X" data-sharer="x" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware" data-via="0xd01a" data-hashtags="Malware Analysis,Reverse Engineering"><i class="fab fa-x-twitter" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Threads" data-sharer="threads" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware"><i class="fab fa-threads" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://d01a.github.io/alphv/" data-hashtag="Malware Analysis"><i class="fab fa-facebook-square" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware"><i class="fab fa-hacker-news" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@16.9.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware"><i class="fab fa-weibo" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Diaspora" data-sharer="diaspora" data-url="https://d01a.github.io/alphv/" data-title="ALPHV ransomware" data-description="ALPHV ransomware analysis"><i class="fab fa-diaspora" aria-hidden="true"></i></a><a href="https://t.me/share/url?url=https%3a%2f%2fd01a.github.io%2falphv%2f&amp;text=ALPHV%20ransomware" target="_blank" title="Share on Telegram"><i class="fab fa-telegram" aria-hidden="true"></i></a></span>
             </div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/malware-analysis/">Malware Analysis</a>,&nbsp;<a href="/tags/reverse-engineering/">Reverse Engineering</a></section>
+        <section class="post-tags"><i class="fas fa-tags" aria-hidden="true"></i>&nbsp;<a href="/tags/malware-analysis/">Malware Analysis</a>,&nbsp;<a href="/tags/reverse-engineering/">Reverse Engineering</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/redline/" class="prev" rel="prev" title="Redline stealer"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Redline stealer</a></div>
+    <div class="post-nav"><a href="/redline/" class="prev" rel="prev" title="Redline stealer"><i class="fas fa-angle-left" aria-hidden="true"></i>Redline stealer</a></div>
 </div>
 </article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.102.3">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2026</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Mohamed Adel</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.161.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 1.0.0"><i class="far fa-kiss-wink-heart" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2026</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Mohamed Adel</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
 
         <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-arrow-up" aria-hidden="true"></i>
             </a>
-        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"data":{"id-1":"d01a","id-2":"d01a"},"lightgallery":true,"typeit":{"cursorChar":"|","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":100}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div>
+
+        <div id="fixed-buttons-hidden"><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.2/sharer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/copy-tex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/mhchem.min.js"></script><script>window.config={"comment":{},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script src="/js/theme.js"></script></body>
 </html>

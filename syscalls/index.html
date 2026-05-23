@@ -4,20 +4,29 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation - d01a</title><meta name="Description" content="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike"><meta property="og:title" content="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation" />
-<meta property="og:description" content="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://d01a.github.io/syscalls/" /><meta property="og:image" content="https://d01a.github.io/syscalls/featured-image.jpg"/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-08-18T09:04:49+08:00" />
-<meta property="article:modified_time" content="2023-08-18T23:07:02+03:00" /><meta property="og:site_name" content="d01a" />
+        <title>Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation - d01a</title><meta name="Description" content="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike"><meta property="og:url" content="https://d01a.github.io/syscalls/">
+  <meta property="og:site_name" content="d01a">
+  <meta property="og:title" content="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation">
+  <meta property="og:description" content="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-08-18T09:04:49+08:00">
+    <meta property="article:modified_time" content="2026-04-26T20:37:42+03:00">
+    <meta property="article:tag" content="Malware Analysis">
+    <meta property="article:tag" content="Reverse Engineering">
+    <meta property="article:tag" content="Research">
+    <meta property="article:tag" content="Post-Exploitation">
+    <meta property="og:image" content="https://d01a.github.io/syscalls/featured-image.jpg">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://d01a.github.io/syscalls/featured-image.jpg"/>
-<meta name="twitter:title" content="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"/>
-<meta name="twitter:description" content="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike"/>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://d01a.github.io/syscalls/featured-image.jpg">
+  <meta name="twitter:title" content="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation">
+  <meta name="twitter:description" content="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike">
 <meta name="application-name" content="d01a">
-<meta name="apple-mobile-web-app-title" content="d01a"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/Luffy.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://d01a.github.io/syscalls/" /><link rel="prev" href="https://d01a.github.io/pikabot/" /><link rel="next" href="https://d01a.github.io/redline/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<meta name="apple-mobile-web-app-title" content="d01a">
+<meta name="referrer" content="no-referrer" /><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/Luffy.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://d01a.github.io/syscalls/" /><link rel="prev" href="https://d01a.github.io/pikabot/" /><link rel="next" href="https://d01a.github.io/redline/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -32,8 +41,8 @@
                             "url": "https:\/\/d01a.github.io\/syscalls\/featured-image.jpg",
                             "width":  1200 ,
                             "height":  628 
-                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering, Research, Post-exploitation","wordcount":  3219 ,
-        "url": "https:\/\/d01a.github.io\/syscalls\/","datePublished": "2023-08-18T09:04:49+08:00","dateModified": "2023-08-18T23:07:02+03:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                        }],"genre": "posts","keywords": "Malware Analysis, Reverse Engineering, Research, Post-exploitation","wordcount":  2982 ,
+        "url": "https:\/\/d01a.github.io\/syscalls\/","datePublished": "2023-08-18T09:04:49+08:00","dateModified": "2026-04-26T20:37:42+03:00","publisher": {
             "@type": "Organization",
             "name": "Mohamed Adel","logo": {
                     "@type": "ImageObject",
@@ -46,16 +55,38 @@
             },"description": "Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike"
     }
     </script></head>
-    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script>
+          const query = window.matchMedia('(prefers-color-scheme: dark)');
+          function applyTheme() {
+            let theme = window.localStorage?.getItem('theme') || 'auto';
+            let isDark = theme === 'dark' || (theme === 'auto' && query.matches);
+            document.body.setAttribute('theme', isDark? 'dark' : 'light');
+            document.body.setAttribute('cfg-theme', theme);
+          }
+
+          applyTheme();
+          query.addEventListener('change', applyTheme);
+        </script>
 
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span><span id="id-1" class="typeit"></span></a>
+            <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span>d01a</a>
         </div>
         <div class="menu">
-            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            <div class="menu-inner"><a class="menu-item" href="/posts/" title="Posts"> Posts </a><a class="menu-item" href="/tags/" title="Tags"> Tags </a><a class="menu-item" href="/categories/" title="Categories"> Categories </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust" aria-hidden="true"></i>
                 </a></div>
         </div>
     </div>
@@ -63,24 +94,45 @@
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span><span id="id-2" class="typeit"></span></a>
+                <a href="/" title="d01a"><span class="header-title-pre"><i class='fa-solid fa-terminal' aria-hidden='true'></i></span>d01a</a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="Posts">Posts</a><a class="menu-item" href="/tags/" title="Tags">Tags</a><a class="menu-item" href="/categories/" title="Categories">Categories</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/d01a" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust" aria-hidden="true"></i>
             </a></div>
     </div>
-</header><main class="main">
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">Contents</h2>
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/reverse-engineering/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Reverse Engineering</a>&nbsp;<a href="/categories/research/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Research</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-08-18">2023-08-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3219 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;16 minutes&nbsp;</div>
+            <div class="post-meta-line"><span class="post-author"><a href="https://d01a.github.io" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle" aria-hidden="true"></i>Mohamed Adel</a></span>&nbsp;<span class="post-category">included in <a href="/categories/reverse-engineering/"><i class="far fa-folder" aria-hidden="true"></i>Reverse Engineering</a>&nbsp;<a href="/categories/research/"><i class="far fa-folder" aria-hidden="true"></i>Research</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt" aria-hidden="true"></i>&nbsp;<time datetime="2023-08-18">2023-08-18</time>&nbsp;<i class="fas fa-pencil-alt" aria-hidden="true"></i>&nbsp;2982 words&nbsp;
+                <i class="far fa-clock" aria-hidden="true"></i>&nbsp;14 minutes&nbsp;</div>
         </div><div class="featured-image"><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -120,25 +172,12 @@
 <p>Hooking user-mode functions by placing a jump to another code section. EDRs use hooks to check the function parameters. For example, if you are trying to change the memory protections of some data to add executable protections. This is a very suspicious activity so EDRs will be alert to that. Most Hooks are on the lowest level of the user-mode interface in <strong>ntdll.dll</strong> which are the system calls.</p>
 <h2 id="direct-syscalls">Direct syscalls</h2>
 <p>Windows has a defined schema of how <code>syscalls</code> are used. Most of the documented windows APIs are just a wrapper of a lower-level Functions in <code>ntdll.dll</code> which are compiled to a <code>syscall</code> with the right SSN (System Service Number). To look at how <code>Nt*</code> version of the higher-level API is implemented.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:018&gt; uf NtOpenProcess
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:018&gt; uf NtOpenProcess
 </span></span><span class="line"><span class="cl">ntdll!NtOpenProcess:
 </span></span><span class="line"><span class="cl">00007ffa`4874d4c0 4c8bd1          mov     r10,rcx
 </span></span><span class="line"><span class="cl">00007ffa`4874d4c3 b826000000      mov     eax,26h
@@ -151,94 +190,41 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">ntdll!NtOpenProcess+0x15:
 </span></span><span class="line"><span class="cl">00007ffa`4874d4d5 cd2e            int     2Eh
-</span></span><span class="line"><span class="cl">00007ffa`4874d4d7 c3              ret
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>At address <code>00007ffa~4874d4d2</code> there <code>syscall</code> instruction. This instruction transfers the execution to the system-handler at the kernel. The handler is specified using pre-defined SSN number loaded into <code>EAX</code> Register (In this case <code>EAX = 0x26</code> at address <code>00007ffa~4874d4c3</code>).
+</span></span><span class="line"><span class="cl">00007ffa`4874d4d7 c3              ret</span></span></code></pre></div></div>
+<p>At address <code>00007ffa~4874d4d2</code> there <code>syscall</code> instruction. This instruction transfers the execution to the system-handler at the kernel. The handler is specified using pre-defined SSN number loaded into <code>EAX</code> Register (In this case <code>EAX = 0x26</code> at address <code>00007ffa~4874d4c3</code>).
 So, to make a <code>syscall</code> The SSN associated.
 The code stub of the <code>syscalls</code> is simple.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-nasm" data-lang="nasm"><span class="line"><span class="cl"><span class="nf">mov</span> <span class="nv">r10</span><span class="p">,</span> <span class="nb">rcx</span>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-nasm">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-nasm" data-lang="nasm"><span class="line"><span class="cl"><span class="nf">mov</span> <span class="nv">r10</span><span class="p">,</span> <span class="nb">rcx</span>
 </span></span><span class="line"><span class="cl"><span class="nf">mov</span> <span class="nb">eax</span><span class="p">,</span> <span class="o">&lt;</span><span class="nv">syscall_number</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="nf">syscall</span>
-</span></span><span class="line"><span class="cl"><span class="nf">ret</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Now, the missing thing is the <code>syscall_number</code>. These numbers are changing based on the Build version of windows. There are some techniques to get these numbers.</p>
+</span></span><span class="line"><span class="cl"><span class="nf">ret</span></span></span></code></pre></div></div>
+<p>Now, the missing thing is the <code>syscall_number</code>. These numbers are changing based on the Build version of windows. There are some techniques to get these numbers.</p>
 <ol>
 <li><strong>SysWhispers</strong></li>
 </ol>
 <p><a href="https://github.com/jthuraisamy/SysWhispers" target="_blank" rel="noopener noreffer ">SysWhispers</a> That generate the table of these numbers in the form of a header file and assembly file that can be embedded in the code. The generated code contains <code>syscall</code> number for multiple versions, The right windows build version is detected at runtime using PEB structure.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">...
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">...
 </span></span><span class="line"><span class="cl">+0x118 OSMajorVersion   : Uint4B
 </span></span><span class="line"><span class="cl">+0x11c OSMinorVersion   : Uint4B
 </span></span><span class="line"><span class="cl">+0x120 OSBuildNumber    : Uint2B
-</span></span><span class="line"><span class="cl">...
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The assembly code generated (Full document at <a href="https://raw.githubusercontent.com/jthuraisamy/SysWhispers/master/example-output/syscalls.asm" target="_blank" rel="noopener noreffer ">example-output</a>)</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-nasm" data-lang="nasm"><span class="line"><span class="cl"><span class="nf">...</span>
+</span></span><span class="line"><span class="cl">...</span></span></code></pre></div></div>
+<p>The assembly code generated (Full document at <a href="https://raw.githubusercontent.com/jthuraisamy/SysWhispers/master/example-output/syscalls.asm" target="_blank" rel="noopener noreffer ">example-output</a>)</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-nasm">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-nasm" data-lang="nasm"><span class="line"><span class="cl"><span class="nf">...</span>
 </span></span><span class="line"><span class="cl"><span class="nf">NtOpenProcess</span> <span class="nv">PROC</span>
 </span></span><span class="line"><span class="cl">	<span class="nf">mov</span> <span class="nb">rax</span><span class="p">,</span> <span class="nb">gs</span><span class="p">:[</span><span class="mh">60h</span><span class="p">]</span>                       <span class="c1">; Load PEB into RAX.</span>
 </span></span><span class="line"><span class="cl"><span class="nl">NtOpenProcess_Check_X_X_XXXX:</span>               <span class="c1">; Check major version.</span>
@@ -278,10 +264,8 @@ The code stub of the <code>syscalls</code> is simple.</p>
 </span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_10_0_10240</span>
 </span></span><span class="line"><span class="cl">	<span class="nf">cmp</span> <span class="kt">dword</span> <span class="nv">ptr</span> <span class="p">[</span><span class="nb">rax</span><span class="o">+</span><span class="mh">120h</span><span class="p">],</span> <span class="mi">10586</span>
 </span></span><span class="line"><span class="cl">	<span class="nf">je</span>  <span class="nv">NtOpenProcess_SystemCall_10_0_10586</span>
-</span></span><span class="line"><span class="cl">	<span class="nf">...</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><ol>
+</span></span><span class="line"><span class="cl">	<span class="nf">...</span></span></span></code></pre></div></div>
+<ol>
 <li><strong>SSN code stub</strong>
 This technique doesn&rsquo;t Look for SSN number, instead it gets the code stub of the required API. This can be done by opening the PE file and parsing the Export table of <code>ntdll</code></li>
 <li><strong>Extract SSN</strong>
@@ -293,25 +277,12 @@ This is an interesting technique explained in this <a href="https://www.mdsec.co
 <li><strong>Sorting by system call address</strong>
 This technique uses the relation between the address of the system call stub and the SSN. It is known as <a href="https://github.com/crummie5/FreshyCalls" target="_blank" rel="noopener noreffer ">FreshyCalls</a> . In simple words, it walks the Export Address Table of <code>ntdll</code> and saves the Name -or a hash of the name- and Address of each entry in a table. Then, it sorts the entries by the addresses in ascending order. It was found that the first function <code>NtAccessCheck</code> (by address) has an SSN = 0</li>
 </ol>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:007&gt; uf NtAccessCheck
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:007&gt; uf NtAccessCheck
 </span></span><span class="line"><span class="cl">ntdll!NtAccessCheck:
 </span></span><span class="line"><span class="cl">00007ffa`4874d000 4c8bd1          mov     r10,rcx
 </span></span><span class="line"><span class="cl">00007ffa`4874d003 b800000000      mov     eax,0
@@ -324,30 +295,14 @@ This technique uses the relation between the address of the system call stub and
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">ntdll!NtAccessCheck+0x15:
 </span></span><span class="line"><span class="cl">00007ffa`4874d015 cd2e            int     2Eh
-</span></span><span class="line"><span class="cl">00007ffa`4874d017 c3              ret
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>and if we unassembled the next function by adding one to the last address (as ret opcode is one byte) we will get that the next function&rsquo;s SSN is 1!</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:007&gt; uf 00007ffa`4874d017+1
+</span></span><span class="line"><span class="cl">00007ffa`4874d017 c3              ret</span></span></code></pre></div></div>
+<p>and if we unassembled the next function by adding one to the last address (as ret opcode is one byte) we will get that the next function&rsquo;s SSN is 1!</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:007&gt; uf 00007ffa`4874d017+1
 </span></span><span class="line"><span class="cl">ntdll!NtAccessCheck+0x18:
 </span></span><span class="line"><span class="cl">00007ffa`4874d018 0f1f840000000000 nop     dword ptr [rax+rax]
 </span></span><span class="line"><span class="cl">00007ffa`4874d020 4c8bd1          mov     r10,rcx
@@ -361,87 +316,53 @@ This technique uses the relation between the address of the system call stub and
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">ntdll!NtWorkerFactoryWorkerReady+0x15:
 </span></span><span class="line"><span class="cl">00007ffa`4874d035 cd2e            int     2Eh
-</span></span><span class="line"><span class="cl">00007ffa`4874d037 c3              ret
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>So, by sorting the functions by the addresses, we have the SSN. for the code, look at <a href="https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams/#8.%20Sorting%20by%20System%20Call%20Address" target="_blank" rel="noopener noreffer ">MDSec</a> (8. Sorting by System Call Address) blog or see <a href="https://github.com/crummie5/FreshyCalls/blob/112bdf0db63a5f7104ba5243af6a672bc098a1ad/syscall.cpp#L65" target="_blank" rel="noopener noreffer ">FreshlyCalls</a> implementation.
+</span></span><span class="line"><span class="cl">00007ffa`4874d037 c3              ret</span></span></code></pre></div></div>
+<p>So, by sorting the functions by the addresses, we have the SSN. for the code, look at <a href="https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams/#8.%20Sorting%20by%20System%20Call%20Address" target="_blank" rel="noopener noreffer ">MDSec</a> (8. Sorting by System Call Address) blog or see <a href="https://github.com/crummie5/FreshyCalls/blob/112bdf0db63a5f7104ba5243af6a672bc098a1ad/syscall.cpp#L65" target="_blank" rel="noopener noreffer ">FreshlyCalls</a> implementation.
 The execution of the system call is not direct by calling <code>syscall</code> instruction. Instead. It uses the method explained below. Briefly, it uses the <code>syscall</code> instructions from <code>ntdll</code>.</p>
 <h2 id="indirect-syscalls">Indirect syscalls</h2>
 <p>All the methods described are workarounds to get the system call number without getting caught. <code>syscall</code> instruction reveals that some suspicious activity is going on. This is done using <code>KPROCESS!InstrumentationCallback</code> in windows.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:030&gt; dt _kprocess
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0:030&gt; dt _kprocess
 </span></span><span class="line"><span class="cl">ntdll!_KPROCESS
 </span></span><span class="line"><span class="cl">   +0x000 Header           : _DISPATCHER_HEADER
 </span></span><span class="line"><span class="cl">   ...
 </span></span><span class="line"><span class="cl">   +0x3d8 InstrumentationCallback : Ptr64 Void
 </span></span><span class="line"><span class="cl">   ...
-</span></span><span class="line"><span class="cl">   +0x3f8 EndPadding       : [8] Uint8B
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Any time the windows is done with a syscall and returns to user-mode, it checks this member it is not <code>NULL</code>, the execution will be transferred to that pointer. To check if the syscall is legit, the return address after finishing the syscall is checked to see if it is not from a valid place. If the address is in the address space of the process running, it&rsquo;s not a legitimate place to make a syscall. This check was done by ScyllaHide to detect manual syscalls, the source code can be found <a href="https://github.com/x64dbg/ScyllaHide/blob/master/HookLibrary/HookedFunctions.cpp#L176-L187" target="_blank" rel="noopener noreffer ">here</a>.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"> <span class="k">if</span> <span class="p">(</span><span class="n">InterlockedOr</span><span class="p">(</span><span class="n">TlsGetInstrumentationCallbackDisabled</span><span class="p">(),</span> <span class="mh">0x1</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   +0x3f8 EndPadding       : [8] Uint8B</span></span></code></pre></div></div>
+<p>Any time the windows is done with a syscall and returns to user-mode, it checks this member it is not <code>NULL</code>, the execution will be transferred to that pointer. To check if the syscall is legit, the return address after finishing the syscall is checked to see if it is not from a valid place. If the address is in the address space of the process running, it&rsquo;s not a legitimate place to make a syscall. This check was done by ScyllaHide to detect manual syscalls, the source code can be found <a href="https://github.com/x64dbg/ScyllaHide/blob/master/HookLibrary/HookedFunctions.cpp#L176-L187" target="_blank" rel="noopener noreffer ">here</a>.</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-c">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"> <span class="k">if</span> <span class="p">(</span><span class="nf">InterlockedOr</span><span class="p">(</span><span class="nf">TlsGetInstrumentationCallbackDisabled</span><span class="p">(),</span> <span class="mh">0x1</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x1</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ReturnVal</span><span class="p">;</span> <span class="c1">// Do not recurse
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">PVOID</span> <span class="n">ImageBase</span> <span class="o">=</span> <span class="n">NtCurrentPeb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ImageBaseAddress</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">PIMAGE_NT_HEADERS</span> <span class="n">NtHeaders</span> <span class="o">=</span> <span class="n">RtlImageNtHeader</span><span class="p">(</span><span class="n">ImageBase</span><span class="p">);</span>
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">PVOID</span> <span class="n">ImageBase</span> <span class="o">=</span> <span class="nf">NtCurrentPeb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ImageBaseAddress</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">PIMAGE_NT_HEADERS</span> <span class="n">NtHeaders</span> <span class="o">=</span> <span class="nf">RtlImageNtHeader</span><span class="p">(</span><span class="n">ImageBase</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">NtHeaders</span> <span class="o">!=</span> <span class="n">nullptr</span> <span class="o">&amp;&amp;</span> <span class="n">ReturnAddress</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">ImageBase</span> <span class="o">&amp;&amp;</span>
 </span></span><span class="line"><span class="cl">        <span class="n">ReturnAddress</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">ImageBase</span> <span class="o">+</span> <span class="n">NtHeaders</span><span class="o">-&gt;</span><span class="n">OptionalHeader</span><span class="p">.</span><span class="n">SizeOfImage</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="c1">// Syscall return address within the exe file
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">ReturnVal</span> <span class="o">=</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)(</span><span class="n">ULONG</span><span class="p">)</span><span class="n">STATUS_PORT_NOT_SET</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">        <span class="n">ReturnVal</span> <span class="o">=</span> <span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">)(</span><span class="n">ULONG</span><span class="p">)</span><span class="n">STATUS_PORT_NOT_SET</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="c1">// Uninstall ourselves after we have completed the sequence { NtQIP, NtQIP }. More NtSITs will follow but we can&#39;t do anything about them
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">NumManualSyscalls</span><span class="o">++</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">        <span class="n">NumManualSyscalls</span><span class="o">++</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">NumManualSyscalls</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">InstallInstrumentationCallbackHook</span><span class="p">(</span><span class="n">NtCurrentProcess</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nf">InstallInstrumentationCallbackHook</span><span class="p">(</span><span class="n">NtCurrentProcess</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">InterlockedAnd</span><span class="p">(</span><span class="n">TlsGetInstrumentationCallbackDisabled</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">InterlockedAnd</span><span class="p">(</span><span class="nf">TlsGetInstrumentationCallbackDisabled</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">ReturnVal</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>It checks the return address of the successful system call. If it resides on the address space of the binary we are running, it is an indication of manual system call.</p>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div>
+<p>It checks the return address of the successful system call. If it resides on the address space of the binary we are running, it is an indication of manual system call.</p>
 <p><strong>The Solution</strong>
 The solution to this hooking method is done by <a href="https://github.com/eversinc33/BouncyGate" target="_blank" rel="noopener noreffer ">Bouncy Gate</a> and <a href="https://github.com/thefLink/RecycledGate" target="_blank" rel="noopener noreffer ">Recycled Gate</a> method. The idea is quite simple, it is an adjusted version of <a href="https://github.com/eversinc33/BouncyGate" target="_blank" rel="noopener noreffer ">Hell&rsquo;s Gate</a>. Instead of directly executing <code>syscall</code> instruction and getting caught by static signatures and system call callbacks described above, the author replaces the <code>syscall</code> instruction with a trampoline jump (<code>JMP</code>) to a <code>syscall</code> instruction address from <code>ntdll.dll</code>. now there is no direct <code>syscall</code> instruction and the system call originated from a legitimate place <code>ntdll</code>. This is also implemented in <a href="https://github.com/klezVirus/SysWhispers3" target="_blank" rel="noopener noreffer ">SysWhispers3</a>. To get the address of the syscall instruction in <code>ntdll</code> we can parse the export table and search for syscall, ret opcodes <code>0F 05 0C</code> or the constant pattern of syscalls in <code>ntdll</code> can be used to get the syscall address. If the function is not hooked, the syscall instruction is on offset <code>0x12</code> from the function&rsquo;s address, we can verify that by comparing the opcodes.</p>
 <h2 id="indirect-syscalls-in-cobalt-strike">Indirect syscalls in Cobalt Strike</h2>
@@ -510,23 +431,17 @@ The hash value returned is the last result of the XOR operation.</li>
 <li>The third <code>QWORD</code> is the Virtual Address (VA) of the system call stub (RVA + ntdll Base Address).</li>
 </ul>
 <p>So, it can be written as:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">syscall_info</span> <span class="p">{</span>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-c">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">syscall_info</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="n">DWORD</span> <span class="n">API_hash</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">DWORD</span> <span class="n">syscall_stub_RVA</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">QWORD</span> <span class="n">syscall_stub_address</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">};</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>After populating the structure with the addresses. The structure elements are being sorted by the RVA of the system call stub (second entry in the structure).</p>
+</span></span><span class="line"><span class="cl"><span class="p">};</span></span></span></code></pre></div></div>
+<p>After populating the structure with the addresses. The structure elements are being sorted by the RVA of the system call stub (second entry in the structure).</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -556,115 +471,13 @@ The hash value returned is the last result of the XOR operation.</li>
 <p>system call number is zero. This is how it gets the SSN for any function, by iterating the structure to get the right hash, the counter will be used to get the SSN (SSN = counter).
 So far, this is remarkably like <a href="https://www.mdsec.co.uk/2020/12/bypassing-user-mode-hooks-and-direct-invocation-of-system-calls-for-red-teams/#8.%20Sorting%20by%20System%20Call%20Address" target="_blank" rel="noopener noreffer ">MDSec</a> (8. Sorting by System Call Address) implementation of the technique known as <code>FreshlyCalls</code>.
 We could rewrite the technique using MDSec implementation as follows:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">  1
-</span><span class="lnt">  2
-</span><span class="lnt">  3
-</span><span class="lnt">  4
-</span><span class="lnt">  5
-</span><span class="lnt">  6
-</span><span class="lnt">  7
-</span><span class="lnt">  8
-</span><span class="lnt">  9
-</span><span class="lnt"> 10
-</span><span class="lnt"> 11
-</span><span class="lnt"> 12
-</span><span class="lnt"> 13
-</span><span class="lnt"> 14
-</span><span class="lnt"> 15
-</span><span class="lnt"> 16
-</span><span class="lnt"> 17
-</span><span class="lnt"> 18
-</span><span class="lnt"> 19
-</span><span class="lnt"> 20
-</span><span class="lnt"> 21
-</span><span class="lnt"> 22
-</span><span class="lnt"> 23
-</span><span class="lnt"> 24
-</span><span class="lnt"> 25
-</span><span class="lnt"> 26
-</span><span class="lnt"> 27
-</span><span class="lnt"> 28
-</span><span class="lnt"> 29
-</span><span class="lnt"> 30
-</span><span class="lnt"> 31
-</span><span class="lnt"> 32
-</span><span class="lnt"> 33
-</span><span class="lnt"> 34
-</span><span class="lnt"> 35
-</span><span class="lnt"> 36
-</span><span class="lnt"> 37
-</span><span class="lnt"> 38
-</span><span class="lnt"> 39
-</span><span class="lnt"> 40
-</span><span class="lnt"> 41
-</span><span class="lnt"> 42
-</span><span class="lnt"> 43
-</span><span class="lnt"> 44
-</span><span class="lnt"> 45
-</span><span class="lnt"> 46
-</span><span class="lnt"> 47
-</span><span class="lnt"> 48
-</span><span class="lnt"> 49
-</span><span class="lnt"> 50
-</span><span class="lnt"> 51
-</span><span class="lnt"> 52
-</span><span class="lnt"> 53
-</span><span class="lnt"> 54
-</span><span class="lnt"> 55
-</span><span class="lnt"> 56
-</span><span class="lnt"> 57
-</span><span class="lnt"> 58
-</span><span class="lnt"> 59
-</span><span class="lnt"> 60
-</span><span class="lnt"> 61
-</span><span class="lnt"> 62
-</span><span class="lnt"> 63
-</span><span class="lnt"> 64
-</span><span class="lnt"> 65
-</span><span class="lnt"> 66
-</span><span class="lnt"> 67
-</span><span class="lnt"> 68
-</span><span class="lnt"> 69
-</span><span class="lnt"> 70
-</span><span class="lnt"> 71
-</span><span class="lnt"> 72
-</span><span class="lnt"> 73
-</span><span class="lnt"> 74
-</span><span class="lnt"> 75
-</span><span class="lnt"> 76
-</span><span class="lnt"> 77
-</span><span class="lnt"> 78
-</span><span class="lnt"> 79
-</span><span class="lnt"> 80
-</span><span class="lnt"> 81
-</span><span class="lnt"> 82
-</span><span class="lnt"> 83
-</span><span class="lnt"> 84
-</span><span class="lnt"> 85
-</span><span class="lnt"> 86
-</span><span class="lnt"> 87
-</span><span class="lnt"> 88
-</span><span class="lnt"> 89
-</span><span class="lnt"> 90
-</span><span class="lnt"> 91
-</span><span class="lnt"> 92
-</span><span class="lnt"> 93
-</span><span class="lnt"> 94
-</span><span class="lnt"> 95
-</span><span class="lnt"> 96
-</span><span class="lnt"> 97
-</span><span class="lnt"> 98
-</span><span class="lnt"> 99
-</span><span class="lnt">100
-</span><span class="lnt">101
-</span><span class="lnt">102
-</span><span class="lnt">103
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#define RVA2VA(Type, DllBase, Rva) (Type)((ULONG_PTR) DllBase + Rva)
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-c">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#define RVA2VA(Type, DllBase, Rva) (Type)((ULONG_PTR) DllBase + Rva)
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">static</span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span>
 </span></span><span class="line"><span class="cl"><span class="nf">GetSyscallList</span><span class="p">(</span><span class="n">PSYSCALL_LIST</span> <span class="n">List</span><span class="p">)</span> <span class="p">{</span>
@@ -684,25 +497,25 @@ We could rewrite the technique using MDSec implementation as follows:</p>
 </span></span><span class="line"><span class="cl">    <span class="n">SYSCALL_ENTRY</span>           <span class="n">Entry</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">//
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// Get the DllBase address of NTDLL.dll
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// NTDLL is not guaranteed to be the second in the list.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// so it&#39;s safer to loop through the full list and find it.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Ldr</span> <span class="o">=</span> <span class="p">(</span><span class="n">PPEB_LDR_DATA</span><span class="p">)</span><span class="n">NtCurrentTeb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ProcessEnvironmentBlock</span><span class="o">-&gt;</span><span class="n">Ldr</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Get the DllBase address of NTDLL.dll
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// NTDLL is not guaranteed to be the second in the list.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// so it&#39;s safer to loop through the full list and find it.
+</span></span></span><span class="line"><span class="cl">    <span class="n">Ldr</span> <span class="o">=</span> <span class="p">(</span><span class="n">PPEB_LDR_DATA</span><span class="p">)</span><span class="nf">NtCurrentTeb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ProcessEnvironmentBlock</span><span class="o">-&gt;</span><span class="n">Ldr</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">// For each DLL loaded
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="n">LdrEntry</span><span class="o">=</span><span class="p">(</span><span class="n">PLDR_DATA_TABLE_ENTRY</span><span class="p">)</span><span class="n">Ldr</span><span class="o">-&gt;</span><span class="n">Reserved2</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="n">LdrEntry</span><span class="o">=</span><span class="p">(</span><span class="n">PLDR_DATA_TABLE_ENTRY</span><span class="p">)</span><span class="n">Ldr</span><span class="o">-&gt;</span><span class="n">Reserved2</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">         <span class="n">LdrEntry</span><span class="o">-&gt;</span><span class="n">DllBase</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">         <span class="n">LdrEntry</span><span class="o">=</span><span class="p">(</span><span class="n">PLDR_DATA_TABLE_ENTRY</span><span class="p">)</span><span class="n">LdrEntry</span><span class="o">-&gt;</span><span class="n">Reserved1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span>
 </span></span><span class="line"><span class="cl">      <span class="n">DllBase</span> <span class="o">=</span> <span class="n">LdrEntry</span><span class="o">-&gt;</span><span class="n">DllBase</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">      <span class="n">DosHeader</span> <span class="o">=</span> <span class="p">(</span><span class="n">PIMAGE_DOS_HEADER</span><span class="p">)</span><span class="n">DllBase</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">      <span class="n">NtHeaders</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PIMAGE_NT_HEADERS</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">DosHeader</span><span class="o">-&gt;</span><span class="n">e_lfanew</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">NtHeaders</span> <span class="o">=</span> <span class="nf">RVA2VA</span><span class="p">(</span><span class="n">PIMAGE_NT_HEADERS</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">DosHeader</span><span class="o">-&gt;</span><span class="n">e_lfanew</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">      <span class="n">DataDirectory</span> <span class="o">=</span> <span class="p">(</span><span class="n">PIMAGE_DATA_DIRECTORY</span><span class="p">)</span><span class="n">NtHeaders</span><span class="o">-&gt;</span><span class="n">OptionalHeader</span><span class="p">.</span><span class="n">DataDirectory</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">      <span class="n">VirtualAddress</span> <span class="o">=</span> <span class="n">DataDirectory</span><span class="p">[</span><span class="n">IMAGE_DIRECTORY_ENTRY_EXPORT</span><span class="p">].</span><span class="n">VirtualAddress</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">(</span><span class="n">VirtualAddress</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">      <span class="n">ExportDirectory</span> <span class="o">=</span> <span class="p">(</span><span class="n">PIMAGE_EXPORT_DIRECTORY</span><span class="p">)</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">VirtualAddress</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">      <span class="n">DllName</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PCHAR</span><span class="p">,</span><span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">ExportDirectory</span> <span class="o">=</span> <span class="p">(</span><span class="n">PIMAGE_EXPORT_DIRECTORY</span><span class="p">)</span> <span class="nf">RVA2VA</span><span class="p">(</span><span class="n">ULONG_PTR</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">VirtualAddress</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">DllName</span> <span class="o">=</span> <span class="nf">RVA2VA</span><span class="p">(</span><span class="n">PCHAR</span><span class="p">,</span><span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">((</span><span class="o">*</span><span class="p">(</span><span class="n">ULONG</span><span class="o">*</span><span class="p">)</span><span class="n">DllName</span> <span class="o">|</span> <span class="mh">0x20202020</span><span class="p">)</span> <span class="o">!=</span> <span class="err">&#39;</span><span class="n">ldtn</span><span class="err">&#39;</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">((</span><span class="o">*</span><span class="p">(</span><span class="n">ULONG</span><span class="o">*</span><span class="p">)(</span><span class="n">DllName</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span> <span class="o">|</span> <span class="mh">0x20202020</span><span class="p">)</span> <span class="o">==</span> <span class="err">&#39;</span><span class="n">ld</span><span class="p">.</span><span class="n">l</span><span class="err">&#39;</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
@@ -710,27 +523,27 @@ We could rewrite the technique using MDSec implementation as follows:</p>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">NumberOfNames</span> <span class="o">=</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">NumberOfNames</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">Functions</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PDWORD</span><span class="p">,</span><span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">AddressOfFunctions</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Names</span>     <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PDWORD</span><span class="p">,</span><span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">AddressOfNames</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Ordinals</span>  <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PWORD</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">AddressOfNameOrdinals</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Functions</span> <span class="o">=</span> <span class="nf">RVA2VA</span><span class="p">(</span><span class="n">PDWORD</span><span class="p">,</span><span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">AddressOfFunctions</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Names</span>     <span class="o">=</span> <span class="nf">RVA2VA</span><span class="p">(</span><span class="n">PDWORD</span><span class="p">,</span><span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">AddressOfNames</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Ordinals</span>  <span class="o">=</span> <span class="nf">RVA2VA</span><span class="p">(</span><span class="n">PWORD</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">ExportDirectory</span><span class="o">-&gt;</span><span class="n">AddressOfNameOrdinals</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">Table</span>     <span class="o">=</span> <span class="n">List</span><span class="o">-&gt;</span><span class="n">Table</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">do</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">      <span class="n">FunctionName</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="n">PCHAR</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">Names</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]);</span>
-</span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">USHORT</span><span class="o">*</span><span class="p">)</span><span class="n">FunctionName</span> <span class="o">==</span> <span class="err">&#39;</span><span class="n">iK</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">HashSyscall</span><span class="p">(</span><span class="n">FunctionName</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x8DCD4499</span><span class="p">)</span>  <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">API_Hash</span> <span class="o">=</span> <span class="n">HashSyscall</span><span class="p">(</span><span class="o">&amp;</span><span class="n">FunctionName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">FunctionName</span> <span class="o">=</span> <span class="nf">RVA2VA</span><span class="p">(</span><span class="n">PCHAR</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span> <span class="n">Names</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">USHORT</span><span class="o">*</span><span class="p">)</span><span class="n">FunctionName</span> <span class="o">==</span> <span class="err">&#39;</span><span class="n">iK</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="nf">HashSyscall</span><span class="p">(</span><span class="n">FunctionName</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x8DCD4499</span><span class="p">)</span>  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">API_Hash</span> <span class="o">=</span> <span class="nf">HashSyscall</span><span class="p">(</span><span class="o">&amp;</span><span class="n">FunctionName</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">syscall_stub_RVA</span> <span class="o">=</span> <span class="n">Functions</span><span class="p">[</span><span class="n">Ordinals</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]];</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">syscall_stub_address</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="kt">void</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span><span class="n">Functions</span><span class="p">[</span><span class="n">Ordinals</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]]);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">syscall_stub_address</span> <span class="o">=</span> <span class="nf">RVA2VA</span><span class="p">(</span><span class="kt">void</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span><span class="n">Functions</span><span class="p">[</span><span class="n">Ordinals</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]]);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="n">Entries</span><span class="o">++</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">Entries</span> <span class="o">==</span> <span class="n">MAX_SYSCALLS</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">      <span class="p">}</span>
 </span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">USHORT</span><span class="o">*</span><span class="p">)</span><span class="n">FunctionName</span> <span class="o">==</span> <span class="err">&#39;</span><span class="n">wZ</span><span class="err">&#39;</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">API_Hash</span> <span class="o">=</span> <span class="n">HashSyscall</span><span class="p">(</span><span class="o">&amp;</span><span class="n">FunctionName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">API_Hash</span> <span class="o">=</span> <span class="nf">HashSyscall</span><span class="p">(</span><span class="o">&amp;</span><span class="n">FunctionName</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">syscall_stub_RVA</span> <span class="o">=</span> <span class="n">Functions</span><span class="p">[</span><span class="n">Ordinals</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]];</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">syscall_stub_address</span> <span class="o">=</span> <span class="n">RVA2VA</span><span class="p">(</span><span class="kt">void</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span><span class="n">Functions</span><span class="p">[</span><span class="n">Ordinals</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]]);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Table</span><span class="p">[</span><span class="n">Entries</span><span class="p">].</span><span class="n">syscall_stub_address</span> <span class="o">=</span> <span class="nf">RVA2VA</span><span class="p">(</span><span class="kt">void</span><span class="p">,</span> <span class="n">DllBase</span><span class="p">,</span><span class="n">Functions</span><span class="p">[</span><span class="n">Ordinals</span><span class="p">[</span><span class="n">NumberOfNames</span><span class="o">-</span><span class="mi">1</span><span class="p">]]);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="n">Entries</span><span class="o">++</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">Entries</span> <span class="o">==</span> <span class="n">MAX_SYSCALLS</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
@@ -738,20 +551,20 @@ We could rewrite the technique using MDSec implementation as follows:</p>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">NumberOfNames</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">//
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// Save total number of system calls found.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">List</span><span class="o">-&gt;</span><span class="n">Entries</span> <span class="o">=</span> <span class="n">Entries</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Save total number of system calls found.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="n">List</span><span class="o">-&gt;</span><span class="n">Entries</span> <span class="o">=</span> <span class="n">Entries</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">//
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// Sort the list by address in ascending order.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Entries</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Sort the list by address in ascending order.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Entries</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">      <span class="k">for</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Entries</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">syscall_stub_RVA</span> <span class="o">&gt;</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">syscall_stub_RVA</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">          <span class="c1">//
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="c1">// Swap entries.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="c1">//
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="n">Entry</span><span class="p">.</span><span class="n">Hash</span> <span class="o">=</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">Hash</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">          <span class="c1">// Swap entries.
+</span></span></span><span class="line"><span class="cl">          <span class="c1">//
+</span></span></span><span class="line"><span class="cl">          <span class="n">Entry</span><span class="p">.</span><span class="n">Hash</span> <span class="o">=</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">Hash</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">          <span class="n">Entry</span><span class="p">.</span><span class="n">Address</span> <span class="o">=</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">Address</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">          <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">API_Hash</span> <span class="o">=</span> <span class="n">Table</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">API_Hash</span><span class="p">;</span>
@@ -765,10 +578,8 @@ We could rewrite the technique using MDSec implementation as follows:</p>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">      <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The next thing is to use the structure to get the SSN. and <code>syscall</code> instruction to call. This is done by function <code>sub_18001A73C</code>.</p>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div>
+<p>The next thing is to use the structure to get the SSN. and <code>syscall</code> instruction to call. This is done by function <code>sub_18001A73C</code>.</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -786,15 +597,13 @@ We could rewrite the technique using MDSec implementation as follows:</p>
 <li>Global variable to get the system call SSN and stub.
 The function is simple, it searches the populated structure to find the given hash. If it&rsquo;s found, the counter value is taken and to get the Address of the system call stub. To get the address, the base address of the structure is added to the offset multiplied by 0x10 (struct size) and add 8 to get the last QWORD.</li>
 </ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">API_Address = *(STRUCT_BASE_ADDR + COUNTER * 0x10 + 8)
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The address the passed to <code>get_syscall_ret_address</code> to get the <code>syscall ret</code> addresses to use it to execute the system call to bypass the callback mentioned before (call stack tracing is be used to detect this trick).</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">API_Address = *(STRUCT_BASE_ADDR + COUNTER * 0x10 + 8)</span></span></code></pre></div></div>
+<p>The address the passed to <code>get_syscall_ret_address</code> to get the <code>syscall ret</code> addresses to use it to execute the system call to bypass the callback mentioned before (call stack tracing is be used to detect this trick).</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -810,23 +619,17 @@ The function is simple, it searches the populated structure to find the given ha
 <li>DWORD to store system call number SSN.
 We can rewrite it as follows:</li>
 </ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">syscall_required_addresses</span> <span class="p">{</span>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-c">
+        <span class="code-title"><i class="arrow fas fa-angle-right" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></span>
+        <span class="copy" title="Copy to clipboard"><i class="far fa-copy" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">syscall_required_addresses</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="n">QWORD</span> <span class="n">syscall_stub_address</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">QWORD</span> <span class="n">syscall_intruction_address</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">DWORD</span> <span class="n">syscall_number</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">};</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>(Creative names I know :) )</p>
+</span></span><span class="line"><span class="cl"><span class="p">};</span></span></span></code></pre></div></div>
+<p>(Creative names I know :) )</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -876,40 +679,42 @@ Indirect system calls solved this problem by getting the address of <code>syscal
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2023-08-18&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/ad703d5792835bb482b5dfaa18dd60ab432e3ebb" target="_blank" title="commit by mohamedadel46(muhammed195826@feng.bu.edu.eg) ad703d5792835bb482b5dfaa18dd60ab432e3ebb: syscalls">
-                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>ad703d5</a></span>
+                <span>Updated on 2026-04-26</span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
                             <a class="link-to-markdown" href="/syscalls/index.md" target="_blank">Read Markdown</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation" data-via="0xd01a" data-hashtags="Malware Analysis,Reverse Engineering,Research,Post-exploitation"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://d01a.github.io/syscalls/" data-hashtag="Malware Analysis"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Linkedin" data-sharer="linkedin" data-url="https://d01a.github.io/syscalls/"><i class="fab fa-linkedin fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Reddit" data-sharer="reddit" data-url="https://d01a.github.io/syscalls/"><i class="fab fa-reddit fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Trello" data-sharer="trello" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation" data-description="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike"><i class="fab fa-trello fa-fw" aria-hidden="true"></i></a></span>
+                <span><a href="javascript:void(0);" title="Share on X" data-sharer="x" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation" data-via="0xd01a" data-hashtags="Malware Analysis,Reverse Engineering,Research,Post-exploitation"><i class="fab fa-x-twitter" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Threads" data-sharer="threads" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"><i class="fab fa-threads" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://d01a.github.io/syscalls/" data-hashtag="Malware Analysis"><i class="fab fa-facebook-square" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"><i class="fab fa-hacker-news" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@16.9.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation"><i class="fab fa-weibo" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Diaspora" data-sharer="diaspora" data-url="https://d01a.github.io/syscalls/" data-title="Understanding Syscalls: Direct, Indirect, and Cobalt Strike Implementation" data-description="Exploring the Concepts of Direct and Indirect Syscalls, and Reverse Engineering Syscalls implementation in Cobalt Strike"><i class="fab fa-diaspora" aria-hidden="true"></i></a><a href="https://t.me/share/url?url=https%3a%2f%2fd01a.github.io%2fsyscalls%2f&amp;text=Understanding%20Syscalls%3a%20Direct%2c%20Indirect%2c%20and%20Cobalt%20Strike%20Implementation" target="_blank" title="Share on Telegram"><i class="fab fa-telegram" aria-hidden="true"></i></a></span>
             </div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/malware-analysis/">Malware Analysis</a>,&nbsp;<a href="/tags/reverse-engineering/">Reverse Engineering</a>,&nbsp;<a href="/tags/research/">Research</a>,&nbsp;<a href="/tags/post-exploitation/">Post-exploitation</a></section>
+        <section class="post-tags"><i class="fas fa-tags" aria-hidden="true"></i>&nbsp;<a href="/tags/malware-analysis/">Malware Analysis</a>,&nbsp;<a href="/tags/reverse-engineering/">Reverse Engineering</a>,&nbsp;<a href="/tags/research/">Research</a>,&nbsp;<a href="/tags/post-exploitation/">Post-Exploitation</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/pikabot/" class="prev" rel="prev" title="Pikabot deep analysis"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Pikabot deep analysis</a>
-            <a href="/redline/" class="next" rel="next" title="Redline stealer">Redline stealer<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="/pikabot/" class="prev" rel="prev" title="Pikabot deep analysis"><i class="fas fa-angle-left" aria-hidden="true"></i>Pikabot deep analysis</a>
+            <a href="/redline/" class="next" rel="next" title="Redline stealer">Redline stealer<i class="fas fa-angle-right" aria-hidden="true"></i></a></div>
 </div>
 </article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.102.3">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2026</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Mohamed Adel</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.161.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 1.0.0"><i class="far fa-kiss-wink-heart" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2026</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Mohamed Adel</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
 
         <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-arrow-up" aria-hidden="true"></i>
             </a>
-        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"data":{"id-1":"d01a","id-2":"d01a"},"lightgallery":true,"typeit":{"cursorChar":"|","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":100}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div>
+
+        <div id="fixed-buttons-hidden"><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.2/sharer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/copy-tex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/mhchem.min.js"></script><script>window.config={"comment":{},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script src="/js/theme.js"></script></body>
 </html>
