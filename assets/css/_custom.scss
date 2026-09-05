@@ -1,0 +1,7 @@
+.content img {
+    /* width: 100%;       /* Spans the full width of the text column */
+    /* height: auto;      /* Automatically scales height proportionally */
+    max-width: 100%;   /* Prevents the image from stretching beyond its original size */
+    display: block;
+    margin: 0 auto;    /* Centers the image perfectly */
+} /* AI generated*/
