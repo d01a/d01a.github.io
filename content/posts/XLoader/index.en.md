@@ -35,7 +35,6 @@ The invoked PowerShell has two binaries in it stored in different formats; the f
 
 
 {{< mermaid >}}
-
 flowchart LR
     classDef stage fill:#16161e,stroke:#3b4261,stroke-width:1px,color:#7aa2f7,font-weight:bold;
     classDef nodeStyle fill:#1f2335,stroke:#414868,stroke-width:1px,color:#c0caf5;
@@ -77,9 +76,6 @@ flowchart LR
     class A,B,C,C1,C2,D,E,F,G,H,I,J,K nodeStyle;
     class A,J highlight;
     class H alert;
-    
-
-
 {{< /mermaid >}}
 
 
