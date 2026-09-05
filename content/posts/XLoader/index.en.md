@@ -33,51 +33,7 @@ The next stage is a PowerShell script that is used to load another PowerShell sc
 
 The invoked PowerShell has two binaries in it stored in different formats; the first one is a `.Net` module that will be injected in a predefined process "aspnet_compiler.exe" in this case stored in base64 and encrypted using rolling XOR with a hardcoded key. The second binary is stored in a list of integers, which is the final XLoader stage that will be loaded and executed using the `.Net` Assembly
 
-
-{{< mermaid >}}
-flowchart LR
-    classDef stage fill:#16161e,stroke:#3b4261,stroke-width:1px,color:#7aa2f7,font-weight:bold;
-    classDef nodeStyle fill:#1f2335,stroke:#414868,stroke-width:1px,color:#c0caf5;
-    classDef highlight fill:#1f2335,stroke:#ff9e64,stroke-width:2px,color:#c0caf5;
-    classDef alert fill:#1f2335,stroke:#f7768e,stroke-width:1.5px,color:#c0caf5;
-
-    subgraph S1 ["1. JScript Delivery"]
-        A["Phishing 7z"] --> B["RFQ #10849013.js"]
-        B --> C["Drop ps_*.ps1"]
-    end
-
-    subgraph S1C ["Cleanup"]
-        C1["WMI Process Query"] --> C2["Terminate & Delete ps1"]
-    end
-
-    subgraph S2 ["2. AES PS Loader"]
-        D["AES-256 Decrypt"] --> E["Invoke-Expression"]
-    end
-
-    subgraph S3 ["3. Process Monitor"]
-        F["Poll aspnet_compiler"] --> G["XOR Decrypt & Reflect Load"]
-    end
-
-    subgraph S4 ["4. .NET Injector"]
-        H["ConfuserEx2 / Anti-Debug"] --> I["Process Hollowing"]
-    end
-
-    subgraph S5 ["5. XLoader Payload"]
-        J["Formbook Core"] --> K["C2 HTTP Traffic"]
-    end
-
-    C --> D
-    C .-> C1
-    E --> F
-    G --> H
-    I --> J
-
-    class S1,S1C,S2,S3,S4,S5 stage;
-    class A,B,C,C1,C2,D,E,F,G,H,I,J,K nodeStyle;
-    class A,J highlight;
-    class H alert;
-{{< /mermaid >}}
-
+![The execution flow of the campaign](img/mermaid-diagram.png "The execution flow of the campaign")
 
 ## Analysis
 

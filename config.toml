@@ -604,7 +604,6 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     RSS = true #
 
 
-
   #  Page global config
 
   [params.page]
