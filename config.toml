@@ -5,7 +5,7 @@ baseURL = "https://d01a.github.io"
 # Change the default theme to be use when building the site with Hugo
 
 theme = "LoveIt"
-themesDir = "/themes"
+themesDir = "themes"
 
 
 
