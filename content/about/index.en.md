@@ -1,6 +1,6 @@
 ---
 title: "About Me"
-date: 2023-01-16T3:04:49+08:00
+date: 2026-09-05T9:04:49+08:00
 draft: false
 description: "About me"
 # images: ["/Apple-Devices-Preview.png"]
@@ -13,7 +13,7 @@ math:
 
 ### About Me
 
-Mohamed Adel is my name, I'm a malware analyst, reverse engineer, Cyber Threat Intelligence Analyst and DFIR investigator. If you're into pulling apart malicious code and connecting the dots in a cyber incident, you've come to the right place. This blog is where I share what I'm working on and what I'm learning in this world.
+Mohamed Adel is my name. I'm a malware analyst, reverse engineer, and CTI analyst, and DFIR. I also have a growing interest in DE&TH. If you're into pulling apart malicious code and connecting the dots in a cyber incident, you've come to the right place. This blog is where I share what I'm working on and what I'm learning in this world.
 
 ### Find Me
 
